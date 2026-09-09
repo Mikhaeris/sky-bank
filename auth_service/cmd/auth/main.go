@@ -3,17 +3,19 @@ package main
 import (
 	"context"
 	"database/sql"
-	"fmt"
+	"log"
 	"log/slog"
-	"net/http"
+	"net"
 	"os"
 	"time"
 
-	"github.com/mikhaeris/bank-test/auth_service/internal/handler"
-	"github.com/mikhaeris/bank-test/auth_service/internal/repository"
-	"github.com/mikhaeris/bank-test/auth_service/internal/service"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/handler"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/repository"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/service"
 
 	_ "github.com/lib/pq"
+	pb "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
+	"google.golang.org/grpc"
 )
 
 type config struct {
@@ -27,7 +29,7 @@ func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	cfg := config{
-		port: 4000,
+		port: 9001,
 	}
 
 	cfg.db.dsn = "postgres://mikhaeris:qwerty@:5432/bank?sslmode=disable"
@@ -44,10 +46,19 @@ func main() {
 	service := service.NewAuthService(logger, repo)
 	handler := handler.NewAuthHandler(logger, service)
 
-	logger.Info("starting server", "addr", cfg.port)
-	err = http.ListenAndServe(":4000", routes(handler))
+	lis, err := net.Listen("tcp", "localhost:9001")
 	if err != nil {
-		fmt.Print(err)
+		log.Println("error starting tcp listener: ", err)
+		os.Exit(1)
+	}
+	logger.Info("starting server", "addr", cfg.port)
+	grpcServer := grpc.NewServer()
+
+	pb.RegisterAuthSericeServer(grpcServer, handler)
+	err = grpcServer.Serve(lis)
+	if err != nil {
+		logger.Error("error serving grpc", err)
+		os.Exit(1)
 	}
 }
 

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/lib/pq"
-	"github.com/mikhaeris/bank-test/auth_service/internal/models"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 )
 
 var (
@@ -25,7 +25,7 @@ func NewAuthRepository(db *sql.DB) *UserRepository {
 	}
 }
 
-func (ur *UserRepository) Insert(ctx context.Context, user *models.User) error {
+func (ur *UserRepository) Insert(ctx context.Context, user *domain.User) error {
 	query := `
 		INSERT INTO users (id, email, password_hash, activated)
 		VALUES ($1, $2, $3, $4)
@@ -53,13 +53,13 @@ func (ur *UserRepository) Insert(ctx context.Context, user *models.User) error {
 	return nil
 }
 
-func (ur *UserRepository) GetByEmail(ctx context.Context, email string) (*models.User, error) {
+func (ur *UserRepository) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	query := `
 		SELECT id, email, password_hash, activated
 		FROM users
 		WHERE email = $1`
 
-	var user models.User
+	var user domain.User
 
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()

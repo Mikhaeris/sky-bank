@@ -1,35 +1,31 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 
-	"github.com/mikhaeris/bank-test/auth_service/internal/models"
+	auth_service "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 )
 
-func (h *AuthHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
-	var dto models.UserDTO
-
-	err := h.ReadJSON(w, r, &dto)
-	if err != nil {
-		h.badRequestResponse(w, r, err)
-		return
+func (h *AuthHandler) RegisterUser(ctx context.Context, in *auth_service.RegisterRequest) (*auth_service.RegisterResponse, error) {
+	userDto := domain.UserDTO{
+		Email:    in.Email,
+		Password: in.Password,
 	}
 
-	userUUID, err := h.authService.RegisterUser(r.Context(), dto)
+	userUUID, err := h.authService.RegisterUser(ctx, userDto)
 	if err != nil {
-		h.serverErrorResponse(w, r, err)
-		return
+		return &auth_service.RegisterResponse{}, err
 	}
 
-	// write answer
-	err = h.WriteJSON(w, http.StatusCreated, Envelope{"user": userUUID}, nil)
-	if err != nil {
-		h.serverErrorResponse(w, r, err)
-	}
+	return &auth_service.RegisterResponse{
+		UserUUID: userUUID.String(),
+	}, nil
 }
 
 func (h *AuthHandler) ActivateUser(w http.ResponseWriter, r *http.Request) {
-	var activateUser models.ActivateUserDTO
+	var activateUser domain.ActivateUserDTO
 
 	err := h.ReadJSON(w, r, &activateUser)
 	if err != nil {

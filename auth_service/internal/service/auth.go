@@ -4,11 +4,11 @@ import (
 	"context"
 	"uuid"
 
-	"github.com/mikhaeris/bank-test/auth_service/internal/models"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (a *AuthService) RegisterUser(ctx context.Context, dto models.UserDTO) (uuid.UUID, error) {
+func (a *AuthService) RegisterUser(ctx context.Context, dto domain.UserDTO) (uuid.UUID, error) {
 	// hash password
 	hash, err := bcrypt.GenerateFromPassword([]byte(dto.Password), 12)
 	if err != nil {
@@ -19,7 +19,7 @@ func (a *AuthService) RegisterUser(ctx context.Context, dto models.UserDTO) (uui
 	userUUID := uuid.New()
 
 	// dto to User
-	user := models.NewUser(dto, userUUID, string(hash))
+	user := domain.NewUser(dto, userUUID, string(hash))
 
 	// Validate
 
@@ -40,6 +40,6 @@ func (a *AuthService) RegisterUser(ctx context.Context, dto models.UserDTO) (uui
 	return user.ID, nil
 }
 
-func (a *AuthService) ActivateUser(ctx context.Context, dto models.ActivateUserDTO) (models.User, error) {
-	return models.User{}, nil
+func (a *AuthService) ActivateUser(ctx context.Context, dto domain.ActivateUserDTO) (domain.User, error) {
+	return domain.User{}, nil
 }

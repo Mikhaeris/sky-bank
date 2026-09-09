@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mikhaeris/bank-test/auth_service/internal/models"
-	"github.com/mikhaeris/bank-test/auth_service/internal/utils"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/utils"
 )
 
-func (a *AuthService) CreateToken(ctx context.Context, dto models.UserDTO) (string, error) {
+func (a *AuthService) CreateToken(ctx context.Context, dto domain.UserDTO) (string, error) {
 
 	// validate
 
@@ -22,7 +22,7 @@ func (a *AuthService) CreateToken(ctx context.Context, dto models.UserDTO) (stri
 	// }
 
 	// check passwords
-	match, err := models.Matches(user.PasswordHash, dto.Password)
+	match, err := domain.Matches(user.PasswordHash, dto.Password)
 	if err != nil {
 		return "", err
 	}

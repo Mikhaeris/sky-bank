@@ -3,7 +3,7 @@ package service
 import (
 	"log/slog"
 
-	"github.com/mikhaeris/bank-test/auth_service/internal/repository"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/repository"
 )
 
 type AuthService struct {

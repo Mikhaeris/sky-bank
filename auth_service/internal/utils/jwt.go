@@ -8,7 +8,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 
-	"github.com/mikhaeris/bank-test/auth_service/internal/models"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 )
 
 const privKeyPath = "../keys/private.pem"
@@ -36,7 +36,7 @@ type UserClaims struct {
 	UserInfo
 }
 
-func CreateToken(user *models.User) (string, error) {
+func CreateToken(user *domain.User) (string, error) {
 	t := jwt.New(jwt.SigningMethodEdDSA)
 
 	t.Claims = &UserClaims{

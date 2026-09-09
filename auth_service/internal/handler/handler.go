@@ -3,10 +3,12 @@ package handler
 import (
 	"log/slog"
 
-	"github.com/mikhaeris/bank-test/auth_service/internal/service"
+	v1 "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/service"
 )
 
 type AuthHandler struct {
+	v1.UnimplementedAuthSericeServer
 	logger      *slog.Logger
 	authService *service.AuthService
 }

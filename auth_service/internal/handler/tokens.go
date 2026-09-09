@@ -3,11 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/mikhaeris/bank-test/auth_service/internal/models"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 )
 
 func (h *AuthHandler) CreateAutentificationToken(w http.ResponseWriter, r *http.Request) {
-	var user models.UserDTO
+	var user domain.UserDTO
 
 	err := h.ReadJSON(w, r, &user)
 	if err != nil {
