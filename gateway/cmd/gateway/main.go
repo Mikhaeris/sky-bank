@@ -16,8 +16,8 @@ var GrpcClient pb.AuthSericeClient
 func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
-	host := "localhost"
-	port := "9001"
+	host := "auth"
+	port := "9000"
 
 	addr := fmt.Sprintf("%s:%s", host, port)
 
@@ -43,8 +43,8 @@ func main() {
 
 	handler := AuthHandler{}
 
-	logger.Info("starting server", "addr", 4000)
-	err = http.ListenAndServe("localhost:4000", routes(&handler))
+	logger.Info("starting server", "addr", 8081)
+	err = http.ListenAndServe(":8081", routes(&handler))
 	if err != nil {
 		logger.Error("error start http server")
 		os.Exit(1)

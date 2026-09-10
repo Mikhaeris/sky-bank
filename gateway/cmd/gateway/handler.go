@@ -30,7 +30,7 @@ func (h *AuthHandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = writeJSON(w, http.StatusCreated, envelope{"userUUID": userUUID}, nil)
+	err = writeJSON(w, http.StatusCreated, userUUID, nil)
 	if err != nil {
 		fmt.Fprint(w, "server error")
 	}
