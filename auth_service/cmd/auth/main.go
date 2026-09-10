@@ -1,40 +1,29 @@
 package main
 
 import (
-	"context"
-	"database/sql"
-	"log"
 	"log/slog"
-	"net"
 	"os"
-	"time"
 
+	"github.com/mikhaeris/sky-bank/auth_service/internal/app"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/config"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/handler"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/postgresClient"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/repository"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/server"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/service"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/utils"
 
 	_ "github.com/lib/pq"
-	pb "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
-	"google.golang.org/grpc"
 )
-
-type config struct {
-	port int
-	db   struct {
-		dsn string
-	}
-}
 
 func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
-	cfg := config{
-		port: 9001,
-	}
+	cfg := config.GetConfig(logger)
 
-	cfg.db.dsn = "postgres://mikhaeris:qwerty@:5432/bank?sslmode=disable"
+	keys := utils.NewKeys(cfg.Jwt.PrivKeyPath, cfg.Jwt.AccessTokenTtl, logger)
 
-	db, err := openDB(cfg)
+	db, err := postgresClient.OpenDB(&cfg.Storage)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
@@ -42,40 +31,16 @@ func main() {
 	defer db.Close()
 	logger.Info("database connection pool established")
 
-	repo := repository.NewAuthRepository(db)
-	service := service.NewAuthService(logger, repo)
-	handler := handler.NewAuthHandler(logger, service)
+	repositories := repository.NewAuthRepository(db)
+	authService := service.NewAuthService(keys, logger, repositories)
 
-	lis, err := net.Listen("tcp", "localhost:9001")
+	authHandler := handler.NewAuthHandler(logger, authService)
+
+	grpcServer := server.NewGRPCServer(authHandler, logger)
+
+	err = app.RunGRPCServer(grpcServer, cfg.Server.Grpc.Addr, logger)
 	if err != nil {
-		log.Println("error starting tcp listener: ", err)
+		logger.Error(err.Error())
 		os.Exit(1)
 	}
-	logger.Info("starting server", "addr", cfg.port)
-	grpcServer := grpc.NewServer()
-
-	pb.RegisterAuthSericeServer(grpcServer, handler)
-	err = grpcServer.Serve(lis)
-	if err != nil {
-		logger.Error("error serving grpc", err)
-		os.Exit(1)
-	}
-}
-
-func openDB(cfg config) (*sql.DB, error) {
-	db, err := sql.Open("postgres", cfg.db.dsn)
-	if err != nil {
-		return nil, err
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	err = db.PingContext(ctx)
-	if err != nil {
-		db.Close()
-		return nil, err
-	}
-
-	return db, nil
 }

@@ -2,7 +2,7 @@ package utils
 
 import (
 	"crypto"
-	"log"
+	"log/slog"
 	"os"
 	"time"
 
@@ -11,19 +11,27 @@ import (
 	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 )
 
-const privKeyPath = "../keys/private.pem"
+type Keys struct {
+	signKey crypto.PrivateKey
+	ttl     time.Duration
+}
 
-var signKey crypto.PrivateKey
-
-func init() {
+func NewKeys(privKeyPath string, ttl time.Duration, logger *slog.Logger) *Keys {
 	signBytes, err := os.ReadFile(privKeyPath)
 	if err != nil {
-		log.Fatal(err)
+		logger.Error("can't get prevKey file", "error", err)
+		os.Exit(1)
 	}
 
-	signKey, err = jwt.ParseEdPrivateKeyFromPEM(signBytes)
+	signKey, err := jwt.ParseEdPrivateKeyFromPEM(signBytes)
 	if err != nil {
-		log.Fatal(err)
+		logger.Error("error while parsing private key", "error", err)
+		os.Exit(1)
+	}
+
+	return &Keys{
+		signKey: signKey,
+		ttl:     ttl,
 	}
 }
 
@@ -36,7 +44,7 @@ type UserClaims struct {
 	UserInfo
 }
 
-func CreateToken(user *domain.User) (string, error) {
+func (k *Keys) CreateToken(user *domain.User) (string, error) {
 	t := jwt.New(jwt.SigningMethodEdDSA)
 
 	t.Claims = &UserClaims{
@@ -44,50 +52,50 @@ func CreateToken(user *domain.User) (string, error) {
 			Subject: user.ID.String(),
 
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(k.ttl)),
 		},
 		UserInfo{
 			Email: user.Email,
 		},
 	}
 
-	return t.SignedString(signKey)
+	return t.SignedString(k.signKey)
 }
 
-const pubKeyPath = "../keys/public.pem"
+// const pubKeyPath = "../keys/public.pem"
 
-var pubKey crypto.PublicKey
+// var pubKey crypto.PublicKey
 
-func init() {
-	pubBytes, err := os.ReadFile(pubKeyPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+// func init() {
+// 	pubBytes, err := os.ReadFile(pubKeyPath)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
 
-	pubKey, err = jwt.ParseEdPublicKeyFromPEM(pubBytes)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+// 	pubKey, err = jwt.ParseEdPublicKeyFromPEM(pubBytes)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// }
 
-func GetToken(tokenString string) (*UserClaims, error) {
-	claims := &UserClaims{}
+// func GetToken(tokenString string) (*UserClaims, error) {
+// 	claims := &UserClaims{}
 
-	_, err := jwt.ParseWithClaims(
-		tokenString,
-		claims,
+// 	_, err := jwt.ParseWithClaims(
+// 		tokenString,
+// 		claims,
 
-		func(token *jwt.Token) (any, error) {
-			return pubKey, nil
-		},
-		jwt.WithValidMethods([]string{
-			jwt.SigningMethodEdDSA.Alg(),
-		}),
-	)
+// 		func(token *jwt.Token) (any, error) {
+// 			return pubKey, nil
+// 		},
+// 		jwt.WithValidMethods([]string{
+// 			jwt.SigningMethodEdDSA.Alg(),
+// 		}),
+// 	)
 
-	if err != nil {
-		return nil, err
-	}
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return claims, nil
-}
+// 	return claims, nil
+// }

@@ -9,6 +9,7 @@ import (
 )
 
 func (h *AuthHandler) RegisterUser(ctx context.Context, in *auth_service.RegisterRequest) (*auth_service.RegisterResponse, error) {
+	h.logger.Info("get request")
 	userDto := domain.UserDTO{
 		Email:    in.Email,
 		Password: in.Password,
@@ -45,6 +46,6 @@ func (h *AuthHandler) ActivateUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *AuthHandler) ResetPassword() {
+func (h *AuthHandler) UpdateUserPassword() {
 
 }

@@ -1,8 +1,19 @@
 syntax = "proto3";
 
-package auth;
+package auth.v1;
+
+import "google/api/annotations.proto";
 
 option go_package = "github.com/mikhaeris/sky-bank/auth_service";
+
+service AuthSerice {
+    rpc RegisterUser(RegisterRequest) returns (RegisterResponse);
+}
+
+message Tokens {
+    access_token = 1;
+    refresh_token = 2;
+}
 
 message RegisterRequest {
     string email = 1;
@@ -11,8 +22,5 @@ message RegisterRequest {
 
 message RegisterResponse {
     string userUUID = 1;
-}
-
-service AuthSerice {
-    rpc RegisterUser(RegisterRequest) returns (RegisterResponse);
+    Tokens tokens = 2;
 }

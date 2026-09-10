@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
-	"github.com/mikhaeris/sky-bank/auth_service/internal/utils"
 )
 
 func (a *AuthService) CreateToken(ctx context.Context, dto domain.UserDTO) (string, error) {
@@ -31,7 +30,7 @@ func (a *AuthService) CreateToken(ctx context.Context, dto domain.UserDTO) (stri
 		return "", fmt.Errorf("user data is incorrect")
 	}
 
-	token, err := utils.CreateToken(user)
+	token, err := a.jwtKey.CreateToken(user)
 	if err != nil {
 		return "", err
 	}

@@ -26,3 +26,11 @@ func (h *AuthHandler) CreateAutentificationToken(w http.ResponseWriter, r *http.
 		h.serverErrorResponse(w, r, err)
 	}
 }
+
+func (h *AuthHandler) CreateActivationToken() {
+
+}
+
+func (h *AuthHandler) CreatePasswordResetToken() {
+
+}
