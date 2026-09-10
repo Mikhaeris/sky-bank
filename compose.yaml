@@ -1,0 +1,54 @@
+services:
+  gateway:
+    build: gateway/
+    command: ./gateway
+    container_name: gateway
+    ports:
+      - "8081:8081"
+    depends_on:
+      auth:
+        condition: service_started
+
+  auth:
+    build: auth_service/
+    command: ./auth
+    container_name: auth
+    ports:
+      - "9000:9000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - ./keys/private.pem:/keys/private.pem:ro
+
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  migrate:
+      image: migrate/migrate:v4.19.0
+      volumes:
+        - ./auth_service/migrations:/migrations:ro
+      command:
+        - "-path=/migrations"
+        - "-database=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+        - "up"
+      depends_on:
+        postgres:
+          condition: service_healthy
+
+volumes:
+  postgres_data:
