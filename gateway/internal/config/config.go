@@ -1,0 +1,48 @@
+package config
+
+import (
+	"log/slog"
+	"os"
+	"sync"
+
+	"github.com/ilyakaznacheev/cleanenv"
+)
+
+type Config struct {
+	Rest struct {
+		Addr string `yaml:"addr"`
+	} `yaml:"rest"`
+	Auth struct {
+		Addr string `yaml:"addr"`
+	} `yaml:"auth"`
+}
+
+const configPath = "config.yaml"
+
+var (
+	once   sync.Once
+	config *Config
+)
+
+func GetConfig(logger *slog.Logger) *Config {
+	var once sync.Once
+
+	config := &Config{}
+
+	once.Do(func() {
+		logger.Info("read application config")
+		err := cleanenv.ReadConfig(configPath, config)
+		if err != nil {
+			help, _ := cleanenv.GetDescription(config, nil)
+			logger.Info(help)
+			logger.Error(
+				"can't read config",
+				"path", configPath,
+				"error", err,
+			)
+			os.Exit(1)
+		}
+	})
+
+	return config
+}
