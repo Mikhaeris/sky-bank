@@ -1,0 +1,295 @@
+Table identities {
+  id uuid [primary key]
+
+  email varchar [not null, unique]
+  password_hash bytea [not null]
+
+  activated bool [not null, default: false]
+
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table sessions {
+  id uuid [primary key]
+
+  identity_id uuid [not null]
+  refresh_token_hash bytea [not null, unique]
+
+  created_at timestamp [not null]
+  expires_at timestamp [not null]
+
+  last_used_at timestamp
+  revoked_at timestamp
+}
+
+Table tokens {
+  hash bytea [primary key]
+
+  identity_id uuid [not null]
+
+  // activation
+  // password_reset
+  // email_change
+  scope varchar [not null]
+
+  expires_at timestamp [not null]
+  created_at timestamp [not null]
+}
+
+Ref: sessions.identity_id > identities.id
+Ref: tokens.identity_id > identities.id
+
+Table customers {
+  id uuid [primary key]
+
+  phone varchar [not null, unique]
+
+  first_name varchar [not null]
+  last_name varchar [not null]
+  middle_name varchar
+
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Enum employee_status {
+  ACTIVE
+  BLOCKED
+  DISMISSED
+}
+
+Table employees {
+  id uuid [primary key]
+
+  first_name varchar [not null]
+  last_name varchar [not null]
+  middle_name varchar
+
+  status employee_status [not null, default: 'ACTIVE']
+
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table roles {
+  id uuid [primary key]
+
+  // SUPPORT
+  // SUPPORT_MANAGER
+  // ADMIN
+  // FRAUD_ANALYST
+  code varchar [not null, unique]
+
+  description varchar
+}
+
+Table permissions {
+  id uuid [primary key]
+
+  // customer:read
+  // account:read
+  // account:block
+  // ticket:read
+  // ticket:update
+  // ticket:assign
+  // employee:create
+  // employee:disable
+  // role:assign
+  code varchar [not null, unique]
+
+  description varchar
+}
+
+Table employee_roles {
+  employee_id uuid [not null]
+  role_id uuid [not null]
+
+  indexes {
+    (employee_id, role_id) [pk]
+  }
+}
+
+Table role_permissions {
+  role_id uuid [not null]
+  permission_id uuid [not null]
+
+  indexes {
+    (role_id, permission_id) [pk]
+  }
+}
+
+Ref: employee_roles.employee_id > employees.id
+Ref: employee_roles.role_id > roles.id
+
+Ref: role_permissions.role_id > roles.id
+Ref: role_permissions.permission_id > permissions.id
+
+Enum account_type {
+  CHECKING
+  SAVINGS
+  DEPOSIT
+  CREDIT
+}
+
+Enum account_status {
+  ACTIVE
+  BLOCKED
+  CLOSED
+}
+
+Table accounts {
+  id uuid [primary key]
+
+  owner_id uuid [not null]
+
+  type account_type [not null]
+
+  // ISO 4217:
+  // RUB
+  // USD
+  // EUR
+  currency_code char(3) [not null]
+
+  // Сумма в минимальных денежных единицах.
+  //
+  // 125050 RUB = 1250.50 RUB
+  balance bigint [not null, default: 0]
+
+  status account_status [not null, default: 'ACTIVE']
+
+  created_at timestamp [not null]
+  closed_at timestamp
+}
+
+Enum card_form {
+  PHYSICAL
+  VIRTUAL
+}
+
+Enum card_status {
+  ACTIVE
+  BLOCKED
+  EXPIRED
+  CLOSED
+}
+
+Table cards {
+  id uuid [primary key]
+
+  account_id uuid [not null]
+
+  form card_form [not null]
+  status card_status [not null, default: 'ACTIVE']
+
+  created_at timestamp [not null]
+  expires_at timestamp
+}
+
+Ref: cards.account_id > accounts.id
+
+Enum transaction_type {
+  TRANSFER
+  CARD_PAYMENT
+  FEE
+  INTEREST
+  REFUND
+  DEPOSIT
+  WITHDRAWAL
+}
+
+Enum transaction_status {
+  PENDING
+  COMPLETED
+  FAILED
+  REVERSED
+}
+
+Table transactions {
+  id uuid [primary key]
+
+  type transaction_type [not null]
+  status transaction_status [not null]
+
+  description varchar
+
+  created_at timestamp [not null]
+  completed_at timestamp
+}
+
+Table account_entries {
+  id uuid [primary key]
+
+  transaction_id uuid [not null]
+  account_id uuid [not null]
+
+  // Signed amount.
+  //
+  // -100000 = -1000.00 RUB
+  // +100000 = +1000.00 RUB
+  amount bigint [not null]
+
+  created_at timestamp [not null]
+}
+
+Ref: account_entries.transaction_id > transactions.id
+Ref: account_entries.account_id > accounts.id
+
+Enum ticket_status {
+  OPEN
+  IN_PROGRESS
+  WAITING_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+Enum ticket_priority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+Table support_tickets {
+  id uuid [primary key]
+
+  customer_id uuid [not null]
+
+  assigned_employee_id uuid
+
+  subject varchar [not null]
+
+  status ticket_status [not null, default: 'OPEN']
+  priority ticket_priority [not null, default: 'NORMAL']
+
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  resolved_at timestamp
+  closed_at timestamp
+}
+
+Table ticket_messages {
+  id uuid [primary key]
+
+  ticket_id uuid [not null]
+
+  customer_id uuid
+  employee_id uuid
+
+  message text [not null]
+
+  created_at timestamp [not null]
+}
+
+Ref: ticket_messages.ticket_id > support_tickets.id
+
+Ref: "customers"."id" -? "identities"."id"
+
+Ref: "accounts"."owner_id" ?> "customers"."id"
+
+Ref: "employees"."id" -? "identities"."id"
+
+Ref: "customers"."id" <? "support_tickets"."customer_id"
+
+Ref: "support_tickets"."assigned_employee_id" ?>? "employees"."id"

@@ -18,8 +18,17 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+      notification:
+        condition: service_started
     volumes:
       - ./keys/private.pem:/keys/private.pem:ro
+
+  notification:
+    build: notification_service/
+    command: ./notification
+    container_name: notification
+    ports:
+      - "9001:9001"
 
   postgres:
     image: postgres:18
