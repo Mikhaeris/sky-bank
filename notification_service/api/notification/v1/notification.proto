@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package api.notification.v1;
+
+option go_package = "github.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1";
+
+service NotificationService {
+    rpc SendWelcomeMessage(WelcomeMessageRequest) returns (WelcomeMessageResponse);
+}
+
+message WelcomeMessageRequest {
+    string identity_uuid = 1;
+    string email = 2;
+    string activation_token = 3;
+}
+
+message WelcomeMessageResponse {
+    string status = 1;
+}

@@ -1,0 +1,10 @@
+server:
+  grpc:
+    addr: 0.0.0.0:9001
+
+smtp:
+  host: qwerty
+  port: 00
+  username: qwerty
+  password: qwerty
+  sender: "qwerty <no-reply@qwerty.qwerty.net>"
