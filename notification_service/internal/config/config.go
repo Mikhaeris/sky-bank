@@ -23,7 +23,7 @@ type Config struct {
 	}
 }
 
-const configPath = "config.yml"
+const configPath = "config.yaml"
 
 var (
 	once   sync.Once

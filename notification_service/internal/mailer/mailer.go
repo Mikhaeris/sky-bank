@@ -11,8 +11,8 @@ import (
 	tt "text/template"
 )
 
-//go:embed "templates"
-var templateFS embed.FS
+//go:embed templates/*
+var templatesFS embed.FS
 
 type Mailer struct {
 	client *mail.Client
@@ -24,7 +24,7 @@ func New(host string /*, port int,*/, username, password, sender string) (*Maile
 		host,
 		mail.WithTLSPortPolicy(mail.TLSMandatory),
 		mail.WithSMTPAuth(mail.SMTPAuthLogin),
-		//mail.WithPort(port),
+		// mail.WithPort(port),
 		mail.WithUsername(username),
 		mail.WithPassword(password),
 		mail.WithTimeout(5*time.Second),
@@ -42,7 +42,9 @@ func New(host string /*, port int,*/, username, password, sender string) (*Maile
 }
 
 func (m *Mailer) Send(recipient string, templateFile string, data any) error {
-	textTmpl, err := tt.New("").ParseFS(templateFS, "templates/"+templateFile)
+	templatePath := "templates/" + templateFile
+
+	textTmpl, err := tt.ParseFS(templatesFS, templatePath)
 	if err != nil {
 		return err
 	}
@@ -59,7 +61,7 @@ func (m *Mailer) Send(recipient string, templateFile string, data any) error {
 		return err
 	}
 
-	htmlTmpl, err := ht.New("").ParseFS(templateFS, "templates/"+templateFile)
+	htmlTmpl, err := ht.ParseFS(templatesFS, templatePath)
 	if err != nil {
 		return err
 	}
@@ -95,7 +97,6 @@ func (m *Mailer) Send(recipient string, templateFile string, data any) error {
 		if i != 3 {
 			time.Sleep(500 * time.Millisecond)
 		}
-
 	}
 
 	return err
