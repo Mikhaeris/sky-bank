@@ -8,7 +8,7 @@ import (
 )
 
 func (h *AuthHandler) RegisterUser(ctx context.Context, in *authv1.RegisterUserRequest) (*authv1.RegisterUserResponse, error) {
-	h.logger.Info("get refister request")
+	h.logger.Info("get register request")
 
 	userDto := domain.UserDTO{
 		Email:    in.Email,

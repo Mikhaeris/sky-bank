@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func NewNotificationClient(addr string) (*notificationClientv1.NotificationServiceClient, func() error, error) {
+func NewNotificationClient(addr string) (notificationClientv1.NotificationServiceClient, func() error, error) {
 	conn, err := grpc.NewClient(
 		addr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -17,5 +17,5 @@ func NewNotificationClient(addr string) (*notificationClientv1.NotificationServi
 
 	client := notificationClientv1.NewNotificationServiceClient(conn)
 
-	return &client, conn.Close, nil
+	return client, conn.Close, nil
 }

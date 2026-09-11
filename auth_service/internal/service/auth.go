@@ -11,12 +11,12 @@ import (
 type AuthService struct {
 	jwtKey             *utils.Keys
 	logger             *slog.Logger
-	notificationClient *notificationv1.NotificationServiceClient
+	notificationClient notificationv1.NotificationServiceClient
 	tokenRepo          *repository.TokenRepository
 	userRepo           *repository.UserRepository
 }
 
-func NewAuthService(jwtKey *utils.Keys, logger *slog.Logger, notificationClient *notificationv1.NotificationServiceClient, tokenRepo *repository.TokenRepository, userRepo *repository.UserRepository) *AuthService {
+func NewAuthService(jwtKey *utils.Keys, logger *slog.Logger, notificationClient notificationv1.NotificationServiceClient, tokenRepo *repository.TokenRepository, userRepo *repository.UserRepository) *AuthService {
 	return &AuthService{
 		jwtKey:             jwtKey,
 		logger:             logger,

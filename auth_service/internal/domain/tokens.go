@@ -13,6 +13,7 @@ const (
 )
 
 type Token struct {
+	Plaintext  string
 	Hash       []byte
 	IdentityId uuid.UUID
 	Expiry     time.Time
@@ -24,6 +25,7 @@ func GenerateToken(identityId uuid.UUID, ttl time.Duration, scope string) *Token
 	hash := sha256.Sum256([]byte(s))
 
 	return &Token{
+		Plaintext:  s,
 		Hash:       hash[:],
 		IdentityId: identityId,
 		Expiry:     time.Now().Add(ttl),

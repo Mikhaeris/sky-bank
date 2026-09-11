@@ -35,7 +35,7 @@ type StorageConfig struct {
 	Password string `yaml:"password"`
 }
 
-const configPath = "config.yml"
+const configPath = "config.yaml"
 
 var (
 	once   sync.Once
@@ -51,6 +51,8 @@ func GetConfig(logger *slog.Logger) *Config {
 		logger.Info("read application config")
 		err := cleanenv.ReadConfig(configPath, config)
 		if err != nil {
+			help, _ := cleanenv.GetDescription(config, nil)
+			logger.Info(help)
 			logger.Error(
 				"can't read config",
 				"path", configPath,
