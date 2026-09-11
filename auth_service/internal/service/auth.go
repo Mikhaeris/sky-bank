@@ -1,45 +1,27 @@
 package service
 
 import (
-	"context"
-	"uuid"
+	"log/slog"
 
-	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/repository"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/utils"
+	notificationv1 "github.com/mikhaeris/sky-bank/notification_service/api/notification/v1"
 )
 
-func (a *AuthService) RegisterUser(ctx context.Context, dto domain.UserDTO) (uuid.UUID, error) {
-	// hash password
-	hash, err := bcrypt.GenerateFromPassword([]byte(dto.Password), 12)
-	if err != nil {
-		return uuid.Nil(), err
-	}
-
-	// generate uuid
-	userUUID := uuid.New()
-
-	// dto to User
-	user := domain.NewUser(dto, userUUID, string(hash))
-
-	// Validate
-
-	// insert to auth_db
-	err = a.userRepo.Insert(ctx, user)
-	if err != nil {
-		return uuid.Nil(), err
-	}
-
-	a.logger.Info("ok", user)
-
-	// send user_service information
-
-	// generate token for email
-
-	// send confirmation email
-
-	return user.ID, nil
+type AuthService struct {
+	jwtKey             *utils.Keys
+	logger             *slog.Logger
+	notificationClient *notificationv1.NotificationServiceClient
+	tokenRepo          *repository.TokenRepository
+	userRepo           *repository.UserRepository
 }
 
-func (a *AuthService) ActivateUser(ctx context.Context, dto domain.ActivateUserDTO) (domain.User, error) {
-	return domain.User{}, nil
+func NewAuthService(jwtKey *utils.Keys, logger *slog.Logger, notificationClient *notificationv1.NotificationServiceClient, tokenRepo *repository.TokenRepository, userRepo *repository.UserRepository) *AuthService {
+	return &AuthService{
+		jwtKey:             jwtKey,
+		logger:             logger,
+		notificationClient: notificationClient,
+		tokenRepo:          tokenRepo,
+		userRepo:           userRepo,
+	}
 }

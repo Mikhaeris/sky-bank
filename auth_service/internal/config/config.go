@@ -15,6 +15,11 @@ type Config struct {
 			Addr string `yaml:"addr"`
 		} `yaml:"grpc"`
 	} `yaml:"server"`
+	Client struct {
+		Grpc struct {
+			Addr string `yaml:"addr"`
+		} `yaml:"grpc"`
+	} `yaml:"client"`
 	Storage StorageConfig `yaml:"database"`
 	Jwt     struct {
 		PrivKeyPath    string        `yaml:"priv_key_path"`

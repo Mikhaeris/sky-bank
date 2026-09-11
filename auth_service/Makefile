@@ -1,6 +1,16 @@
+## db/migrations/new name=$1: create a new database migration
+.PHONY: db/migration/new
+db/migration/new:
+	@echo 'Creating migration files for ${name}...'
+	migrate create -seq -ext=.sql -dir=./migrations ${name}
+
 ## grpc/generate: genereate proto contract
 .PHONY: grpc/generate
 grpc/generate:
-	protoc --go_out=. --go_opt=paths=source_relative \
-		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
-		api/v1/auth.proto
+	protoc \
+		--proto_path=./api \
+		--proto_path=./third_party \
+		--go_out=paths=source_relative:./api \
+		--go-grpc_out=paths=source_relative:./api \
+		--grpc-gateway_out=paths=source_relative:./api \
+		auth/v1/auth.proto

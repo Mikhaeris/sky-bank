@@ -3,9 +3,18 @@ package service
 import (
 	"context"
 	"fmt"
+	"time"
+	"uuid"
 
 	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 )
+
+func (a *AuthService) NewToken(ctx context.Context, identityId uuid.UUID, ttl time.Duration, scope string) (*domain.Token, error) {
+	token := domain.GenerateToken(identityId, ttl, scope)
+
+	err := a.tokenRepo.Insert(ctx, token)
+	return token, err
+}
 
 func (a *AuthService) CreateToken(ctx context.Context, dto domain.UserDTO) (string, error) {
 

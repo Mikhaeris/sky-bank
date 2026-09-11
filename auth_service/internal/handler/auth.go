@@ -1,51 +1,21 @@
 package handler
 
 import (
-	"context"
-	"net/http"
+	"log/slog"
 
-	auth_service "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
-	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
+	v1 "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/service"
 )
 
-func (h *AuthHandler) RegisterUser(ctx context.Context, in *auth_service.RegisterRequest) (*auth_service.RegisterResponse, error) {
-	h.logger.Info("get request")
-	userDto := domain.UserDTO{
-		Email:    in.Email,
-		Password: in.Password,
-	}
-
-	userUUID, err := h.authService.RegisterUser(ctx, userDto)
-	if err != nil {
-		return &auth_service.RegisterResponse{}, err
-	}
-
-	return &auth_service.RegisterResponse{
-		UserUUID: userUUID.String(),
-	}, nil
+type AuthHandler struct {
+	v1.UnimplementedAuthServiceServer
+	logger      *slog.Logger
+	authService *service.AuthService
 }
 
-func (h *AuthHandler) ActivateUser(w http.ResponseWriter, r *http.Request) {
-	var activateUser domain.ActivateUserDTO
-
-	err := h.ReadJSON(w, r, &activateUser)
-	if err != nil {
-		h.badRequestResponse(w, r, err)
-		return
+func NewAuthHandler(logger *slog.Logger, authService *service.AuthService) *AuthHandler {
+	return &AuthHandler{
+		logger:      logger,
+		authService: authService,
 	}
-
-	user, err := h.authService.ActivateUser(r.Context(), activateUser)
-	if err != nil {
-		h.serverErrorResponse(w, r, err)
-		return
-	}
-
-	err = h.WriteJSON(w, http.StatusOK, Envelope{"user": user}, nil)
-	if err != nil {
-		h.serverErrorResponse(w, r, err)
-	}
-}
-
-func (h *AuthHandler) UpdateUserPassword() {
-
 }

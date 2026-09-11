@@ -1,26 +1,139 @@
 syntax = "proto3";
 
-package auth.v1;
+package api.auth.v1;
 
 import "google/api/annotations.proto";
 
-option go_package = "github.com/mikhaeris/sky-bank/auth_service";
+option go_package = "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1";
 
-service AuthSerice {
-    rpc RegisterUser(RegisterRequest) returns (RegisterResponse);
+service AuthService {
+    rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/auth/users/register"
+            body: "*"
+        };
+    };
+
+    rpc ActivateUser(ActivateUserRequest) returns (ActivateUserResponse) {
+        option (google.api.http) = {
+            put: "/api/v1/auth/users/activated"
+            body: "*"
+        };
+    };
+
+    rpc CreateAuthenticationToken(CreateAuthenticationTokenRequest) returns (CreateAuthenticationTokenResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/auth/tokens/authentication"
+            body: "*"
+        };
+    };
+
+    rpc CreateActivationToken(CreateActivationTokenRequest) returns (CreateActivationTokenResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/auth/tokens/activation"
+            body: "*"
+        };
+    };
+
+    rpc CreatePasswordResetToken(CreatePasswordResetTokenRequest) returns (CreatePasswordResetTokenResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/auth/tokens/password-reset"
+            body: "*"
+        };
+    };
+
+    rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (UpdateUserPasswordResponse) {
+        option (google.api.http) = {
+            put: "/api/v1/auth/users/password"
+            body: "*"
+        };
+    };
+
+    rpc RefreshTokens(RefreshTokensRequest) returns (RefreshTokensResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/auth/tokens/refresh"
+            body: "*"
+        };
+    };
+
+    rpc LogOut(LogOutRequest) returns (LogOutResponse) {
+        option (google.api.http) = {
+            put: "/api/v1/auth/tokens/reset"
+        };
+    };
 }
 
 message Tokens {
-    access_token = 1;
-    refresh_token = 2;
+    string access_token = 1;
+    string refresh_token = 2;
 }
 
-message RegisterRequest {
+message RegisterUserRequest {
     string email = 1;
     string password = 2;
 }
 
-message RegisterResponse {
-    string userUUID = 1;
+message RegisterUserResponse {
+    string user_uuid = 1;
+}
+
+message ActivateUserRequest {
+    string activation_token = 1;
+}
+
+message ActivateUserResponse {
+    string user_uuid = 1;
+}
+
+message CreateAuthenticationTokenRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message CreateAuthenticationTokenResponse {
+    string id = 1;
     Tokens tokens = 2;
+}
+
+message CreateActivationTokenRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message CreateActivationTokenResponse {
+    string user_uuid = 1;
+}
+
+message CreatePasswordResetTokenRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message CreatePasswordResetTokenResponse {
+    string user_uuid = 1;
+}
+
+message UpdateUserPasswordRequest {
+    string password_reset_token = 1;
+}
+
+message UpdateUserPasswordResponse {
+    string user_uuid = 1;
+}
+
+message RefreshTokensRequest {
+    Tokens tokens = 1;
+}
+
+message RefreshTokensResponse {
+    Tokens tokens = 1;
+}
+
+message LogOutRequest {
+    string user_uuid = 1;
+    Tokens tokens = 2;
+}
+
+message LogOutResponse {
+    string user_uuid = 1;
 }
