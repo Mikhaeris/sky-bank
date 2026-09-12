@@ -8,10 +8,11 @@ import (
 )
 
 type User struct {
-	ID           uuid.UUID
+	Id           uuid.UUID
 	Email        string
 	PasswordHash string
 	Activated    bool
+	Version      int
 }
 
 type UserDTO struct {
@@ -20,12 +21,22 @@ type UserDTO struct {
 }
 
 type ActivateUserDTO struct {
-	activateToken string
+	TokenPlaintext string
+}
+
+type ResetPasswordDTO struct {
+	TokenPlaintext string
+	Password       string
+}
+
+type UserLogOutDTO struct {
+	Id uuid.UUID
+	TokensDTO
 }
 
 func NewUser(dto UserDTO, userUUID uuid.UUID, passwordHash string) *User {
 	return &User{
-		ID:           userUUID,
+		Id:           userUUID,
 		Email:        dto.Email,
 		PasswordHash: passwordHash,
 	}

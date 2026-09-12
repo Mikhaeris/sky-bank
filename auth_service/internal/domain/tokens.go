@@ -10,6 +10,8 @@ import (
 const (
 	ScopeActivation     = "activation"
 	ScopeAuthentication = "authentication"
+	ScopeResetPassword  = "reset_password"
+	ScopeSecurity       = "security"
 )
 
 type Token struct {
@@ -31,4 +33,9 @@ func GenerateToken(identityId uuid.UUID, ttl time.Duration, scope string) *Token
 		Expiry:     time.Now().Add(ttl),
 		Scope:      scope,
 	}
+}
+
+type TokensDTO struct {
+	Access  string
+	Refresh string
 }

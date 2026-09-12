@@ -13,15 +13,15 @@ type AuthService struct {
 	logger             *slog.Logger
 	notificationClient notificationv1.NotificationServiceClient
 	tokenRepo          *repository.TokenRepository
-	userRepo           *repository.UserRepository
+	identiRepo         *repository.IdentityRepository
 }
 
-func NewAuthService(jwtKey *utils.Keys, logger *slog.Logger, notificationClient notificationv1.NotificationServiceClient, tokenRepo *repository.TokenRepository, userRepo *repository.UserRepository) *AuthService {
+func NewAuthService(jwtKey *utils.Keys, logger *slog.Logger, notificationClient notificationv1.NotificationServiceClient, tokenRepo *repository.TokenRepository, identiRepo *repository.IdentityRepository) *AuthService {
 	return &AuthService{
 		jwtKey:             jwtKey,
 		logger:             logger,
 		notificationClient: notificationClient,
 		tokenRepo:          tokenRepo,
-		userRepo:           userRepo,
+		identiRepo:         identiRepo,
 	}
 }

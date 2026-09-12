@@ -2,7 +2,7 @@ package utils
 
 import (
 	"crypto"
-	"log/slog"
+	"fmt"
 	"os"
 	"time"
 
@@ -16,23 +16,21 @@ type Keys struct {
 	ttl     time.Duration
 }
 
-func NewKeys(privKeyPath string, ttl time.Duration, logger *slog.Logger) *Keys {
+func NewKeys(privKeyPath string, ttl time.Duration) (*Keys, error) {
 	signBytes, err := os.ReadFile(privKeyPath)
 	if err != nil {
-		logger.Error("can't get prevKey file", "error", err)
-		os.Exit(1)
+		return nil, fmt.Errorf("read private key: %w", err)
 	}
 
 	signKey, err := jwt.ParseEdPrivateKeyFromPEM(signBytes)
 	if err != nil {
-		logger.Error("error while parsing private key", "error", err)
-		os.Exit(1)
+		return nil, fmt.Errorf("parse private key: %w", err)
 	}
 
 	return &Keys{
 		signKey: signKey,
 		ttl:     ttl,
-	}
+	}, nil
 }
 
 type UserInfo struct {
@@ -49,7 +47,7 @@ func (k *Keys) CreateToken(user *domain.User) (string, error) {
 
 	t.Claims = &UserClaims{
 		jwt.RegisteredClaims{
-			Subject: user.ID.String(),
+			Subject: user.Id.String(),
 
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(k.ttl)),

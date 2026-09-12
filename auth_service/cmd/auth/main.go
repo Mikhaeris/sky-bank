@@ -22,7 +22,11 @@ func main() {
 
 	cfg := config.GetConfig(logger)
 
-	keys := utils.NewKeys(cfg.Jwt.PrivKeyPath, cfg.Jwt.AccessTokenTtl, logger)
+	keys, err := utils.NewKeys(cfg.Jwt.PrivKeyPath, cfg.Jwt.AccessTokenTtl)
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
 
 	db, err := postgresclient.OpenDB(&cfg.Storage)
 	if err != nil {
@@ -40,7 +44,7 @@ func main() {
 	defer closeNotificationClient()
 	logger.Info("grpc notification_service connection established")
 
-	identityRepositories := repository.NewAuthRepository(db)
+	identityRepositories := repository.NewIdentityRepository(db)
 	tokenRepositories := repository.NewTokenRepository(db)
 
 	authService := service.NewAuthService(keys, logger, notificationClient, tokenRepositories, identityRepositories)
