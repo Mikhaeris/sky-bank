@@ -77,6 +77,10 @@ service AuthService {
     };
 
     rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (UpdateUserPasswordResponse) {
+        option (api.auth.v1.auth) = {
+          authentication: AUTHENTICATION_PUBLIC
+        };
+
         option (google.api.http) = {
             put: "/api/v1/auth/users/password"
             body: "*"
