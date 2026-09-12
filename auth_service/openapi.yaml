@@ -239,8 +239,6 @@ components:
             properties:
                 email:
                     type: string
-                password:
-                    type: string
         CreatePasswordResetTokenResponse:
             type: object
             properties:

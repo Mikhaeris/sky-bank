@@ -544,7 +544,6 @@ func (x *CreateActivationTokenResponse) GetUserUuid() string {
 type CreatePasswordResetTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -582,13 +581,6 @@ func (*CreatePasswordResetTokenRequest) Descriptor() ([]byte, []int) {
 func (x *CreatePasswordResetTokenRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
-	}
-	return ""
-}
-
-func (x *CreatePasswordResetTokenRequest) GetPassword() string {
-	if x != nil {
-		return x.Password
 	}
 	return ""
 }
@@ -955,10 +947,9 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"<\n" +
 	"\x1dCreateActivationTokenResponse\x12\x1b\n" +
-	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid\"S\n" +
+	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid\"7\n" +
 	"\x1fCreatePasswordResetTokenRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"?\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"?\n" +
 	" CreatePasswordResetTokenResponse\x12\x1b\n" +
 	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid\"M\n" +
 	"\x19UpdateUserPasswordRequest\x120\n" +
