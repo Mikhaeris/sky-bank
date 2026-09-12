@@ -34,7 +34,7 @@ func (h *NotificationHandler) SendWelcomeMessage(ctx context.Context, in *notifi
 			Status: "bad",
 		}, err
 	}
-	h.logger.Info("send email", "email", in.Email)
+	h.logger.Info("send welcome email", "email", in.Email)
 
 	return &notificationv1.WelcomeMessageResponse{
 		Status: "ok",
@@ -51,9 +51,29 @@ func (h *NotificationHandler) SendWelcomeActivatedMessage(ctx context.Context, i
 			Status: "bad",
 		}, err
 	}
-	h.logger.Info("send email", "email", in.Email)
+	h.logger.Info("send welcome activated email", "email", in.Email)
 
 	return &notificationv1.WelcomeActivatedMessageResponse{
+		Status: "ok",
+	}, nil
+}
+
+func (h *NotificationHandler) SendResetPasswordMessage(ctx context.Context, in *notificationv1.ResetPasswordMessageRequest) (*notificationv1.ResetPasswordMessageResponse, error) {
+	data := map[string]any{
+		"resetPasswordToken": in.ResetPasswordToken,
+		"userID":             in.IdentityUuid,
+	}
+
+	err := h.mailer.Send(in.Email, "user_reset_password.html", data)
+	if err != nil {
+		h.logger.Error(err.Error())
+		return &notificationv1.ResetPasswordMessageResponse{
+			Status: "bad",
+		}, err
+	}
+	h.logger.Info("send reset password email", "email", in.Email)
+
+	return &notificationv1.ResetPasswordMessageResponse{
 		Status: "ok",
 	}, nil
 }

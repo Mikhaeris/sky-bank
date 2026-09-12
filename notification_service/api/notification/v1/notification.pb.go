@@ -213,6 +213,110 @@ func (x *WelcomeActivatedMessageResponse) GetStatus() string {
 	return ""
 }
 
+type ResetPasswordMessageRequest struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	IdentityUuid       string                 `protobuf:"bytes,1,opt,name=identity_uuid,json=identityUuid,proto3" json:"identity_uuid,omitempty"`
+	Email              string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	ResetPasswordToken string                 `protobuf:"bytes,3,opt,name=reset_password_token,json=resetPasswordToken,proto3" json:"reset_password_token,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *ResetPasswordMessageRequest) Reset() {
+	*x = ResetPasswordMessageRequest{}
+	mi := &file_notification_v1_notification_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResetPasswordMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetPasswordMessageRequest) ProtoMessage() {}
+
+func (x *ResetPasswordMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_notification_v1_notification_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetPasswordMessageRequest.ProtoReflect.Descriptor instead.
+func (*ResetPasswordMessageRequest) Descriptor() ([]byte, []int) {
+	return file_notification_v1_notification_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ResetPasswordMessageRequest) GetIdentityUuid() string {
+	if x != nil {
+		return x.IdentityUuid
+	}
+	return ""
+}
+
+func (x *ResetPasswordMessageRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *ResetPasswordMessageRequest) GetResetPasswordToken() string {
+	if x != nil {
+		return x.ResetPasswordToken
+	}
+	return ""
+}
+
+type ResetPasswordMessageResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResetPasswordMessageResponse) Reset() {
+	*x = ResetPasswordMessageResponse{}
+	mi := &file_notification_v1_notification_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResetPasswordMessageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResetPasswordMessageResponse) ProtoMessage() {}
+
+func (x *ResetPasswordMessageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_notification_v1_notification_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResetPasswordMessageResponse.ProtoReflect.Descriptor instead.
+func (*ResetPasswordMessageResponse) Descriptor() ([]byte, []int) {
+	return file_notification_v1_notification_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ResetPasswordMessageResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 var File_notification_v1_notification_proto protoreflect.FileDescriptor
 
 const file_notification_v1_notification_proto_rawDesc = "" +
@@ -227,10 +331,17 @@ const file_notification_v1_notification_proto_rawDesc = "" +
 	"\x1eWelcomeActivatedMessageRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\"9\n" +
 	"\x1fWelcomeActivatedMessageResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status2\x8f\x02\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\"\x8a\x01\n" +
+	"\x1bResetPasswordMessageRequest\x12#\n" +
+	"\ridentity_uuid\x18\x01 \x01(\tR\fidentityUuid\x12\x14\n" +
+	"\x05email\x18\x02 \x01(\tR\x05email\x120\n" +
+	"\x14reset_password_token\x18\x03 \x01(\tR\x12resetPasswordToken\"6\n" +
+	"\x1cResetPasswordMessageResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status2\x90\x03\n" +
 	"\x13NotificationService\x12m\n" +
 	"\x12SendWelcomeMessage\x12*.api.notification.v1.WelcomeMessageRequest\x1a+.api.notification.v1.WelcomeMessageResponse\x12\x88\x01\n" +
-	"\x1bSendWelcomeActivatedMessage\x123.api.notification.v1.WelcomeActivatedMessageRequest\x1a4.api.notification.v1.WelcomeActivatedMessageResponseBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
+	"\x1bSendWelcomeActivatedMessage\x123.api.notification.v1.WelcomeActivatedMessageRequest\x1a4.api.notification.v1.WelcomeActivatedMessageResponse\x12\x7f\n" +
+	"\x18SendResetPasswordMessage\x120.api.notification.v1.ResetPasswordMessageRequest\x1a1.api.notification.v1.ResetPasswordMessageResponseBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
 
 var (
 	file_notification_v1_notification_proto_rawDescOnce sync.Once
@@ -244,20 +355,24 @@ func file_notification_v1_notification_proto_rawDescGZIP() []byte {
 	return file_notification_v1_notification_proto_rawDescData
 }
 
-var file_notification_v1_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_notification_v1_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_notification_v1_notification_proto_goTypes = []any{
 	(*WelcomeMessageRequest)(nil),           // 0: api.notification.v1.WelcomeMessageRequest
 	(*WelcomeMessageResponse)(nil),          // 1: api.notification.v1.WelcomeMessageResponse
 	(*WelcomeActivatedMessageRequest)(nil),  // 2: api.notification.v1.WelcomeActivatedMessageRequest
 	(*WelcomeActivatedMessageResponse)(nil), // 3: api.notification.v1.WelcomeActivatedMessageResponse
+	(*ResetPasswordMessageRequest)(nil),     // 4: api.notification.v1.ResetPasswordMessageRequest
+	(*ResetPasswordMessageResponse)(nil),    // 5: api.notification.v1.ResetPasswordMessageResponse
 }
 var file_notification_v1_notification_proto_depIdxs = []int32{
 	0, // 0: api.notification.v1.NotificationService.SendWelcomeMessage:input_type -> api.notification.v1.WelcomeMessageRequest
 	2, // 1: api.notification.v1.NotificationService.SendWelcomeActivatedMessage:input_type -> api.notification.v1.WelcomeActivatedMessageRequest
-	1, // 2: api.notification.v1.NotificationService.SendWelcomeMessage:output_type -> api.notification.v1.WelcomeMessageResponse
-	3, // 3: api.notification.v1.NotificationService.SendWelcomeActivatedMessage:output_type -> api.notification.v1.WelcomeActivatedMessageResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	4, // 2: api.notification.v1.NotificationService.SendResetPasswordMessage:input_type -> api.notification.v1.ResetPasswordMessageRequest
+	1, // 3: api.notification.v1.NotificationService.SendWelcomeMessage:output_type -> api.notification.v1.WelcomeMessageResponse
+	3, // 4: api.notification.v1.NotificationService.SendWelcomeActivatedMessage:output_type -> api.notification.v1.WelcomeActivatedMessageResponse
+	5, // 5: api.notification.v1.NotificationService.SendResetPasswordMessage:output_type -> api.notification.v1.ResetPasswordMessageResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -274,7 +389,7 @@ func file_notification_v1_notification_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_notification_v1_notification_proto_rawDesc), len(file_notification_v1_notification_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
