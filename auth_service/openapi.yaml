@@ -314,6 +314,8 @@ components:
             properties:
                 passwordResetToken:
                     type: string
+                password:
+                    type: string
         UpdateUserPasswordResponse:
             type: object
             properties:

@@ -148,6 +148,7 @@ message CreatePasswordResetTokenResponse {
 
 message UpdateUserPasswordRequest {
     string password_reset_token = 1;
+    string password = 2;
 }
 
 message UpdateUserPasswordResponse {
