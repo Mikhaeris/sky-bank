@@ -22,7 +22,6 @@ func NewNotificationHandler(logger *slog.Logger, mailer *mailer.Mailer) *Notific
 }
 
 func (h *NotificationHandler) SendWelcomeMessage(ctx context.Context, in *notificationv1.WelcomeMessageRequest) (*notificationv1.WelcomeMessageResponse, error) {
-	h.logger.Info("get request to send Email")
 	data := map[string]any{
 		"activationToken": in.ActivationToken,
 		"userID":          in.IdentityUuid,
@@ -35,8 +34,26 @@ func (h *NotificationHandler) SendWelcomeMessage(ctx context.Context, in *notifi
 			Status: "bad",
 		}, err
 	}
+	h.logger.Info("send email", "email", in.Email)
 
 	return &notificationv1.WelcomeMessageResponse{
+		Status: "ok",
+	}, nil
+}
+
+func (h *NotificationHandler) SendWelcomeActivatedMessage(ctx context.Context, in *notificationv1.WelcomeActivatedMessageRequest) (*notificationv1.WelcomeActivatedMessageResponse, error) {
+	data := map[string]any{}
+
+	err := h.mailer.Send(in.Email, "user_welcome_activated.html", data)
+	if err != nil {
+		h.logger.Error(err.Error())
+		return &notificationv1.WelcomeActivatedMessageResponse{
+			Status: "bad",
+		}, err
+	}
+	h.logger.Info("send email", "email", in.Email)
+
+	return &notificationv1.WelcomeActivatedMessageResponse{
 		Status: "ok",
 	}, nil
 }

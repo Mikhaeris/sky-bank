@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NotificationService_SendWelcomeMessage_FullMethodName = "/api.notification.v1.NotificationService/SendWelcomeMessage"
+	NotificationService_SendWelcomeMessage_FullMethodName          = "/api.notification.v1.NotificationService/SendWelcomeMessage"
+	NotificationService_SendWelcomeActivatedMessage_FullMethodName = "/api.notification.v1.NotificationService/SendWelcomeActivatedMessage"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotificationServiceClient interface {
 	SendWelcomeMessage(ctx context.Context, in *WelcomeMessageRequest, opts ...grpc.CallOption) (*WelcomeMessageResponse, error)
+	SendWelcomeActivatedMessage(ctx context.Context, in *WelcomeActivatedMessageRequest, opts ...grpc.CallOption) (*WelcomeActivatedMessageResponse, error)
 }
 
 type notificationServiceClient struct {
@@ -47,11 +49,22 @@ func (c *notificationServiceClient) SendWelcomeMessage(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *notificationServiceClient) SendWelcomeActivatedMessage(ctx context.Context, in *WelcomeActivatedMessageRequest, opts ...grpc.CallOption) (*WelcomeActivatedMessageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(WelcomeActivatedMessageResponse)
+	err := c.cc.Invoke(ctx, NotificationService_SendWelcomeActivatedMessage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NotificationServiceServer is the server API for NotificationService service.
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility.
 type NotificationServiceServer interface {
 	SendWelcomeMessage(context.Context, *WelcomeMessageRequest) (*WelcomeMessageResponse, error)
+	SendWelcomeActivatedMessage(context.Context, *WelcomeActivatedMessageRequest) (*WelcomeActivatedMessageResponse, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedNotificationServiceServer struct{}
 
 func (UnimplementedNotificationServiceServer) SendWelcomeMessage(context.Context, *WelcomeMessageRequest) (*WelcomeMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendWelcomeMessage not implemented")
+}
+func (UnimplementedNotificationServiceServer) SendWelcomeActivatedMessage(context.Context, *WelcomeActivatedMessageRequest) (*WelcomeActivatedMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendWelcomeActivatedMessage not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 func (UnimplementedNotificationServiceServer) testEmbeddedByValue()                             {}
@@ -104,6 +120,24 @@ func _NotificationService_SendWelcomeMessage_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationService_SendWelcomeActivatedMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WelcomeActivatedMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).SendWelcomeActivatedMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationService_SendWelcomeActivatedMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).SendWelcomeActivatedMessage(ctx, req.(*WelcomeActivatedMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NotificationService_ServiceDesc is the grpc.ServiceDesc for NotificationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendWelcomeMessage",
 			Handler:    _NotificationService_SendWelcomeMessage_Handler,
+		},
+		{
+			MethodName: "SendWelcomeActivatedMessage",
+			Handler:    _NotificationService_SendWelcomeActivatedMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

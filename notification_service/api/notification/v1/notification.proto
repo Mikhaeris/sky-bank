@@ -6,6 +6,7 @@ option go_package = "github.com/mikhaeris/sky-bank/notification_service/api/noti
 
 service NotificationService {
     rpc SendWelcomeMessage(WelcomeMessageRequest) returns (WelcomeMessageResponse);
+    rpc SendWelcomeActivatedMessage(WelcomeActivatedMessageRequest) returns (WelcomeActivatedMessageResponse);
 }
 
 message WelcomeMessageRequest {
@@ -15,5 +16,13 @@ message WelcomeMessageRequest {
 }
 
 message WelcomeMessageResponse {
+    string status = 1;
+}
+
+message WelcomeActivatedMessageRequest {
+    string email = 1;
+}
+
+message WelcomeActivatedMessageResponse {
     string status = 1;
 }
