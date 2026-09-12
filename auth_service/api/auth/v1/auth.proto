@@ -66,6 +66,10 @@ service AuthService {
     };
 
     rpc CreatePasswordResetToken(CreatePasswordResetTokenRequest) returns (CreatePasswordResetTokenResponse) {
+        option (api.auth.v1.auth) = {
+          authentication: AUTHENTICATION_PUBLIC
+        };
+
         option (google.api.http) = {
             post: "/api/v1/auth/tokens/password-reset"
             body: "*"

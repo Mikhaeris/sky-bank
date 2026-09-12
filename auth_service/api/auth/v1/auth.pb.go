@@ -967,13 +967,13 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid*H\n" +
 	"\x0eAuthentication\x12\x1b\n" +
 	"\x17AUTHENTICATION_REQUIRED\x10\x00\x12\x19\n" +
-	"\x15AUTHENTICATION_PUBLIC\x10\x012\x8c\t\n" +
+	"\x15AUTHENTICATION_PUBLIC\x10\x012\x92\t\n" +
 	"\vAuthService\x12\x81\x01\n" +
 	"\fRegisterUser\x12 .api.auth.v1.RegisterUserRequest\x1a!.api.auth.v1.RegisterUserResponse\",\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/users/register\x12\x82\x01\n" +
 	"\fActivateUser\x12 .api.auth.v1.ActivateUserRequest\x1a!.api.auth.v1.ActivateUserResponse\"-\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02!:\x01*\x1a\x1c/api/v1/auth/users/activated\x12\xaf\x01\n" +
 	"\x19CreateAuthenticationToken\x12-.api.auth.v1.CreateAuthenticationTokenRequest\x1a..api.auth.v1.CreateAuthenticationTokenResponse\"3\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02':\x01*\"\"/api/v1/auth/tokens/authentication\x12\x9f\x01\n" +
-	"\x15CreateActivationToken\x12).api.auth.v1.CreateActivationTokenRequest\x1a*.api.auth.v1.CreateActivationTokenResponse\"/\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/auth/tokens/activation\x12\xa6\x01\n" +
-	"\x18CreatePasswordResetToken\x12,.api.auth.v1.CreatePasswordResetTokenRequest\x1a-.api.auth.v1.CreatePasswordResetTokenResponse\"-\x82\xd3\xe4\x93\x02':\x01*\"\"/api/v1/auth/tokens/password-reset\x12\x8d\x01\n" +
+	"\x15CreateActivationToken\x12).api.auth.v1.CreateActivationTokenRequest\x1a*.api.auth.v1.CreateActivationTokenResponse\"/\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/auth/tokens/activation\x12\xac\x01\n" +
+	"\x18CreatePasswordResetToken\x12,.api.auth.v1.CreatePasswordResetTokenRequest\x1a-.api.auth.v1.CreatePasswordResetTokenResponse\"3\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02':\x01*\"\"/api/v1/auth/tokens/password-reset\x12\x8d\x01\n" +
 	"\x12UpdateUserPassword\x12&.api.auth.v1.UpdateUserPasswordRequest\x1a'.api.auth.v1.UpdateUserPasswordResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/api/v1/auth/users/password\x12~\n" +
 	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\".api.auth.v1.RefreshTokensResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/tokens/refresh\x12g\n" +
 	"\x06LogOut\x12\x1a.api.auth.v1.LogOutRequest\x1a\x1b.api.auth.v1.LogOutResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\x1a\x19/api/v1/auth/tokens/reset:M\n" +
