@@ -136,7 +136,6 @@ message CreateActivationTokenResponse {
 
 message CreatePasswordResetTokenRequest {
     string email = 1;
-    string password = 2;
 }
 
 message CreatePasswordResetTokenResponse {
