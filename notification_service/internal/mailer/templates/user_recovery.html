@@ -1,0 +1,41 @@
+{{define "subject"}}Sky Bank New LogIn{{end}}
+
+{{define "plainBody"}}
+
+We see new log in you account, if it's not you
+
+send a request to the `PUT /v1/users/activated` endpoint with the following JSON
+body to recover you account.
+
+{"token": "{{.securityToken}}"}
+
+Thanks,
+
+The Sky Bank Team
+{{end}}
+
+
+{{define "htmlBody"}}
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <p>We see new log in you account, if it's not you</p>
+
+    <p>send a request to the `PUT /v1/users/activated` endpoint with the following JSON</p>
+    <p>body to recover you account.</p>
+    <pre><code>
+    {"token": "{{.securityToken}}"}
+    </code></pre>
+
+    <p>Thanks,</p>
+    <p>The Sky Bank Team</p>
+</body>
+
+</html>
+{{end}}

@@ -77,3 +77,23 @@ func (h *NotificationHandler) SendResetPasswordMessage(ctx context.Context, in *
 		Status: "ok",
 	}, nil
 }
+
+func (h *NotificationHandler) SendRecoveryMessage(ctx context.Context, in *notificationv1.RecoveryMessageRequest) (*notificationv1.RecoveryMessageResponse, error) {
+	data := map[string]any{
+		"securityToken": in.SecurityToken,
+		"userID":        in.IdentityUuid,
+	}
+
+	err := h.mailer.Send(in.Email, "user_recovery.html", data)
+	if err != nil {
+		h.logger.Error(err.Error())
+		return &notificationv1.RecoveryMessageResponse{
+			Status: "bad",
+		}, err
+	}
+	h.logger.Info("send recovery email", "email", in.Email)
+
+	return &notificationv1.RecoveryMessageResponse{
+		Status: "ok",
+	}, nil
+}
