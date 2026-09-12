@@ -8,6 +8,9 @@ services:
     depends_on:
       auth:
         condition: service_started
+    volumes:
+      - ./keys/public.pem:/keys/public.pem:ro
+
 
   auth:
     build: auth_service/

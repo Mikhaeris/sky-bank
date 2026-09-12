@@ -19,3 +19,9 @@ compose/no_cache_up:
 .PHONY:
 compose/ps:
 	docker compose ps
+
+## compose/restart name=$1: rebuild without cache and restart container with name=$1
+.PHONY: compose/restart
+compose/restart:
+	docker compose build --no-cache ${name}
+	docker compose up -d --force-recreate ${name}
