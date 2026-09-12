@@ -403,8 +403,7 @@ func (x *CreateAuthenticationTokenRequest) GetPassword() string {
 
 type CreateAuthenticationTokenResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Tokens        *Tokens                `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
+	Tokens        *Tokens                `protobuf:"bytes,1,opt,name=tokens,proto3" json:"tokens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -437,13 +436,6 @@ func (x *CreateAuthenticationTokenResponse) ProtoReflect() protoreflect.Message 
 // Deprecated: Use CreateAuthenticationTokenResponse.ProtoReflect.Descriptor instead.
 func (*CreateAuthenticationTokenResponse) Descriptor() ([]byte, []int) {
 	return file_auth_v1_auth_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *CreateAuthenticationTokenResponse) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
 }
 
 func (x *CreateAuthenticationTokenResponse) GetTokens() *Tokens {
@@ -956,10 +948,9 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid\"T\n" +
 	" CreateAuthenticationTokenRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"`\n" +
-	"!CreateAuthenticationTokenResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12+\n" +
-	"\x06tokens\x18\x02 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\"P\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"P\n" +
+	"!CreateAuthenticationTokenResponse\x12+\n" +
+	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\"P\n" +
 	"\x1cCreateActivationTokenRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"<\n" +
@@ -985,7 +976,7 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid*H\n" +
 	"\x0eAuthentication\x12\x1b\n" +
 	"\x17AUTHENTICATION_REQUIRED\x10\x00\x12\x19\n" +
-	"\x15AUTHENTICATION_PUBLIC\x10\x012\x89\t\n" +
+	"\x15AUTHENTICATION_PUBLIC\x10\x012\x8c\t\n" +
 	"\vAuthService\x12\x81\x01\n" +
 	"\fRegisterUser\x12 .api.auth.v1.RegisterUserRequest\x1a!.api.auth.v1.RegisterUserResponse\",\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/users/register\x12\x82\x01\n" +
 	"\fActivateUser\x12 .api.auth.v1.ActivateUserRequest\x1a!.api.auth.v1.ActivateUserResponse\"-\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02!:\x01*\x1a\x1c/api/v1/auth/users/activated\x12\xaf\x01\n" +
@@ -993,8 +984,8 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\x15CreateActivationToken\x12).api.auth.v1.CreateActivationTokenRequest\x1a*.api.auth.v1.CreateActivationTokenResponse\"/\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/auth/tokens/activation\x12\xa6\x01\n" +
 	"\x18CreatePasswordResetToken\x12,.api.auth.v1.CreatePasswordResetTokenRequest\x1a-.api.auth.v1.CreatePasswordResetTokenResponse\"-\x82\xd3\xe4\x93\x02':\x01*\"\"/api/v1/auth/tokens/password-reset\x12\x8d\x01\n" +
 	"\x12UpdateUserPassword\x12&.api.auth.v1.UpdateUserPasswordRequest\x1a'.api.auth.v1.UpdateUserPasswordResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/api/v1/auth/users/password\x12~\n" +
-	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\".api.auth.v1.RefreshTokensResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/tokens/refresh\x12d\n" +
-	"\x06LogOut\x12\x1a.api.auth.v1.LogOutRequest\x1a\x1b.api.auth.v1.LogOutResponse\"!\x82\xd3\xe4\x93\x02\x1b\x1a\x19/api/v1/auth/tokens/reset:M\n" +
+	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\".api.auth.v1.RefreshTokensResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/tokens/refresh\x12g\n" +
+	"\x06LogOut\x12\x1a.api.auth.v1.LogOutRequest\x1a\x1b.api.auth.v1.LogOutResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\x1a\x19/api/v1/auth/tokens/reset:M\n" +
 	"\x04auth\x12\x1e.google.protobuf.MethodOptions\x18ц\x03 \x01(\v2\x17.api.auth.v1.AuthPolicyR\x04authB?Z=github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1b\x06proto3"
 
 var (

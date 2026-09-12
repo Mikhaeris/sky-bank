@@ -107,19 +107,12 @@ paths:
             tags:
                 - AuthService
             operationId: AuthService_LogOut
-            parameters:
-                - name: userUuid
-                  in: query
-                  schema:
-                    type: string
-                - name: tokens.accessToken
-                  in: query
-                  schema:
-                    type: string
-                - name: tokens.refreshToken
-                  in: query
-                  schema:
-                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/LogOutRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -239,8 +232,6 @@ components:
         CreateAuthenticationTokenResponse:
             type: object
             properties:
-                id:
-                    type: string
                 tokens:
                     $ref: '#/components/schemas/Tokens'
         CreatePasswordResetTokenRequest:
@@ -263,6 +254,13 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        LogOutRequest:
+            type: object
+            properties:
+                userUuid:
+                    type: string
+                tokens:
+                    $ref: '#/components/schemas/Tokens'
         LogOutResponse:
             type: object
             properties:
