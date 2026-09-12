@@ -22,7 +22,7 @@ extend google.protobuf.MethodOptions {
 
 service AuthService {
     rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse) {
-        option (auth.v1.auth) = {
+        option (api.auth.v1.auth) = {
           authentication: AUTHENTICATION_PUBLIC
         };
 
@@ -33,7 +33,7 @@ service AuthService {
     };
 
     rpc ActivateUser(ActivateUserRequest) returns (ActivateUserResponse) {
-        option (auth.v1.auth) = {
+        option (api.auth.v1.auth) = {
           authentication: AUTHENTICATION_PUBLIC
         };
 
@@ -44,7 +44,7 @@ service AuthService {
     };
 
     rpc CreateAuthenticationToken(CreateAuthenticationTokenRequest) returns (CreateAuthenticationTokenResponse) {
-        option (auth.v1.auth) = {
+        option (api.auth.v1.auth) = {
           authentication: AUTHENTICATION_PUBLIC
         };
 
@@ -55,7 +55,7 @@ service AuthService {
     };
 
     rpc CreateActivationToken(CreateActivationTokenRequest) returns (CreateActivationTokenResponse) {
-        option (auth.v1.auth) = {
+        option (api.auth.v1.auth) = {
           authentication: AUTHENTICATION_PUBLIC
         };
 

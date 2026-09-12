@@ -13,4 +13,5 @@ grpc/generate:
 		--go_out=paths=source_relative:./api \
 		--go-grpc_out=paths=source_relative:./api \
 		--grpc-gateway_out=paths=source_relative:./api \
+		--openapi_out==paths=source_relative:. \
 		auth/v1/auth.proto
