@@ -3,11 +3,29 @@ syntax = "proto3";
 package api.auth.v1;
 
 import "google/api/annotations.proto";
+import "google/protobuf/descriptor.proto";
 
 option go_package = "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1";
 
+enum Authentication {
+  AUTHENTICATION_REQUIRED = 0;
+  AUTHENTICATION_PUBLIC = 1;
+}
+
+message AuthPolicy {
+  Authentication authentication = 1;
+}
+
+extend google.protobuf.MethodOptions {
+  AuthPolicy auth = 50001;
+}
+
 service AuthService {
     rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse) {
+        option (auth.v1.auth) = {
+          authentication: AUTHENTICATION_PUBLIC
+        };
+
         option (google.api.http) = {
             post: "/api/v1/auth/users/register"
             body: "*"
@@ -15,6 +33,10 @@ service AuthService {
     };
 
     rpc ActivateUser(ActivateUserRequest) returns (ActivateUserResponse) {
+        option (auth.v1.auth) = {
+          authentication: AUTHENTICATION_PUBLIC
+        };
+
         option (google.api.http) = {
             put: "/api/v1/auth/users/activated"
             body: "*"
@@ -22,6 +44,10 @@ service AuthService {
     };
 
     rpc CreateAuthenticationToken(CreateAuthenticationTokenRequest) returns (CreateAuthenticationTokenResponse) {
+        option (auth.v1.auth) = {
+          authentication: AUTHENTICATION_PUBLIC
+        };
+
         option (google.api.http) = {
             post: "/api/v1/auth/tokens/authentication"
             body: "*"
@@ -29,6 +55,10 @@ service AuthService {
     };
 
     rpc CreateActivationToken(CreateActivationTokenRequest) returns (CreateActivationTokenResponse) {
+        option (auth.v1.auth) = {
+          authentication: AUTHENTICATION_PUBLIC
+        };
+
         option (google.api.http) = {
             post: "/api/v1/auth/tokens/activation"
             body: "*"
