@@ -909,6 +909,102 @@ func (x *LogOutResponse) GetUserUuid() string {
 	return ""
 }
 
+type RecoverCompromisedAccountRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SecurityToken string                 `protobuf:"bytes,1,opt,name=security_token,json=securityToken,proto3" json:"security_token,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RecoverCompromisedAccountRequest) Reset() {
+	*x = RecoverCompromisedAccountRequest{}
+	mi := &file_auth_v1_auth_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RecoverCompromisedAccountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecoverCompromisedAccountRequest) ProtoMessage() {}
+
+func (x *RecoverCompromisedAccountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_v1_auth_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecoverCompromisedAccountRequest.ProtoReflect.Descriptor instead.
+func (*RecoverCompromisedAccountRequest) Descriptor() ([]byte, []int) {
+	return file_auth_v1_auth_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *RecoverCompromisedAccountRequest) GetSecurityToken() string {
+	if x != nil {
+		return x.SecurityToken
+	}
+	return ""
+}
+
+func (x *RecoverCompromisedAccountRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type RecoverCompromisedAccountResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserUuid      string                 `protobuf:"bytes,1,opt,name=user_uuid,json=userUuid,proto3" json:"user_uuid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RecoverCompromisedAccountResponse) Reset() {
+	*x = RecoverCompromisedAccountResponse{}
+	mi := &file_auth_v1_auth_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RecoverCompromisedAccountResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecoverCompromisedAccountResponse) ProtoMessage() {}
+
+func (x *RecoverCompromisedAccountResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_v1_auth_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecoverCompromisedAccountResponse.ProtoReflect.Descriptor instead.
+func (*RecoverCompromisedAccountResponse) Descriptor() ([]byte, []int) {
+	return file_auth_v1_auth_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *RecoverCompromisedAccountResponse) GetUserUuid() string {
+	if x != nil {
+		return x.UserUuid
+	}
+	return ""
+}
+
 var file_auth_v1_auth_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*descriptorpb.MethodOptions)(nil),
@@ -973,18 +1069,25 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid\x12+\n" +
 	"\x06tokens\x18\x02 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\"-\n" +
 	"\x0eLogOutResponse\x12\x1b\n" +
+	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid\"e\n" +
+	" RecoverCompromisedAccountRequest\x12%\n" +
+	"\x0esecurity_token\x18\x01 \x01(\tR\rsecurityToken\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"@\n" +
+	"!RecoverCompromisedAccountResponse\x12\x1b\n" +
 	"\tuser_uuid\x18\x01 \x01(\tR\buserUuid*H\n" +
 	"\x0eAuthentication\x12\x1b\n" +
 	"\x17AUTHENTICATION_REQUIRED\x10\x00\x12\x19\n" +
-	"\x15AUTHENTICATION_PUBLIC\x10\x012\x98\t\n" +
+	"\x15AUTHENTICATION_PUBLIC\x10\x012\xc9\n" +
+	"\n" +
 	"\vAuthService\x12\x81\x01\n" +
 	"\fRegisterUser\x12 .api.auth.v1.RegisterUserRequest\x1a!.api.auth.v1.RegisterUserResponse\",\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/users/register\x12\x82\x01\n" +
 	"\fActivateUser\x12 .api.auth.v1.ActivateUserRequest\x1a!.api.auth.v1.ActivateUserResponse\"-\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02!:\x01*\x1a\x1c/api/v1/auth/users/activated\x12\xaf\x01\n" +
 	"\x19CreateAuthenticationToken\x12-.api.auth.v1.CreateAuthenticationTokenRequest\x1a..api.auth.v1.CreateAuthenticationTokenResponse\"3\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02':\x01*\"\"/api/v1/auth/tokens/authentication\x12\x9f\x01\n" +
 	"\x15CreateActivationToken\x12).api.auth.v1.CreateActivationTokenRequest\x1a*.api.auth.v1.CreateActivationTokenResponse\"/\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/auth/tokens/activation\x12\xac\x01\n" +
 	"\x18CreatePasswordResetToken\x12,.api.auth.v1.CreatePasswordResetTokenRequest\x1a-.api.auth.v1.CreatePasswordResetTokenResponse\"3\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02':\x01*\"\"/api/v1/auth/tokens/password-reset\x12\x93\x01\n" +
-	"\x12UpdateUserPassword\x12&.api.auth.v1.UpdateUserPasswordRequest\x1a'.api.auth.v1.UpdateUserPasswordResponse\",\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/api/v1/auth/users/password\x12~\n" +
-	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\".api.auth.v1.RefreshTokensResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/tokens/refresh\x12g\n" +
+	"\x12UpdateUserPassword\x12&.api.auth.v1.UpdateUserPasswordRequest\x1a'.api.auth.v1.UpdateUserPasswordResponse\",\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02 :\x01*\x1a\x1b/api/v1/auth/users/password\x12\x84\x01\n" +
+	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\".api.auth.v1.RefreshTokensResponse\",\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/api/v1/auth/tokens/refresh\x12\xa7\x01\n" +
+	"\x19RecoverCompromisedAccount\x12-.api.auth.v1.RecoverCompromisedAccountRequest\x1a..api.auth.v1.RecoverCompromisedAccountResponse\"+\x8a\xb5\x18\x02\b\x01\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/auth/users/recover\x12g\n" +
 	"\x06LogOut\x12\x1a.api.auth.v1.LogOutRequest\x1a\x1b.api.auth.v1.LogOutResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\x1a\x19/api/v1/auth/tokens/reset:M\n" +
 	"\x04auth\x12\x1e.google.protobuf.MethodOptions\x18ц\x03 \x01(\v2\x17.api.auth.v1.AuthPolicyR\x04authB?Z=github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1b\x06proto3"
 
@@ -1001,7 +1104,7 @@ func file_auth_v1_auth_proto_rawDescGZIP() []byte {
 }
 
 var file_auth_v1_auth_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_auth_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_auth_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_auth_v1_auth_proto_goTypes = []any{
 	(Authentication)(0),                       // 0: api.auth.v1.Authentication
 	(*AuthPolicy)(nil),                        // 1: api.auth.v1.AuthPolicy
@@ -1022,7 +1125,9 @@ var file_auth_v1_auth_proto_goTypes = []any{
 	(*RefreshTokensResponse)(nil),             // 16: api.auth.v1.RefreshTokensResponse
 	(*LogOutRequest)(nil),                     // 17: api.auth.v1.LogOutRequest
 	(*LogOutResponse)(nil),                    // 18: api.auth.v1.LogOutResponse
-	(*descriptorpb.MethodOptions)(nil),        // 19: google.protobuf.MethodOptions
+	(*RecoverCompromisedAccountRequest)(nil),  // 19: api.auth.v1.RecoverCompromisedAccountRequest
+	(*RecoverCompromisedAccountResponse)(nil), // 20: api.auth.v1.RecoverCompromisedAccountResponse
+	(*descriptorpb.MethodOptions)(nil),        // 21: google.protobuf.MethodOptions
 }
 var file_auth_v1_auth_proto_depIdxs = []int32{
 	0,  // 0: api.auth.v1.AuthPolicy.authentication:type_name -> api.auth.v1.Authentication
@@ -1030,7 +1135,7 @@ var file_auth_v1_auth_proto_depIdxs = []int32{
 	2,  // 2: api.auth.v1.RefreshTokensRequest.tokens:type_name -> api.auth.v1.Tokens
 	2,  // 3: api.auth.v1.RefreshTokensResponse.tokens:type_name -> api.auth.v1.Tokens
 	2,  // 4: api.auth.v1.LogOutRequest.tokens:type_name -> api.auth.v1.Tokens
-	19, // 5: api.auth.v1.auth:extendee -> google.protobuf.MethodOptions
+	21, // 5: api.auth.v1.auth:extendee -> google.protobuf.MethodOptions
 	1,  // 6: api.auth.v1.auth:type_name -> api.auth.v1.AuthPolicy
 	3,  // 7: api.auth.v1.AuthService.RegisterUser:input_type -> api.auth.v1.RegisterUserRequest
 	5,  // 8: api.auth.v1.AuthService.ActivateUser:input_type -> api.auth.v1.ActivateUserRequest
@@ -1039,17 +1144,19 @@ var file_auth_v1_auth_proto_depIdxs = []int32{
 	11, // 11: api.auth.v1.AuthService.CreatePasswordResetToken:input_type -> api.auth.v1.CreatePasswordResetTokenRequest
 	13, // 12: api.auth.v1.AuthService.UpdateUserPassword:input_type -> api.auth.v1.UpdateUserPasswordRequest
 	15, // 13: api.auth.v1.AuthService.RefreshTokens:input_type -> api.auth.v1.RefreshTokensRequest
-	17, // 14: api.auth.v1.AuthService.LogOut:input_type -> api.auth.v1.LogOutRequest
-	4,  // 15: api.auth.v1.AuthService.RegisterUser:output_type -> api.auth.v1.RegisterUserResponse
-	6,  // 16: api.auth.v1.AuthService.ActivateUser:output_type -> api.auth.v1.ActivateUserResponse
-	8,  // 17: api.auth.v1.AuthService.CreateAuthenticationToken:output_type -> api.auth.v1.CreateAuthenticationTokenResponse
-	10, // 18: api.auth.v1.AuthService.CreateActivationToken:output_type -> api.auth.v1.CreateActivationTokenResponse
-	12, // 19: api.auth.v1.AuthService.CreatePasswordResetToken:output_type -> api.auth.v1.CreatePasswordResetTokenResponse
-	14, // 20: api.auth.v1.AuthService.UpdateUserPassword:output_type -> api.auth.v1.UpdateUserPasswordResponse
-	16, // 21: api.auth.v1.AuthService.RefreshTokens:output_type -> api.auth.v1.RefreshTokensResponse
-	18, // 22: api.auth.v1.AuthService.LogOut:output_type -> api.auth.v1.LogOutResponse
-	15, // [15:23] is the sub-list for method output_type
-	7,  // [7:15] is the sub-list for method input_type
+	19, // 14: api.auth.v1.AuthService.RecoverCompromisedAccount:input_type -> api.auth.v1.RecoverCompromisedAccountRequest
+	17, // 15: api.auth.v1.AuthService.LogOut:input_type -> api.auth.v1.LogOutRequest
+	4,  // 16: api.auth.v1.AuthService.RegisterUser:output_type -> api.auth.v1.RegisterUserResponse
+	6,  // 17: api.auth.v1.AuthService.ActivateUser:output_type -> api.auth.v1.ActivateUserResponse
+	8,  // 18: api.auth.v1.AuthService.CreateAuthenticationToken:output_type -> api.auth.v1.CreateAuthenticationTokenResponse
+	10, // 19: api.auth.v1.AuthService.CreateActivationToken:output_type -> api.auth.v1.CreateActivationTokenResponse
+	12, // 20: api.auth.v1.AuthService.CreatePasswordResetToken:output_type -> api.auth.v1.CreatePasswordResetTokenResponse
+	14, // 21: api.auth.v1.AuthService.UpdateUserPassword:output_type -> api.auth.v1.UpdateUserPasswordResponse
+	16, // 22: api.auth.v1.AuthService.RefreshTokens:output_type -> api.auth.v1.RefreshTokensResponse
+	20, // 23: api.auth.v1.AuthService.RecoverCompromisedAccount:output_type -> api.auth.v1.RecoverCompromisedAccountResponse
+	18, // 24: api.auth.v1.AuthService.LogOut:output_type -> api.auth.v1.LogOutResponse
+	16, // [16:25] is the sub-list for method output_type
+	7,  // [7:16] is the sub-list for method input_type
 	6,  // [6:7] is the sub-list for extension type_name
 	5,  // [5:6] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -1066,7 +1173,7 @@ func file_auth_v1_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_v1_auth_proto_rawDesc), len(file_auth_v1_auth_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   18,
+			NumMessages:   20,
 			NumExtensions: 1,
 			NumServices:   1,
 		},

@@ -88,11 +88,26 @@ service AuthService {
     };
 
     rpc RefreshTokens(RefreshTokensRequest) returns (RefreshTokensResponse) {
+        option (api.auth.v1.auth) = {
+          authentication: AUTHENTICATION_PUBLIC
+        };
+
         option (google.api.http) = {
             post: "/api/v1/auth/tokens/refresh"
             body: "*"
         };
     };
+
+    rpc RecoverCompromisedAccount(RecoverCompromisedAccountRequest) returns (RecoverCompromisedAccountResponse) {
+        option (api.auth.v1.auth) = {
+          authentication: AUTHENTICATION_PUBLIC
+        };
+
+        option (google.api.http) = {
+            post: "/api/v1/auth/users/recover"
+            body: "*"
+        };
+    }
 
     rpc LogOut(LogOutRequest) returns (LogOutResponse) {
         option (google.api.http) = {
@@ -173,5 +188,14 @@ message LogOutRequest {
 }
 
 message LogOutResponse {
+    string user_uuid = 1;
+}
+
+message RecoverCompromisedAccountRequest {
+    string security_token = 1;
+    string password = 2;
+}
+
+message RecoverCompromisedAccountResponse {
     string user_uuid = 1;
 }

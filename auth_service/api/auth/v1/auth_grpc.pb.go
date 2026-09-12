@@ -26,6 +26,7 @@ const (
 	AuthService_CreatePasswordResetToken_FullMethodName  = "/api.auth.v1.AuthService/CreatePasswordResetToken"
 	AuthService_UpdateUserPassword_FullMethodName        = "/api.auth.v1.AuthService/UpdateUserPassword"
 	AuthService_RefreshTokens_FullMethodName             = "/api.auth.v1.AuthService/RefreshTokens"
+	AuthService_RecoverCompromisedAccount_FullMethodName = "/api.auth.v1.AuthService/RecoverCompromisedAccount"
 	AuthService_LogOut_FullMethodName                    = "/api.auth.v1.AuthService/LogOut"
 )
 
@@ -40,6 +41,7 @@ type AuthServiceClient interface {
 	CreatePasswordResetToken(ctx context.Context, in *CreatePasswordResetTokenRequest, opts ...grpc.CallOption) (*CreatePasswordResetTokenResponse, error)
 	UpdateUserPassword(ctx context.Context, in *UpdateUserPasswordRequest, opts ...grpc.CallOption) (*UpdateUserPasswordResponse, error)
 	RefreshTokens(ctx context.Context, in *RefreshTokensRequest, opts ...grpc.CallOption) (*RefreshTokensResponse, error)
+	RecoverCompromisedAccount(ctx context.Context, in *RecoverCompromisedAccountRequest, opts ...grpc.CallOption) (*RecoverCompromisedAccountResponse, error)
 	LogOut(ctx context.Context, in *LogOutRequest, opts ...grpc.CallOption) (*LogOutResponse, error)
 }
 
@@ -121,6 +123,16 @@ func (c *authServiceClient) RefreshTokens(ctx context.Context, in *RefreshTokens
 	return out, nil
 }
 
+func (c *authServiceClient) RecoverCompromisedAccount(ctx context.Context, in *RecoverCompromisedAccountRequest, opts ...grpc.CallOption) (*RecoverCompromisedAccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RecoverCompromisedAccountResponse)
+	err := c.cc.Invoke(ctx, AuthService_RecoverCompromisedAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) LogOut(ctx context.Context, in *LogOutRequest, opts ...grpc.CallOption) (*LogOutResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LogOutResponse)
@@ -142,6 +154,7 @@ type AuthServiceServer interface {
 	CreatePasswordResetToken(context.Context, *CreatePasswordResetTokenRequest) (*CreatePasswordResetTokenResponse, error)
 	UpdateUserPassword(context.Context, *UpdateUserPasswordRequest) (*UpdateUserPasswordResponse, error)
 	RefreshTokens(context.Context, *RefreshTokensRequest) (*RefreshTokensResponse, error)
+	RecoverCompromisedAccount(context.Context, *RecoverCompromisedAccountRequest) (*RecoverCompromisedAccountResponse, error)
 	LogOut(context.Context, *LogOutRequest) (*LogOutResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
@@ -173,6 +186,9 @@ func (UnimplementedAuthServiceServer) UpdateUserPassword(context.Context, *Updat
 }
 func (UnimplementedAuthServiceServer) RefreshTokens(context.Context, *RefreshTokensRequest) (*RefreshTokensResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshTokens not implemented")
+}
+func (UnimplementedAuthServiceServer) RecoverCompromisedAccount(context.Context, *RecoverCompromisedAccountRequest) (*RecoverCompromisedAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RecoverCompromisedAccount not implemented")
 }
 func (UnimplementedAuthServiceServer) LogOut(context.Context, *LogOutRequest) (*LogOutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
@@ -324,6 +340,24 @@ func _AuthService_RefreshTokens_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_RecoverCompromisedAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RecoverCompromisedAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RecoverCompromisedAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RecoverCompromisedAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RecoverCompromisedAccount(ctx, req.(*RecoverCompromisedAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_LogOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LogOutRequest)
 	if err := dec(in); err != nil {
@@ -376,6 +410,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RefreshTokens",
 			Handler:    _AuthService_RefreshTokens_Handler,
+		},
+		{
+			MethodName: "RecoverCompromisedAccount",
+			Handler:    _AuthService_RecoverCompromisedAccount_Handler,
 		},
 		{
 			MethodName: "LogOut",
