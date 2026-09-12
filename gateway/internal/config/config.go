@@ -15,6 +15,9 @@ type Config struct {
 	Auth struct {
 		Addr string `yaml:"addr"`
 	} `yaml:"auth"`
+	Jwt struct {
+		PubKeyPath string `yaml:"pub_key_path"`
+	} `yaml:"jwt"`
 }
 
 const configPath = "config.yaml"

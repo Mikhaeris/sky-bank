@@ -7,6 +7,7 @@ import (
 
 	"github.com/mikhaeris/sky-bank/gateway/internal/config"
 	"github.com/mikhaeris/sky-bank/gateway/internal/registers"
+	"github.com/mikhaeris/sky-bank/gateway/internal/utils"
 )
 
 func main() {
@@ -14,7 +15,13 @@ func main() {
 
 	cfg := config.GetConfig(logger)
 
-	serverMux, clenup, err := registers.RegisterAll(cfg.Auth.Addr)
+	tokenVerifier, err := utils.NewTokenVerifier(cfg.Jwt.PubKeyPath)
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
+
+	serverMux, clenup, err := registers.RegisterAll(cfg.Auth.Addr, tokenVerifier)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
