@@ -9,6 +9,7 @@ service NotificationService {
     rpc SendWelcomeActivatedMessage(WelcomeActivatedMessageRequest) returns (WelcomeActivatedMessageResponse);
     rpc SendResetPasswordMessage(ResetPasswordMessageRequest) returns (ResetPasswordMessageResponse);
     rpc SendRecoveryMessage(RecoveryMessageRequest) returns (RecoveryMessageResponse);
+    rpc SendConfirmPasswordResetMessage(ConfirmPasswordResetMessageRequest) returns (ConfirmPasswordResetMessageResponse);
 }
 
 message WelcomeMessageRequest {
@@ -46,5 +47,13 @@ message RecoveryMessageRequest {
 }
 
 message RecoveryMessageResponse {
+    string status = 1;
+}
+
+message ConfirmPasswordResetMessageRequest {
+    string email = 1;
+}
+
+message ConfirmPasswordResetMessageResponse {
     string status = 1;
 }

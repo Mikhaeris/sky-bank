@@ -421,6 +421,94 @@ func (x *RecoveryMessageResponse) GetStatus() string {
 	return ""
 }
 
+type ConfirmPasswordResetMessageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ConfirmPasswordResetMessageRequest) Reset() {
+	*x = ConfirmPasswordResetMessageRequest{}
+	mi := &file_notification_v1_notification_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConfirmPasswordResetMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConfirmPasswordResetMessageRequest) ProtoMessage() {}
+
+func (x *ConfirmPasswordResetMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_notification_v1_notification_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConfirmPasswordResetMessageRequest.ProtoReflect.Descriptor instead.
+func (*ConfirmPasswordResetMessageRequest) Descriptor() ([]byte, []int) {
+	return file_notification_v1_notification_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *ConfirmPasswordResetMessageRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+type ConfirmPasswordResetMessageResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ConfirmPasswordResetMessageResponse) Reset() {
+	*x = ConfirmPasswordResetMessageResponse{}
+	mi := &file_notification_v1_notification_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConfirmPasswordResetMessageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConfirmPasswordResetMessageResponse) ProtoMessage() {}
+
+func (x *ConfirmPasswordResetMessageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_notification_v1_notification_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConfirmPasswordResetMessageResponse.ProtoReflect.Descriptor instead.
+func (*ConfirmPasswordResetMessageResponse) Descriptor() ([]byte, []int) {
+	return file_notification_v1_notification_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ConfirmPasswordResetMessageResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
 var File_notification_v1_notification_proto protoreflect.FileDescriptor
 
 const file_notification_v1_notification_proto_rawDesc = "" +
@@ -447,12 +535,17 @@ const file_notification_v1_notification_proto_rawDesc = "" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12%\n" +
 	"\x0esecurity_token\x18\x03 \x01(\tR\rsecurityToken\"1\n" +
 	"\x17RecoveryMessageResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status2\x82\x04\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\":\n" +
+	"\"ConfirmPasswordResetMessageRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"=\n" +
+	"#ConfirmPasswordResetMessageResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status2\x99\x05\n" +
 	"\x13NotificationService\x12m\n" +
 	"\x12SendWelcomeMessage\x12*.api.notification.v1.WelcomeMessageRequest\x1a+.api.notification.v1.WelcomeMessageResponse\x12\x88\x01\n" +
 	"\x1bSendWelcomeActivatedMessage\x123.api.notification.v1.WelcomeActivatedMessageRequest\x1a4.api.notification.v1.WelcomeActivatedMessageResponse\x12\x7f\n" +
 	"\x18SendResetPasswordMessage\x120.api.notification.v1.ResetPasswordMessageRequest\x1a1.api.notification.v1.ResetPasswordMessageResponse\x12p\n" +
-	"\x13SendRecoveryMessage\x12+.api.notification.v1.RecoveryMessageRequest\x1a,.api.notification.v1.RecoveryMessageResponseBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
+	"\x13SendRecoveryMessage\x12+.api.notification.v1.RecoveryMessageRequest\x1a,.api.notification.v1.RecoveryMessageResponse\x12\x94\x01\n" +
+	"\x1fSendConfirmPasswordResetMessage\x127.api.notification.v1.ConfirmPasswordResetMessageRequest\x1a8.api.notification.v1.ConfirmPasswordResetMessageResponseBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
 
 var (
 	file_notification_v1_notification_proto_rawDescOnce sync.Once
@@ -466,28 +559,32 @@ func file_notification_v1_notification_proto_rawDescGZIP() []byte {
 	return file_notification_v1_notification_proto_rawDescData
 }
 
-var file_notification_v1_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_notification_v1_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_notification_v1_notification_proto_goTypes = []any{
-	(*WelcomeMessageRequest)(nil),           // 0: api.notification.v1.WelcomeMessageRequest
-	(*WelcomeMessageResponse)(nil),          // 1: api.notification.v1.WelcomeMessageResponse
-	(*WelcomeActivatedMessageRequest)(nil),  // 2: api.notification.v1.WelcomeActivatedMessageRequest
-	(*WelcomeActivatedMessageResponse)(nil), // 3: api.notification.v1.WelcomeActivatedMessageResponse
-	(*ResetPasswordMessageRequest)(nil),     // 4: api.notification.v1.ResetPasswordMessageRequest
-	(*ResetPasswordMessageResponse)(nil),    // 5: api.notification.v1.ResetPasswordMessageResponse
-	(*RecoveryMessageRequest)(nil),          // 6: api.notification.v1.RecoveryMessageRequest
-	(*RecoveryMessageResponse)(nil),         // 7: api.notification.v1.RecoveryMessageResponse
+	(*WelcomeMessageRequest)(nil),               // 0: api.notification.v1.WelcomeMessageRequest
+	(*WelcomeMessageResponse)(nil),              // 1: api.notification.v1.WelcomeMessageResponse
+	(*WelcomeActivatedMessageRequest)(nil),      // 2: api.notification.v1.WelcomeActivatedMessageRequest
+	(*WelcomeActivatedMessageResponse)(nil),     // 3: api.notification.v1.WelcomeActivatedMessageResponse
+	(*ResetPasswordMessageRequest)(nil),         // 4: api.notification.v1.ResetPasswordMessageRequest
+	(*ResetPasswordMessageResponse)(nil),        // 5: api.notification.v1.ResetPasswordMessageResponse
+	(*RecoveryMessageRequest)(nil),              // 6: api.notification.v1.RecoveryMessageRequest
+	(*RecoveryMessageResponse)(nil),             // 7: api.notification.v1.RecoveryMessageResponse
+	(*ConfirmPasswordResetMessageRequest)(nil),  // 8: api.notification.v1.ConfirmPasswordResetMessageRequest
+	(*ConfirmPasswordResetMessageResponse)(nil), // 9: api.notification.v1.ConfirmPasswordResetMessageResponse
 }
 var file_notification_v1_notification_proto_depIdxs = []int32{
 	0, // 0: api.notification.v1.NotificationService.SendWelcomeMessage:input_type -> api.notification.v1.WelcomeMessageRequest
 	2, // 1: api.notification.v1.NotificationService.SendWelcomeActivatedMessage:input_type -> api.notification.v1.WelcomeActivatedMessageRequest
 	4, // 2: api.notification.v1.NotificationService.SendResetPasswordMessage:input_type -> api.notification.v1.ResetPasswordMessageRequest
 	6, // 3: api.notification.v1.NotificationService.SendRecoveryMessage:input_type -> api.notification.v1.RecoveryMessageRequest
-	1, // 4: api.notification.v1.NotificationService.SendWelcomeMessage:output_type -> api.notification.v1.WelcomeMessageResponse
-	3, // 5: api.notification.v1.NotificationService.SendWelcomeActivatedMessage:output_type -> api.notification.v1.WelcomeActivatedMessageResponse
-	5, // 6: api.notification.v1.NotificationService.SendResetPasswordMessage:output_type -> api.notification.v1.ResetPasswordMessageResponse
-	7, // 7: api.notification.v1.NotificationService.SendRecoveryMessage:output_type -> api.notification.v1.RecoveryMessageResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	8, // 4: api.notification.v1.NotificationService.SendConfirmPasswordResetMessage:input_type -> api.notification.v1.ConfirmPasswordResetMessageRequest
+	1, // 5: api.notification.v1.NotificationService.SendWelcomeMessage:output_type -> api.notification.v1.WelcomeMessageResponse
+	3, // 6: api.notification.v1.NotificationService.SendWelcomeActivatedMessage:output_type -> api.notification.v1.WelcomeActivatedMessageResponse
+	5, // 7: api.notification.v1.NotificationService.SendResetPasswordMessage:output_type -> api.notification.v1.ResetPasswordMessageResponse
+	7, // 8: api.notification.v1.NotificationService.SendRecoveryMessage:output_type -> api.notification.v1.RecoveryMessageResponse
+	9, // 9: api.notification.v1.NotificationService.SendConfirmPasswordResetMessage:output_type -> api.notification.v1.ConfirmPasswordResetMessageResponse
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -504,7 +601,7 @@ func file_notification_v1_notification_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_notification_v1_notification_proto_rawDesc), len(file_notification_v1_notification_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

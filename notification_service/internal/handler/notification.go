@@ -97,3 +97,20 @@ func (h *NotificationHandler) SendRecoveryMessage(ctx context.Context, in *notif
 		Status: "ok",
 	}, nil
 }
+
+func (h *NotificationHandler) SendConfirmPasswordResetMessage(ctx context.Context, in *notificationv1.ConfirmPasswordResetMessageRequest) (*notificationv1.ConfirmPasswordResetMessageResponse, error) {
+	data := map[string]any{}
+
+	err := h.mailer.Send(in.Email, "user_confirm_password_reset.html", data)
+	if err != nil {
+		h.logger.Error(err.Error())
+		return &notificationv1.ConfirmPasswordResetMessageResponse{
+			Status: "bad",
+		}, err
+	}
+	h.logger.Info("send welcome activated email", "email", in.Email)
+
+	return &notificationv1.ConfirmPasswordResetMessageResponse{
+		Status: "ok",
+	}, nil
+}
