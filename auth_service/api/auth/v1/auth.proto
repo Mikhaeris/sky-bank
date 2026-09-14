@@ -8,40 +8,40 @@ import "google/protobuf/empty.proto";
 option go_package = "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1";
 
 service Auth {
-  rpc StartAuthentication(StartAuthenticationRequest) returns(google.protobuf.Empty) {
+  rpc StartAuthentication (StartAuthenticationRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/auth/start"
       body: "*"
     };
   };
 
-  rpc CompleteAuthentication(CompleteAuthenticationRequest) returns(CompleteAuthenticationReply) {
+  rpc CompleteAuthentication (CompleteAuthenticationRequest) returns (CompleteAuthenticationResponse) {
     option (google.api.http) = {
       post: "/auth/complete"
       body: "*"
     };
   };
 
-  rpc RefreshTokens(RefreshTokensRequest) returns(RefreshTokensReply) {
+  rpc RefreshTokens (RefreshTokensRequest) returns (RefreshTokensResponse) {
     option (google.api.http) = {
       post: "/auth/refresh"
       body: "*"
     };
   };
 
-  rpc GetSessions(google.protobuf.Empty) returns (GetSessionsReply) {
+  rpc GetSessions(google.protobuf.Empty) returns (GetSessionsResponse) {
     option (google.api.http) = {
       get: "/auth/sessions"
     };
   }
 
-  rpc RevokeSession(RevokeSessionRequest) returns (google.protobuf.Empty) {
+  rpc RevokeSession (RevokeSessionRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete: "/auth/sessions/{session_id}"
     };
   }
 
-  rpc RevokeOtherSessions(google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc RevokeOtherSessions (google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete: "/auth/sessions/others"
     };
@@ -61,16 +61,15 @@ message CompleteAuthenticationRequest {
   string otp_code = 1;
 }
 
-message CompleteAuthenticationReply {
-  string id = 1;
-  Tokens tokens = 2;
+message CompleteAuthenticationResponse {
+  Tokens tokens = 1;
 }
 
 message RefreshTokensRequest {
   string refresh_token = 1;
 }
 
-message RefreshTokensReply {
+message RefreshTokensResponse {
   Tokens tokens = 1;
 }
 
@@ -80,7 +79,7 @@ message Session {
   string last_used_at = 3;
 }
 
-message GetSessionsReply {
+message GetSessionsResponse {
   repeated Session sessions = 1;
 }
 
@@ -88,6 +87,6 @@ message RevokeSessionRequest {
   string session_id = 1;
 }
 
-message RevokeSessionReply {
+message RevokeSessionResponse {
   string status = 1;
 }

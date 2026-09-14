@@ -33,9 +33,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
 	StartAuthentication(ctx context.Context, in *StartAuthenticationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CompleteAuthentication(ctx context.Context, in *CompleteAuthenticationRequest, opts ...grpc.CallOption) (*CompleteAuthenticationReply, error)
-	RefreshTokens(ctx context.Context, in *RefreshTokensRequest, opts ...grpc.CallOption) (*RefreshTokensReply, error)
-	GetSessions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSessionsReply, error)
+	CompleteAuthentication(ctx context.Context, in *CompleteAuthenticationRequest, opts ...grpc.CallOption) (*CompleteAuthenticationResponse, error)
+	RefreshTokens(ctx context.Context, in *RefreshTokensRequest, opts ...grpc.CallOption) (*RefreshTokensResponse, error)
+	GetSessions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSessionsResponse, error)
 	RevokeSession(ctx context.Context, in *RevokeSessionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RevokeOtherSessions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -58,9 +58,9 @@ func (c *authClient) StartAuthentication(ctx context.Context, in *StartAuthentic
 	return out, nil
 }
 
-func (c *authClient) CompleteAuthentication(ctx context.Context, in *CompleteAuthenticationRequest, opts ...grpc.CallOption) (*CompleteAuthenticationReply, error) {
+func (c *authClient) CompleteAuthentication(ctx context.Context, in *CompleteAuthenticationRequest, opts ...grpc.CallOption) (*CompleteAuthenticationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CompleteAuthenticationReply)
+	out := new(CompleteAuthenticationResponse)
 	err := c.cc.Invoke(ctx, Auth_CompleteAuthentication_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -68,9 +68,9 @@ func (c *authClient) CompleteAuthentication(ctx context.Context, in *CompleteAut
 	return out, nil
 }
 
-func (c *authClient) RefreshTokens(ctx context.Context, in *RefreshTokensRequest, opts ...grpc.CallOption) (*RefreshTokensReply, error) {
+func (c *authClient) RefreshTokens(ctx context.Context, in *RefreshTokensRequest, opts ...grpc.CallOption) (*RefreshTokensResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RefreshTokensReply)
+	out := new(RefreshTokensResponse)
 	err := c.cc.Invoke(ctx, Auth_RefreshTokens_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -78,9 +78,9 @@ func (c *authClient) RefreshTokens(ctx context.Context, in *RefreshTokensRequest
 	return out, nil
 }
 
-func (c *authClient) GetSessions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSessionsReply, error) {
+func (c *authClient) GetSessions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSessionsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetSessionsReply)
+	out := new(GetSessionsResponse)
 	err := c.cc.Invoke(ctx, Auth_GetSessions_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -113,9 +113,9 @@ func (c *authClient) RevokeOtherSessions(ctx context.Context, in *emptypb.Empty,
 // for forward compatibility.
 type AuthServer interface {
 	StartAuthentication(context.Context, *StartAuthenticationRequest) (*emptypb.Empty, error)
-	CompleteAuthentication(context.Context, *CompleteAuthenticationRequest) (*CompleteAuthenticationReply, error)
-	RefreshTokens(context.Context, *RefreshTokensRequest) (*RefreshTokensReply, error)
-	GetSessions(context.Context, *emptypb.Empty) (*GetSessionsReply, error)
+	CompleteAuthentication(context.Context, *CompleteAuthenticationRequest) (*CompleteAuthenticationResponse, error)
+	RefreshTokens(context.Context, *RefreshTokensRequest) (*RefreshTokensResponse, error)
+	GetSessions(context.Context, *emptypb.Empty) (*GetSessionsResponse, error)
 	RevokeSession(context.Context, *RevokeSessionRequest) (*emptypb.Empty, error)
 	RevokeOtherSessions(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAuthServer()
@@ -131,13 +131,13 @@ type UnimplementedAuthServer struct{}
 func (UnimplementedAuthServer) StartAuthentication(context.Context, *StartAuthenticationRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StartAuthentication not implemented")
 }
-func (UnimplementedAuthServer) CompleteAuthentication(context.Context, *CompleteAuthenticationRequest) (*CompleteAuthenticationReply, error) {
+func (UnimplementedAuthServer) CompleteAuthentication(context.Context, *CompleteAuthenticationRequest) (*CompleteAuthenticationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompleteAuthentication not implemented")
 }
-func (UnimplementedAuthServer) RefreshTokens(context.Context, *RefreshTokensRequest) (*RefreshTokensReply, error) {
+func (UnimplementedAuthServer) RefreshTokens(context.Context, *RefreshTokensRequest) (*RefreshTokensResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshTokens not implemented")
 }
-func (UnimplementedAuthServer) GetSessions(context.Context, *emptypb.Empty) (*GetSessionsReply, error) {
+func (UnimplementedAuthServer) GetSessions(context.Context, *emptypb.Empty) (*GetSessionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSessions not implemented")
 }
 func (UnimplementedAuthServer) RevokeSession(context.Context, *RevokeSessionRequest) (*emptypb.Empty, error) {

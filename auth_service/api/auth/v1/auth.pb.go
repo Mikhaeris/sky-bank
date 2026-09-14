@@ -163,28 +163,27 @@ func (x *CompleteAuthenticationRequest) GetOtpCode() string {
 	return ""
 }
 
-type CompleteAuthenticationReply struct {
+type CompleteAuthenticationResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Tokens        *Tokens                `protobuf:"bytes,2,opt,name=tokens,proto3" json:"tokens,omitempty"`
+	Tokens        *Tokens                `protobuf:"bytes,1,opt,name=tokens,proto3" json:"tokens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CompleteAuthenticationReply) Reset() {
-	*x = CompleteAuthenticationReply{}
+func (x *CompleteAuthenticationResponse) Reset() {
+	*x = CompleteAuthenticationResponse{}
 	mi := &file_auth_v1_auth_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CompleteAuthenticationReply) String() string {
+func (x *CompleteAuthenticationResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CompleteAuthenticationReply) ProtoMessage() {}
+func (*CompleteAuthenticationResponse) ProtoMessage() {}
 
-func (x *CompleteAuthenticationReply) ProtoReflect() protoreflect.Message {
+func (x *CompleteAuthenticationResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_auth_v1_auth_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -196,19 +195,12 @@ func (x *CompleteAuthenticationReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CompleteAuthenticationReply.ProtoReflect.Descriptor instead.
-func (*CompleteAuthenticationReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use CompleteAuthenticationResponse.ProtoReflect.Descriptor instead.
+func (*CompleteAuthenticationResponse) Descriptor() ([]byte, []int) {
 	return file_auth_v1_auth_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CompleteAuthenticationReply) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *CompleteAuthenticationReply) GetTokens() *Tokens {
+func (x *CompleteAuthenticationResponse) GetTokens() *Tokens {
 	if x != nil {
 		return x.Tokens
 	}
@@ -259,27 +251,27 @@ func (x *RefreshTokensRequest) GetRefreshToken() string {
 	return ""
 }
 
-type RefreshTokensReply struct {
+type RefreshTokensResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Tokens        *Tokens                `protobuf:"bytes,1,opt,name=tokens,proto3" json:"tokens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RefreshTokensReply) Reset() {
-	*x = RefreshTokensReply{}
+func (x *RefreshTokensResponse) Reset() {
+	*x = RefreshTokensResponse{}
 	mi := &file_auth_v1_auth_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RefreshTokensReply) String() string {
+func (x *RefreshTokensResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RefreshTokensReply) ProtoMessage() {}
+func (*RefreshTokensResponse) ProtoMessage() {}
 
-func (x *RefreshTokensReply) ProtoReflect() protoreflect.Message {
+func (x *RefreshTokensResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_auth_v1_auth_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -291,12 +283,12 @@ func (x *RefreshTokensReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RefreshTokensReply.ProtoReflect.Descriptor instead.
-func (*RefreshTokensReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use RefreshTokensResponse.ProtoReflect.Descriptor instead.
+func (*RefreshTokensResponse) Descriptor() ([]byte, []int) {
 	return file_auth_v1_auth_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *RefreshTokensReply) GetTokens() *Tokens {
+func (x *RefreshTokensResponse) GetTokens() *Tokens {
 	if x != nil {
 		return x.Tokens
 	}
@@ -363,27 +355,27 @@ func (x *Session) GetLastUsedAt() string {
 	return ""
 }
 
-type GetSessionsReply struct {
+type GetSessionsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Sessions      []*Session             `protobuf:"bytes,1,rep,name=sessions,proto3" json:"sessions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetSessionsReply) Reset() {
-	*x = GetSessionsReply{}
+func (x *GetSessionsResponse) Reset() {
+	*x = GetSessionsResponse{}
 	mi := &file_auth_v1_auth_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetSessionsReply) String() string {
+func (x *GetSessionsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetSessionsReply) ProtoMessage() {}
+func (*GetSessionsResponse) ProtoMessage() {}
 
-func (x *GetSessionsReply) ProtoReflect() protoreflect.Message {
+func (x *GetSessionsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_auth_v1_auth_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -395,12 +387,12 @@ func (x *GetSessionsReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetSessionsReply.ProtoReflect.Descriptor instead.
-func (*GetSessionsReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetSessionsResponse.ProtoReflect.Descriptor instead.
+func (*GetSessionsResponse) Descriptor() ([]byte, []int) {
 	return file_auth_v1_auth_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *GetSessionsReply) GetSessions() []*Session {
+func (x *GetSessionsResponse) GetSessions() []*Session {
 	if x != nil {
 		return x.Sessions
 	}
@@ -451,27 +443,27 @@ func (x *RevokeSessionRequest) GetSessionId() string {
 	return ""
 }
 
-type RevokeSessionReply struct {
+type RevokeSessionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RevokeSessionReply) Reset() {
-	*x = RevokeSessionReply{}
+func (x *RevokeSessionResponse) Reset() {
+	*x = RevokeSessionResponse{}
 	mi := &file_auth_v1_auth_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RevokeSessionReply) String() string {
+func (x *RevokeSessionResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RevokeSessionReply) ProtoMessage() {}
+func (*RevokeSessionResponse) ProtoMessage() {}
 
-func (x *RevokeSessionReply) ProtoReflect() protoreflect.Message {
+func (x *RevokeSessionResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_auth_v1_auth_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -483,12 +475,12 @@ func (x *RevokeSessionReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RevokeSessionReply.ProtoReflect.Descriptor instead.
-func (*RevokeSessionReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use RevokeSessionResponse.ProtoReflect.Descriptor instead.
+func (*RevokeSessionResponse) Descriptor() ([]byte, []int) {
 	return file_auth_v1_auth_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *RevokeSessionReply) GetStatus() string {
+func (x *RevokeSessionResponse) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
@@ -506,32 +498,31 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\x1aStartAuthenticationRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\":\n" +
 	"\x1dCompleteAuthenticationRequest\x12\x19\n" +
-	"\botp_code\x18\x01 \x01(\tR\aotpCode\"Z\n" +
-	"\x1bCompleteAuthenticationReply\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12+\n" +
-	"\x06tokens\x18\x02 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\";\n" +
+	"\botp_code\x18\x01 \x01(\tR\aotpCode\"M\n" +
+	"\x1eCompleteAuthenticationResponse\x12+\n" +
+	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\";\n" +
 	"\x14RefreshTokensRequest\x12#\n" +
-	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"A\n" +
-	"\x12RefreshTokensReply\x12+\n" +
+	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"D\n" +
+	"\x15RefreshTokensResponse\x12+\n" +
 	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\"Z\n" +
 	"\aSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\x02 \x01(\tR\tcreatedAt\x12 \n" +
 	"\flast_used_at\x18\x03 \x01(\tR\n" +
-	"lastUsedAt\"D\n" +
-	"\x10GetSessionsReply\x120\n" +
+	"lastUsedAt\"G\n" +
+	"\x13GetSessionsResponse\x120\n" +
 	"\bsessions\x18\x01 \x03(\v2\x14.api.auth.v1.SessionR\bsessions\"5\n" +
 	"\x14RevokeSessionRequest\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x01 \x01(\tR\tsessionId\",\n" +
-	"\x12RevokeSessionReply\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status2\xa6\x05\n" +
+	"session_id\x18\x01 \x01(\tR\tsessionId\"/\n" +
+	"\x15RevokeSessionResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status2\xaf\x05\n" +
 	"\x04Auth\x12n\n" +
-	"\x13StartAuthentication\x12'.api.auth.v1.StartAuthenticationRequest\x1a\x16.google.protobuf.Empty\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/start\x12\x89\x01\n" +
-	"\x16CompleteAuthentication\x12*.api.auth.v1.CompleteAuthenticationRequest\x1a(.api.auth.v1.CompleteAuthenticationReply\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/auth/complete\x12m\n" +
-	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\x1f.api.auth.v1.RefreshTokensReply\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/auth/refresh\x12\\\n" +
-	"\vGetSessions\x12\x16.google.protobuf.Empty\x1a\x1d.api.auth.v1.GetSessionsReply\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/auth/sessions\x12o\n" +
+	"\x13StartAuthentication\x12'.api.auth.v1.StartAuthenticationRequest\x1a\x16.google.protobuf.Empty\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/start\x12\x8c\x01\n" +
+	"\x16CompleteAuthentication\x12*.api.auth.v1.CompleteAuthenticationRequest\x1a+.api.auth.v1.CompleteAuthenticationResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/auth/complete\x12p\n" +
+	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\".api.auth.v1.RefreshTokensResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/auth/refresh\x12_\n" +
+	"\vGetSessions\x12\x16.google.protobuf.Empty\x1a .api.auth.v1.GetSessionsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/auth/sessions\x12o\n" +
 	"\rRevokeSession\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/auth/sessions/{session_id}\x12d\n" +
 	"\x13RevokeOtherSessions\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x1d\x82\xd3\xe4\x93\x02\x17*\x15/auth/sessions/othersB?Z=github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1b\x06proto3"
 
@@ -549,22 +540,22 @@ func file_auth_v1_auth_proto_rawDescGZIP() []byte {
 
 var file_auth_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_auth_v1_auth_proto_goTypes = []any{
-	(*Tokens)(nil),                        // 0: api.auth.v1.Tokens
-	(*StartAuthenticationRequest)(nil),    // 1: api.auth.v1.StartAuthenticationRequest
-	(*CompleteAuthenticationRequest)(nil), // 2: api.auth.v1.CompleteAuthenticationRequest
-	(*CompleteAuthenticationReply)(nil),   // 3: api.auth.v1.CompleteAuthenticationReply
-	(*RefreshTokensRequest)(nil),          // 4: api.auth.v1.RefreshTokensRequest
-	(*RefreshTokensReply)(nil),            // 5: api.auth.v1.RefreshTokensReply
-	(*Session)(nil),                       // 6: api.auth.v1.Session
-	(*GetSessionsReply)(nil),              // 7: api.auth.v1.GetSessionsReply
-	(*RevokeSessionRequest)(nil),          // 8: api.auth.v1.RevokeSessionRequest
-	(*RevokeSessionReply)(nil),            // 9: api.auth.v1.RevokeSessionReply
-	(*emptypb.Empty)(nil),                 // 10: google.protobuf.Empty
+	(*Tokens)(nil),                         // 0: api.auth.v1.Tokens
+	(*StartAuthenticationRequest)(nil),     // 1: api.auth.v1.StartAuthenticationRequest
+	(*CompleteAuthenticationRequest)(nil),  // 2: api.auth.v1.CompleteAuthenticationRequest
+	(*CompleteAuthenticationResponse)(nil), // 3: api.auth.v1.CompleteAuthenticationResponse
+	(*RefreshTokensRequest)(nil),           // 4: api.auth.v1.RefreshTokensRequest
+	(*RefreshTokensResponse)(nil),          // 5: api.auth.v1.RefreshTokensResponse
+	(*Session)(nil),                        // 6: api.auth.v1.Session
+	(*GetSessionsResponse)(nil),            // 7: api.auth.v1.GetSessionsResponse
+	(*RevokeSessionRequest)(nil),           // 8: api.auth.v1.RevokeSessionRequest
+	(*RevokeSessionResponse)(nil),          // 9: api.auth.v1.RevokeSessionResponse
+	(*emptypb.Empty)(nil),                  // 10: google.protobuf.Empty
 }
 var file_auth_v1_auth_proto_depIdxs = []int32{
-	0,  // 0: api.auth.v1.CompleteAuthenticationReply.tokens:type_name -> api.auth.v1.Tokens
-	0,  // 1: api.auth.v1.RefreshTokensReply.tokens:type_name -> api.auth.v1.Tokens
-	6,  // 2: api.auth.v1.GetSessionsReply.sessions:type_name -> api.auth.v1.Session
+	0,  // 0: api.auth.v1.CompleteAuthenticationResponse.tokens:type_name -> api.auth.v1.Tokens
+	0,  // 1: api.auth.v1.RefreshTokensResponse.tokens:type_name -> api.auth.v1.Tokens
+	6,  // 2: api.auth.v1.GetSessionsResponse.sessions:type_name -> api.auth.v1.Session
 	1,  // 3: api.auth.v1.Auth.StartAuthentication:input_type -> api.auth.v1.StartAuthenticationRequest
 	2,  // 4: api.auth.v1.Auth.CompleteAuthentication:input_type -> api.auth.v1.CompleteAuthenticationRequest
 	4,  // 5: api.auth.v1.Auth.RefreshTokens:input_type -> api.auth.v1.RefreshTokensRequest
@@ -572,9 +563,9 @@ var file_auth_v1_auth_proto_depIdxs = []int32{
 	8,  // 7: api.auth.v1.Auth.RevokeSession:input_type -> api.auth.v1.RevokeSessionRequest
 	10, // 8: api.auth.v1.Auth.RevokeOtherSessions:input_type -> google.protobuf.Empty
 	10, // 9: api.auth.v1.Auth.StartAuthentication:output_type -> google.protobuf.Empty
-	3,  // 10: api.auth.v1.Auth.CompleteAuthentication:output_type -> api.auth.v1.CompleteAuthenticationReply
-	5,  // 11: api.auth.v1.Auth.RefreshTokens:output_type -> api.auth.v1.RefreshTokensReply
-	7,  // 12: api.auth.v1.Auth.GetSessions:output_type -> api.auth.v1.GetSessionsReply
+	3,  // 10: api.auth.v1.Auth.CompleteAuthentication:output_type -> api.auth.v1.CompleteAuthenticationResponse
+	5,  // 11: api.auth.v1.Auth.RefreshTokens:output_type -> api.auth.v1.RefreshTokensResponse
+	7,  // 12: api.auth.v1.Auth.GetSessions:output_type -> api.auth.v1.GetSessionsResponse
 	10, // 13: api.auth.v1.Auth.RevokeSession:output_type -> google.protobuf.Empty
 	10, // 14: api.auth.v1.Auth.RevokeOtherSessions:output_type -> google.protobuf.Empty
 	9,  // [9:15] is the sub-list for method output_type

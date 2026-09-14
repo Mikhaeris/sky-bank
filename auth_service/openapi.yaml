@@ -23,7 +23,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/CompleteAuthenticationReply'
+                                $ref: '#/components/schemas/CompleteAuthenticationResponse'
                 default:
                     description: Default error response
                     content:
@@ -47,7 +47,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/RefreshTokensReply'
+                                $ref: '#/components/schemas/RefreshTokensResponse'
                 default:
                     description: Default error response
                     content:
@@ -65,7 +65,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetSessionsReply'
+                                $ref: '#/components/schemas/GetSessionsResponse'
                 default:
                     description: Default error response
                     content:
@@ -131,19 +131,17 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        CompleteAuthenticationReply:
-            type: object
-            properties:
-                id:
-                    type: string
-                tokens:
-                    $ref: '#/components/schemas/Tokens'
         CompleteAuthenticationRequest:
             type: object
             properties:
                 otpCode:
                     type: string
-        GetSessionsReply:
+        CompleteAuthenticationResponse:
+            type: object
+            properties:
+                tokens:
+                    $ref: '#/components/schemas/Tokens'
+        GetSessionsResponse:
             type: object
             properties:
                 sessions:
@@ -158,16 +156,16 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        RefreshTokensReply:
-            type: object
-            properties:
-                tokens:
-                    $ref: '#/components/schemas/Tokens'
         RefreshTokensRequest:
             type: object
             properties:
                 refreshToken:
                     type: string
+        RefreshTokensResponse:
+            type: object
+            properties:
+                tokens:
+                    $ref: '#/components/schemas/Tokens'
         Session:
             type: object
             properties:
