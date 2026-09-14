@@ -9,6 +9,7 @@ package notificationv1
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -21,29 +22,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type WelcomeMessageRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	IdentityUuid    string                 `protobuf:"bytes,1,opt,name=identity_uuid,json=identityUuid,proto3" json:"identity_uuid,omitempty"`
-	Email           string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	ActivationToken string                 `protobuf:"bytes,3,opt,name=activation_token,json=activationToken,proto3" json:"activation_token,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+type SendOtpCodeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	OtpCode       string                 `protobuf:"bytes,2,opt,name=otp_code,json=otpCode,proto3" json:"otp_code,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *WelcomeMessageRequest) Reset() {
-	*x = WelcomeMessageRequest{}
+func (x *SendOtpCodeRequest) Reset() {
+	*x = SendOtpCodeRequest{}
 	mi := &file_notification_v1_notification_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *WelcomeMessageRequest) String() string {
+func (x *SendOtpCodeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WelcomeMessageRequest) ProtoMessage() {}
+func (*SendOtpCodeRequest) ProtoMessage() {}
 
-func (x *WelcomeMessageRequest) ProtoReflect() protoreflect.Message {
+func (x *SendOtpCodeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_notification_v1_notification_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,456 +55,21 @@ func (x *WelcomeMessageRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use WelcomeMessageRequest.ProtoReflect.Descriptor instead.
-func (*WelcomeMessageRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use SendOtpCodeRequest.ProtoReflect.Descriptor instead.
+func (*SendOtpCodeRequest) Descriptor() ([]byte, []int) {
 	return file_notification_v1_notification_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *WelcomeMessageRequest) GetIdentityUuid() string {
-	if x != nil {
-		return x.IdentityUuid
-	}
-	return ""
-}
-
-func (x *WelcomeMessageRequest) GetEmail() string {
+func (x *SendOtpCodeRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *WelcomeMessageRequest) GetActivationToken() string {
+func (x *SendOtpCodeRequest) GetOtpCode() string {
 	if x != nil {
-		return x.ActivationToken
-	}
-	return ""
-}
-
-type WelcomeMessageResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *WelcomeMessageResponse) Reset() {
-	*x = WelcomeMessageResponse{}
-	mi := &file_notification_v1_notification_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *WelcomeMessageResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*WelcomeMessageResponse) ProtoMessage() {}
-
-func (x *WelcomeMessageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_v1_notification_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use WelcomeMessageResponse.ProtoReflect.Descriptor instead.
-func (*WelcomeMessageResponse) Descriptor() ([]byte, []int) {
-	return file_notification_v1_notification_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *WelcomeMessageResponse) GetStatus() string {
-	if x != nil {
-		return x.Status
-	}
-	return ""
-}
-
-type WelcomeActivatedMessageRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *WelcomeActivatedMessageRequest) Reset() {
-	*x = WelcomeActivatedMessageRequest{}
-	mi := &file_notification_v1_notification_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *WelcomeActivatedMessageRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*WelcomeActivatedMessageRequest) ProtoMessage() {}
-
-func (x *WelcomeActivatedMessageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_v1_notification_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use WelcomeActivatedMessageRequest.ProtoReflect.Descriptor instead.
-func (*WelcomeActivatedMessageRequest) Descriptor() ([]byte, []int) {
-	return file_notification_v1_notification_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *WelcomeActivatedMessageRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-type WelcomeActivatedMessageResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *WelcomeActivatedMessageResponse) Reset() {
-	*x = WelcomeActivatedMessageResponse{}
-	mi := &file_notification_v1_notification_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *WelcomeActivatedMessageResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*WelcomeActivatedMessageResponse) ProtoMessage() {}
-
-func (x *WelcomeActivatedMessageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_v1_notification_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use WelcomeActivatedMessageResponse.ProtoReflect.Descriptor instead.
-func (*WelcomeActivatedMessageResponse) Descriptor() ([]byte, []int) {
-	return file_notification_v1_notification_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *WelcomeActivatedMessageResponse) GetStatus() string {
-	if x != nil {
-		return x.Status
-	}
-	return ""
-}
-
-type ResetPasswordMessageRequest struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	IdentityUuid       string                 `protobuf:"bytes,1,opt,name=identity_uuid,json=identityUuid,proto3" json:"identity_uuid,omitempty"`
-	Email              string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	ResetPasswordToken string                 `protobuf:"bytes,3,opt,name=reset_password_token,json=resetPasswordToken,proto3" json:"reset_password_token,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *ResetPasswordMessageRequest) Reset() {
-	*x = ResetPasswordMessageRequest{}
-	mi := &file_notification_v1_notification_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ResetPasswordMessageRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ResetPasswordMessageRequest) ProtoMessage() {}
-
-func (x *ResetPasswordMessageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_v1_notification_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ResetPasswordMessageRequest.ProtoReflect.Descriptor instead.
-func (*ResetPasswordMessageRequest) Descriptor() ([]byte, []int) {
-	return file_notification_v1_notification_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ResetPasswordMessageRequest) GetIdentityUuid() string {
-	if x != nil {
-		return x.IdentityUuid
-	}
-	return ""
-}
-
-func (x *ResetPasswordMessageRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-func (x *ResetPasswordMessageRequest) GetResetPasswordToken() string {
-	if x != nil {
-		return x.ResetPasswordToken
-	}
-	return ""
-}
-
-type ResetPasswordMessageResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ResetPasswordMessageResponse) Reset() {
-	*x = ResetPasswordMessageResponse{}
-	mi := &file_notification_v1_notification_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ResetPasswordMessageResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ResetPasswordMessageResponse) ProtoMessage() {}
-
-func (x *ResetPasswordMessageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_v1_notification_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ResetPasswordMessageResponse.ProtoReflect.Descriptor instead.
-func (*ResetPasswordMessageResponse) Descriptor() ([]byte, []int) {
-	return file_notification_v1_notification_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *ResetPasswordMessageResponse) GetStatus() string {
-	if x != nil {
-		return x.Status
-	}
-	return ""
-}
-
-type RecoveryMessageRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	IdentityUuid  string                 `protobuf:"bytes,1,opt,name=identity_uuid,json=identityUuid,proto3" json:"identity_uuid,omitempty"`
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	SecurityToken string                 `protobuf:"bytes,3,opt,name=security_token,json=securityToken,proto3" json:"security_token,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RecoveryMessageRequest) Reset() {
-	*x = RecoveryMessageRequest{}
-	mi := &file_notification_v1_notification_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RecoveryMessageRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RecoveryMessageRequest) ProtoMessage() {}
-
-func (x *RecoveryMessageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_v1_notification_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RecoveryMessageRequest.ProtoReflect.Descriptor instead.
-func (*RecoveryMessageRequest) Descriptor() ([]byte, []int) {
-	return file_notification_v1_notification_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *RecoveryMessageRequest) GetIdentityUuid() string {
-	if x != nil {
-		return x.IdentityUuid
-	}
-	return ""
-}
-
-func (x *RecoveryMessageRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-func (x *RecoveryMessageRequest) GetSecurityToken() string {
-	if x != nil {
-		return x.SecurityToken
-	}
-	return ""
-}
-
-type RecoveryMessageResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RecoveryMessageResponse) Reset() {
-	*x = RecoveryMessageResponse{}
-	mi := &file_notification_v1_notification_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RecoveryMessageResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RecoveryMessageResponse) ProtoMessage() {}
-
-func (x *RecoveryMessageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_v1_notification_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RecoveryMessageResponse.ProtoReflect.Descriptor instead.
-func (*RecoveryMessageResponse) Descriptor() ([]byte, []int) {
-	return file_notification_v1_notification_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *RecoveryMessageResponse) GetStatus() string {
-	if x != nil {
-		return x.Status
-	}
-	return ""
-}
-
-type ConfirmPasswordResetMessageRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ConfirmPasswordResetMessageRequest) Reset() {
-	*x = ConfirmPasswordResetMessageRequest{}
-	mi := &file_notification_v1_notification_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ConfirmPasswordResetMessageRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ConfirmPasswordResetMessageRequest) ProtoMessage() {}
-
-func (x *ConfirmPasswordResetMessageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_v1_notification_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ConfirmPasswordResetMessageRequest.ProtoReflect.Descriptor instead.
-func (*ConfirmPasswordResetMessageRequest) Descriptor() ([]byte, []int) {
-	return file_notification_v1_notification_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *ConfirmPasswordResetMessageRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-type ConfirmPasswordResetMessageResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ConfirmPasswordResetMessageResponse) Reset() {
-	*x = ConfirmPasswordResetMessageResponse{}
-	mi := &file_notification_v1_notification_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ConfirmPasswordResetMessageResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ConfirmPasswordResetMessageResponse) ProtoMessage() {}
-
-func (x *ConfirmPasswordResetMessageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_notification_v1_notification_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ConfirmPasswordResetMessageResponse.ProtoReflect.Descriptor instead.
-func (*ConfirmPasswordResetMessageResponse) Descriptor() ([]byte, []int) {
-	return file_notification_v1_notification_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *ConfirmPasswordResetMessageResponse) GetStatus() string {
-	if x != nil {
-		return x.Status
+		return x.OtpCode
 	}
 	return ""
 }
@@ -513,39 +78,12 @@ var File_notification_v1_notification_proto protoreflect.FileDescriptor
 
 const file_notification_v1_notification_proto_rawDesc = "" +
 	"\n" +
-	"\"notification/v1/notification.proto\x12\x13api.notification.v1\"}\n" +
-	"\x15WelcomeMessageRequest\x12#\n" +
-	"\ridentity_uuid\x18\x01 \x01(\tR\fidentityUuid\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\x12)\n" +
-	"\x10activation_token\x18\x03 \x01(\tR\x0factivationToken\"0\n" +
-	"\x16WelcomeMessageResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status\"6\n" +
-	"\x1eWelcomeActivatedMessageRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"9\n" +
-	"\x1fWelcomeActivatedMessageResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status\"\x8a\x01\n" +
-	"\x1bResetPasswordMessageRequest\x12#\n" +
-	"\ridentity_uuid\x18\x01 \x01(\tR\fidentityUuid\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\x120\n" +
-	"\x14reset_password_token\x18\x03 \x01(\tR\x12resetPasswordToken\"6\n" +
-	"\x1cResetPasswordMessageResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status\"z\n" +
-	"\x16RecoveryMessageRequest\x12#\n" +
-	"\ridentity_uuid\x18\x01 \x01(\tR\fidentityUuid\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\x12%\n" +
-	"\x0esecurity_token\x18\x03 \x01(\tR\rsecurityToken\"1\n" +
-	"\x17RecoveryMessageResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status\":\n" +
-	"\"ConfirmPasswordResetMessageRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"=\n" +
-	"#ConfirmPasswordResetMessageResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status2\x99\x05\n" +
-	"\x13NotificationService\x12m\n" +
-	"\x12SendWelcomeMessage\x12*.api.notification.v1.WelcomeMessageRequest\x1a+.api.notification.v1.WelcomeMessageResponse\x12\x88\x01\n" +
-	"\x1bSendWelcomeActivatedMessage\x123.api.notification.v1.WelcomeActivatedMessageRequest\x1a4.api.notification.v1.WelcomeActivatedMessageResponse\x12\x7f\n" +
-	"\x18SendResetPasswordMessage\x120.api.notification.v1.ResetPasswordMessageRequest\x1a1.api.notification.v1.ResetPasswordMessageResponse\x12p\n" +
-	"\x13SendRecoveryMessage\x12+.api.notification.v1.RecoveryMessageRequest\x1a,.api.notification.v1.RecoveryMessageResponse\x12\x94\x01\n" +
-	"\x1fSendConfirmPasswordResetMessage\x127.api.notification.v1.ConfirmPasswordResetMessageRequest\x1a8.api.notification.v1.ConfirmPasswordResetMessageResponseBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
+	"\"notification/v1/notification.proto\x12\x13api.notification.v1\x1a\x1bgoogle/protobuf/empty.proto\"E\n" +
+	"\x12SendOtpCodeRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\x12\x19\n" +
+	"\botp_code\x18\x02 \x01(\tR\aotpCode2e\n" +
+	"\x13NotificationService\x12N\n" +
+	"\vSendOtpCode\x12'.api.notification.v1.SendOtpCodeRequest\x1a\x16.google.protobuf.EmptyBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
 
 var (
 	file_notification_v1_notification_proto_rawDescOnce sync.Once
@@ -559,32 +97,16 @@ func file_notification_v1_notification_proto_rawDescGZIP() []byte {
 	return file_notification_v1_notification_proto_rawDescData
 }
 
-var file_notification_v1_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_notification_v1_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_notification_v1_notification_proto_goTypes = []any{
-	(*WelcomeMessageRequest)(nil),               // 0: api.notification.v1.WelcomeMessageRequest
-	(*WelcomeMessageResponse)(nil),              // 1: api.notification.v1.WelcomeMessageResponse
-	(*WelcomeActivatedMessageRequest)(nil),      // 2: api.notification.v1.WelcomeActivatedMessageRequest
-	(*WelcomeActivatedMessageResponse)(nil),     // 3: api.notification.v1.WelcomeActivatedMessageResponse
-	(*ResetPasswordMessageRequest)(nil),         // 4: api.notification.v1.ResetPasswordMessageRequest
-	(*ResetPasswordMessageResponse)(nil),        // 5: api.notification.v1.ResetPasswordMessageResponse
-	(*RecoveryMessageRequest)(nil),              // 6: api.notification.v1.RecoveryMessageRequest
-	(*RecoveryMessageResponse)(nil),             // 7: api.notification.v1.RecoveryMessageResponse
-	(*ConfirmPasswordResetMessageRequest)(nil),  // 8: api.notification.v1.ConfirmPasswordResetMessageRequest
-	(*ConfirmPasswordResetMessageResponse)(nil), // 9: api.notification.v1.ConfirmPasswordResetMessageResponse
+	(*SendOtpCodeRequest)(nil), // 0: api.notification.v1.SendOtpCodeRequest
+	(*emptypb.Empty)(nil),      // 1: google.protobuf.Empty
 }
 var file_notification_v1_notification_proto_depIdxs = []int32{
-	0, // 0: api.notification.v1.NotificationService.SendWelcomeMessage:input_type -> api.notification.v1.WelcomeMessageRequest
-	2, // 1: api.notification.v1.NotificationService.SendWelcomeActivatedMessage:input_type -> api.notification.v1.WelcomeActivatedMessageRequest
-	4, // 2: api.notification.v1.NotificationService.SendResetPasswordMessage:input_type -> api.notification.v1.ResetPasswordMessageRequest
-	6, // 3: api.notification.v1.NotificationService.SendRecoveryMessage:input_type -> api.notification.v1.RecoveryMessageRequest
-	8, // 4: api.notification.v1.NotificationService.SendConfirmPasswordResetMessage:input_type -> api.notification.v1.ConfirmPasswordResetMessageRequest
-	1, // 5: api.notification.v1.NotificationService.SendWelcomeMessage:output_type -> api.notification.v1.WelcomeMessageResponse
-	3, // 6: api.notification.v1.NotificationService.SendWelcomeActivatedMessage:output_type -> api.notification.v1.WelcomeActivatedMessageResponse
-	5, // 7: api.notification.v1.NotificationService.SendResetPasswordMessage:output_type -> api.notification.v1.ResetPasswordMessageResponse
-	7, // 8: api.notification.v1.NotificationService.SendRecoveryMessage:output_type -> api.notification.v1.RecoveryMessageResponse
-	9, // 9: api.notification.v1.NotificationService.SendConfirmPasswordResetMessage:output_type -> api.notification.v1.ConfirmPasswordResetMessageResponse
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	0, // 0: api.notification.v1.NotificationService.SendOtpCode:input_type -> api.notification.v1.SendOtpCodeRequest
+	1, // 1: api.notification.v1.NotificationService.SendOtpCode:output_type -> google.protobuf.Empty
+	1, // [1:2] is the sub-list for method output_type
+	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -601,7 +123,7 @@ func file_notification_v1_notification_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_notification_v1_notification_proto_rawDesc), len(file_notification_v1_notification_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

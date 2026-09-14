@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,22 +20,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NotificationService_SendWelcomeMessage_FullMethodName              = "/api.notification.v1.NotificationService/SendWelcomeMessage"
-	NotificationService_SendWelcomeActivatedMessage_FullMethodName     = "/api.notification.v1.NotificationService/SendWelcomeActivatedMessage"
-	NotificationService_SendResetPasswordMessage_FullMethodName        = "/api.notification.v1.NotificationService/SendResetPasswordMessage"
-	NotificationService_SendRecoveryMessage_FullMethodName             = "/api.notification.v1.NotificationService/SendRecoveryMessage"
-	NotificationService_SendConfirmPasswordResetMessage_FullMethodName = "/api.notification.v1.NotificationService/SendConfirmPasswordResetMessage"
+	NotificationService_SendOtpCode_FullMethodName = "/api.notification.v1.NotificationService/SendOtpCode"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotificationServiceClient interface {
-	SendWelcomeMessage(ctx context.Context, in *WelcomeMessageRequest, opts ...grpc.CallOption) (*WelcomeMessageResponse, error)
-	SendWelcomeActivatedMessage(ctx context.Context, in *WelcomeActivatedMessageRequest, opts ...grpc.CallOption) (*WelcomeActivatedMessageResponse, error)
-	SendResetPasswordMessage(ctx context.Context, in *ResetPasswordMessageRequest, opts ...grpc.CallOption) (*ResetPasswordMessageResponse, error)
-	SendRecoveryMessage(ctx context.Context, in *RecoveryMessageRequest, opts ...grpc.CallOption) (*RecoveryMessageResponse, error)
-	SendConfirmPasswordResetMessage(ctx context.Context, in *ConfirmPasswordResetMessageRequest, opts ...grpc.CallOption) (*ConfirmPasswordResetMessageResponse, error)
+	SendOtpCode(ctx context.Context, in *SendOtpCodeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type notificationServiceClient struct {
@@ -45,50 +38,10 @@ func NewNotificationServiceClient(cc grpc.ClientConnInterface) NotificationServi
 	return &notificationServiceClient{cc}
 }
 
-func (c *notificationServiceClient) SendWelcomeMessage(ctx context.Context, in *WelcomeMessageRequest, opts ...grpc.CallOption) (*WelcomeMessageResponse, error) {
+func (c *notificationServiceClient) SendOtpCode(ctx context.Context, in *SendOtpCodeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(WelcomeMessageResponse)
-	err := c.cc.Invoke(ctx, NotificationService_SendWelcomeMessage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *notificationServiceClient) SendWelcomeActivatedMessage(ctx context.Context, in *WelcomeActivatedMessageRequest, opts ...grpc.CallOption) (*WelcomeActivatedMessageResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(WelcomeActivatedMessageResponse)
-	err := c.cc.Invoke(ctx, NotificationService_SendWelcomeActivatedMessage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *notificationServiceClient) SendResetPasswordMessage(ctx context.Context, in *ResetPasswordMessageRequest, opts ...grpc.CallOption) (*ResetPasswordMessageResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ResetPasswordMessageResponse)
-	err := c.cc.Invoke(ctx, NotificationService_SendResetPasswordMessage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *notificationServiceClient) SendRecoveryMessage(ctx context.Context, in *RecoveryMessageRequest, opts ...grpc.CallOption) (*RecoveryMessageResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RecoveryMessageResponse)
-	err := c.cc.Invoke(ctx, NotificationService_SendRecoveryMessage_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *notificationServiceClient) SendConfirmPasswordResetMessage(ctx context.Context, in *ConfirmPasswordResetMessageRequest, opts ...grpc.CallOption) (*ConfirmPasswordResetMessageResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ConfirmPasswordResetMessageResponse)
-	err := c.cc.Invoke(ctx, NotificationService_SendConfirmPasswordResetMessage_FullMethodName, in, out, cOpts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, NotificationService_SendOtpCode_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -99,11 +52,7 @@ func (c *notificationServiceClient) SendConfirmPasswordResetMessage(ctx context.
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility.
 type NotificationServiceServer interface {
-	SendWelcomeMessage(context.Context, *WelcomeMessageRequest) (*WelcomeMessageResponse, error)
-	SendWelcomeActivatedMessage(context.Context, *WelcomeActivatedMessageRequest) (*WelcomeActivatedMessageResponse, error)
-	SendResetPasswordMessage(context.Context, *ResetPasswordMessageRequest) (*ResetPasswordMessageResponse, error)
-	SendRecoveryMessage(context.Context, *RecoveryMessageRequest) (*RecoveryMessageResponse, error)
-	SendConfirmPasswordResetMessage(context.Context, *ConfirmPasswordResetMessageRequest) (*ConfirmPasswordResetMessageResponse, error)
+	SendOtpCode(context.Context, *SendOtpCodeRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -114,20 +63,8 @@ type NotificationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedNotificationServiceServer struct{}
 
-func (UnimplementedNotificationServiceServer) SendWelcomeMessage(context.Context, *WelcomeMessageRequest) (*WelcomeMessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendWelcomeMessage not implemented")
-}
-func (UnimplementedNotificationServiceServer) SendWelcomeActivatedMessage(context.Context, *WelcomeActivatedMessageRequest) (*WelcomeActivatedMessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendWelcomeActivatedMessage not implemented")
-}
-func (UnimplementedNotificationServiceServer) SendResetPasswordMessage(context.Context, *ResetPasswordMessageRequest) (*ResetPasswordMessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendResetPasswordMessage not implemented")
-}
-func (UnimplementedNotificationServiceServer) SendRecoveryMessage(context.Context, *RecoveryMessageRequest) (*RecoveryMessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendRecoveryMessage not implemented")
-}
-func (UnimplementedNotificationServiceServer) SendConfirmPasswordResetMessage(context.Context, *ConfirmPasswordResetMessageRequest) (*ConfirmPasswordResetMessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendConfirmPasswordResetMessage not implemented")
+func (UnimplementedNotificationServiceServer) SendOtpCode(context.Context, *SendOtpCodeRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendOtpCode not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 func (UnimplementedNotificationServiceServer) testEmbeddedByValue()                             {}
@@ -150,92 +87,20 @@ func RegisterNotificationServiceServer(s grpc.ServiceRegistrar, srv Notification
 	s.RegisterService(&NotificationService_ServiceDesc, srv)
 }
 
-func _NotificationService_SendWelcomeMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WelcomeMessageRequest)
+func _NotificationService_SendOtpCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendOtpCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NotificationServiceServer).SendWelcomeMessage(ctx, in)
+		return srv.(NotificationServiceServer).SendOtpCode(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: NotificationService_SendWelcomeMessage_FullMethodName,
+		FullMethod: NotificationService_SendOtpCode_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).SendWelcomeMessage(ctx, req.(*WelcomeMessageRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _NotificationService_SendWelcomeActivatedMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WelcomeActivatedMessageRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(NotificationServiceServer).SendWelcomeActivatedMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: NotificationService_SendWelcomeActivatedMessage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).SendWelcomeActivatedMessage(ctx, req.(*WelcomeActivatedMessageRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _NotificationService_SendResetPasswordMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResetPasswordMessageRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(NotificationServiceServer).SendResetPasswordMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: NotificationService_SendResetPasswordMessage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).SendResetPasswordMessage(ctx, req.(*ResetPasswordMessageRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _NotificationService_SendRecoveryMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RecoveryMessageRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(NotificationServiceServer).SendRecoveryMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: NotificationService_SendRecoveryMessage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).SendRecoveryMessage(ctx, req.(*RecoveryMessageRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _NotificationService_SendConfirmPasswordResetMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConfirmPasswordResetMessageRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(NotificationServiceServer).SendConfirmPasswordResetMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: NotificationService_SendConfirmPasswordResetMessage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).SendConfirmPasswordResetMessage(ctx, req.(*ConfirmPasswordResetMessageRequest))
+		return srv.(NotificationServiceServer).SendOtpCode(ctx, req.(*SendOtpCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -248,24 +113,8 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*NotificationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SendWelcomeMessage",
-			Handler:    _NotificationService_SendWelcomeMessage_Handler,
-		},
-		{
-			MethodName: "SendWelcomeActivatedMessage",
-			Handler:    _NotificationService_SendWelcomeActivatedMessage_Handler,
-		},
-		{
-			MethodName: "SendResetPasswordMessage",
-			Handler:    _NotificationService_SendResetPasswordMessage_Handler,
-		},
-		{
-			MethodName: "SendRecoveryMessage",
-			Handler:    _NotificationService_SendRecoveryMessage_Handler,
-		},
-		{
-			MethodName: "SendConfirmPasswordResetMessage",
-			Handler:    _NotificationService_SendConfirmPasswordResetMessage_Handler,
+			MethodName: "SendOtpCode",
+			Handler:    _NotificationService_SendOtpCode_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

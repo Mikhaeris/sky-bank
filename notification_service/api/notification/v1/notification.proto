@@ -2,58 +2,15 @@ syntax = "proto3";
 
 package api.notification.v1;
 
+import "google/protobuf/empty.proto";
+
 option go_package = "github.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1";
 
 service NotificationService {
-    rpc SendWelcomeMessage(WelcomeMessageRequest) returns (WelcomeMessageResponse);
-    rpc SendWelcomeActivatedMessage(WelcomeActivatedMessageRequest) returns (WelcomeActivatedMessageResponse);
-    rpc SendResetPasswordMessage(ResetPasswordMessageRequest) returns (ResetPasswordMessageResponse);
-    rpc SendRecoveryMessage(RecoveryMessageRequest) returns (RecoveryMessageResponse);
-    rpc SendConfirmPasswordResetMessage(ConfirmPasswordResetMessageRequest) returns (ConfirmPasswordResetMessageResponse);
+  rpc SendOtpCode (SendOtpCodeRequest) returns (google.protobuf.Empty);
 }
 
-message WelcomeMessageRequest {
-    string identity_uuid = 1;
-    string email = 2;
-    string activation_token = 3;
-}
-
-message WelcomeMessageResponse {
-    string status = 1;
-}
-
-message WelcomeActivatedMessageRequest {
-    string email = 1;
-}
-
-message WelcomeActivatedMessageResponse {
-    string status = 1;
-}
-
-message ResetPasswordMessageRequest {
-    string identity_uuid = 1;
-    string email = 2;
-    string reset_password_token = 3;
-}
-
-message ResetPasswordMessageResponse {
-    string status = 1;
-}
-
-message RecoveryMessageRequest {
-    string identity_uuid = 1;
-    string email = 2;
-    string security_token = 3;
-}
-
-message RecoveryMessageResponse {
-    string status = 1;
-}
-
-message ConfirmPasswordResetMessageRequest {
-    string email = 1;
-}
-
-message ConfirmPasswordResetMessageResponse {
-    string status = 1;
+message SendOtpCodeRequest {
+  string email = 1;
+  string otp_code = 2;
 }
