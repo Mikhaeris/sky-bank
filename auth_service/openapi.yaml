@@ -3,19 +3,19 @@
 
 openapi: 3.0.3
 info:
-    title: AuthService API
+    title: Auth API
     version: 0.0.1
 paths:
-    /api/v1/auth/tokens/activation:
+    /auth/complete:
         post:
             tags:
-                - AuthService
-            operationId: AuthService_CreateActivationToken
+                - Auth
+            operationId: Auth_CompleteAuthentication
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/CreateActivationTokenRequest'
+                            $ref: '#/components/schemas/CompleteAuthenticationRequest'
                 required: true
             responses:
                 "200":
@@ -23,66 +23,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/CreateActivationTokenResponse'
+                                $ref: '#/components/schemas/CompleteAuthenticationReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/v1/auth/tokens/authentication:
+    /auth/refresh:
         post:
             tags:
-                - AuthService
-            operationId: AuthService_CreateAuthenticationToken
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateAuthenticationTokenRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateAuthenticationTokenResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/auth/tokens/password-reset:
-        post:
-            tags:
-                - AuthService
-            operationId: AuthService_CreatePasswordResetToken
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreatePasswordResetTokenRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreatePasswordResetTokenResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/auth/tokens/refresh:
-        post:
-            tags:
-                - AuthService
-            operationId: AuthService_RefreshTokens
+                - Auth
+            operationId: Auth_RefreshTokens
             requestBody:
                 content:
                     application/json:
@@ -95,127 +47,82 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/RefreshTokensResponse'
+                                $ref: '#/components/schemas/RefreshTokensReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/v1/auth/tokens/reset:
-        put:
+    /auth/sessions:
+        get:
             tags:
-                - AuthService
-            operationId: AuthService_LogOut
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/LogOutRequest'
-                required: true
+                - Auth
+            operationId: Auth_GetSessions
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/LogOutResponse'
+                                $ref: '#/components/schemas/GetSessionsReply'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/v1/auth/users/activated:
-        put:
+    /auth/sessions/others:
+        delete:
             tags:
-                - AuthService
-            operationId: AuthService_ActivateUser
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/ActivateUserRequest'
-                required: true
+                - Auth
+            operationId: Auth_RevokeOtherSessions
             responses:
                 "200":
                     description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ActivateUserResponse'
+                    content: {}
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/v1/auth/users/password:
-        put:
+    /auth/sessions/{sessionId}:
+        delete:
             tags:
-                - AuthService
-            operationId: AuthService_UpdateUserPassword
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UpdateUserPasswordRequest'
-                required: true
+                - Auth
+            operationId: Auth_RevokeSession
+            parameters:
+                - name: sessionId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/UpdateUserPasswordResponse'
+                    content: {}
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/v1/auth/users/recover:
+    /auth/start:
         post:
             tags:
-                - AuthService
-            operationId: AuthService_RecoverCompromisedAccount
+                - Auth
+            operationId: Auth_StartAuthentication
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/RecoverCompromisedAccountRequest'
+                            $ref: '#/components/schemas/StartAuthenticationRequest'
                 required: true
             responses:
                 "200":
                     description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/RecoverCompromisedAccountResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/auth/users/register:
-        post:
-            tags:
-                - AuthService
-            operationId: AuthService_RegisterUser
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/RegisterUserRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/RegisterUserResponse'
+                    content: {}
                 default:
                     description: Default error response
                     content:
@@ -224,50 +131,25 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        ActivateUserRequest:
+        CompleteAuthenticationReply:
             type: object
             properties:
-                activationToken:
+                id:
                     type: string
-        ActivateUserResponse:
-            type: object
-            properties:
-                userUuid:
-                    type: string
-        CreateActivationTokenRequest:
-            type: object
-            properties:
-                email:
-                    type: string
-                password:
-                    type: string
-        CreateActivationTokenResponse:
-            type: object
-            properties:
-                userUuid:
-                    type: string
-        CreateAuthenticationTokenRequest:
-            type: object
-            properties:
-                email:
-                    type: string
-                password:
-                    type: string
-        CreateAuthenticationTokenResponse:
-            type: object
-            properties:
                 tokens:
                     $ref: '#/components/schemas/Tokens'
-        CreatePasswordResetTokenRequest:
+        CompleteAuthenticationRequest:
             type: object
             properties:
-                email:
+                otpCode:
                     type: string
-        CreatePasswordResetTokenResponse:
+        GetSessionsReply:
             type: object
             properties:
-                userUuid:
-                    type: string
+                sessions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Session'
         GoogleProtobufAny:
             type: object
             properties:
@@ -276,51 +158,29 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        LogOutRequest:
+        RefreshTokensReply:
             type: object
             properties:
-                userUuid:
-                    type: string
                 tokens:
                     $ref: '#/components/schemas/Tokens'
-        LogOutResponse:
-            type: object
-            properties:
-                userUuid:
-                    type: string
-        RecoverCompromisedAccountRequest:
-            type: object
-            properties:
-                securityToken:
-                    type: string
-                password:
-                    type: string
-        RecoverCompromisedAccountResponse:
-            type: object
-            properties:
-                userUuid:
-                    type: string
         RefreshTokensRequest:
             type: object
             properties:
-                tokens:
-                    $ref: '#/components/schemas/Tokens'
-        RefreshTokensResponse:
+                refreshToken:
+                    type: string
+        Session:
             type: object
             properties:
-                tokens:
-                    $ref: '#/components/schemas/Tokens'
-        RegisterUserRequest:
+                id:
+                    type: string
+                createdAt:
+                    type: string
+                lastUsedAt:
+                    type: string
+        StartAuthenticationRequest:
             type: object
             properties:
                 email:
-                    type: string
-                password:
-                    type: string
-        RegisterUserResponse:
-            type: object
-            properties:
-                userUuid:
                     type: string
         Status:
             type: object
@@ -345,17 +205,5 @@ components:
                     type: string
                 refreshToken:
                     type: string
-        UpdateUserPasswordRequest:
-            type: object
-            properties:
-                passwordResetToken:
-                    type: string
-                password:
-                    type: string
-        UpdateUserPasswordResponse:
-            type: object
-            properties:
-                userUuid:
-                    type: string
 tags:
-    - name: AuthService
+    - name: Auth

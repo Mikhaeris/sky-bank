@@ -3,199 +3,91 @@ syntax = "proto3";
 package api.auth.v1;
 
 import "google/api/annotations.proto";
-import "google/protobuf/descriptor.proto";
+import "google/protobuf/empty.proto";
 
 option go_package = "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1";
 
-enum Authentication {
-  AUTHENTICATION_REQUIRED = 0;
-  AUTHENTICATION_PUBLIC = 1;
-}
-
-message AuthPolicy {
-  Authentication authentication = 1;
-}
-
-extend google.protobuf.MethodOptions {
-  AuthPolicy auth = 50001;
-}
-
-service AuthService {
-    rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse) {
-        option (api.auth.v1.auth) = {
-          authentication: AUTHENTICATION_PUBLIC
-        };
-
-        option (google.api.http) = {
-            post: "/api/v1/auth/users/register"
-            body: "*"
-        };
+service Auth {
+  rpc StartAuthentication(StartAuthenticationRequest) returns(google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/auth/start"
+      body: "*"
     };
+  };
 
-    rpc ActivateUser(ActivateUserRequest) returns (ActivateUserResponse) {
-        option (api.auth.v1.auth) = {
-          authentication: AUTHENTICATION_PUBLIC
-        };
-
-        option (google.api.http) = {
-            put: "/api/v1/auth/users/activated"
-            body: "*"
-        };
+  rpc CompleteAuthentication(CompleteAuthenticationRequest) returns(CompleteAuthenticationReply) {
+    option (google.api.http) = {
+      post: "/auth/complete"
+      body: "*"
     };
+  };
 
-    rpc CreateAuthenticationToken(CreateAuthenticationTokenRequest) returns (CreateAuthenticationTokenResponse) {
-        option (api.auth.v1.auth) = {
-          authentication: AUTHENTICATION_PUBLIC
-        };
-
-        option (google.api.http) = {
-            post: "/api/v1/auth/tokens/authentication"
-            body: "*"
-        };
+  rpc RefreshTokens(RefreshTokensRequest) returns(RefreshTokensReply) {
+    option (google.api.http) = {
+      post: "/auth/refresh"
+      body: "*"
     };
+  };
 
-    rpc CreateActivationToken(CreateActivationTokenRequest) returns (CreateActivationTokenResponse) {
-        option (api.auth.v1.auth) = {
-          authentication: AUTHENTICATION_PUBLIC
-        };
-
-        option (google.api.http) = {
-            post: "/api/v1/auth/tokens/activation"
-            body: "*"
-        };
+  rpc GetSessions(google.protobuf.Empty) returns (GetSessionsReply) {
+    option (google.api.http) = {
+      get: "/auth/sessions"
     };
+  }
 
-    rpc CreatePasswordResetToken(CreatePasswordResetTokenRequest) returns (CreatePasswordResetTokenResponse) {
-        option (api.auth.v1.auth) = {
-          authentication: AUTHENTICATION_PUBLIC
-        };
-
-        option (google.api.http) = {
-            post: "/api/v1/auth/tokens/password-reset"
-            body: "*"
-        };
+  rpc RevokeSession(RevokeSessionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/auth/sessions/{session_id}"
     };
+  }
 
-    rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (UpdateUserPasswordResponse) {
-        option (api.auth.v1.auth) = {
-          authentication: AUTHENTICATION_PUBLIC
-        };
-
-        option (google.api.http) = {
-            put: "/api/v1/auth/users/password"
-            body: "*"
-        };
+  rpc RevokeOtherSessions(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/auth/sessions/others"
     };
-
-    rpc RefreshTokens(RefreshTokensRequest) returns (RefreshTokensResponse) {
-        option (api.auth.v1.auth) = {
-          authentication: AUTHENTICATION_PUBLIC
-        };
-
-        option (google.api.http) = {
-            post: "/api/v1/auth/tokens/refresh"
-            body: "*"
-        };
-    };
-
-    rpc RecoverCompromisedAccount(RecoverCompromisedAccountRequest) returns (RecoverCompromisedAccountResponse) {
-        option (api.auth.v1.auth) = {
-          authentication: AUTHENTICATION_PUBLIC
-        };
-
-        option (google.api.http) = {
-            post: "/api/v1/auth/users/recover"
-            body: "*"
-        };
-    }
-
-    rpc LogOut(LogOutRequest) returns (LogOutResponse) {
-        option (google.api.http) = {
-            put: "/api/v1/auth/tokens/reset"
-            body: "*"
-        };
-    };
+  }
 }
 
-message Tokens {
-    string access_token = 1;
-    string refresh_token = 2;
+message Tokens{
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
-message RegisterUserRequest {
-    string email = 1;
-    string password = 2;
+message StartAuthenticationRequest {
+  string email = 1;
 }
 
-message RegisterUserResponse {
-    string user_uuid = 1;
+message CompleteAuthenticationRequest {
+  string otp_code = 1;
 }
 
-message ActivateUserRequest {
-    string activation_token = 1;
-}
-
-message ActivateUserResponse {
-    string user_uuid = 1;
-}
-
-message CreateAuthenticationTokenRequest {
-    string email = 1;
-    string password = 2;
-}
-
-message CreateAuthenticationTokenResponse {
-    Tokens tokens = 1;
-}
-
-message CreateActivationTokenRequest {
-    string email = 1;
-    string password = 2;
-}
-
-message CreateActivationTokenResponse {
-    string user_uuid = 1;
-}
-
-message CreatePasswordResetTokenRequest {
-    string email = 1;
-}
-
-message CreatePasswordResetTokenResponse {
-    string user_uuid = 1;
-}
-
-message UpdateUserPasswordRequest {
-    string password_reset_token = 1;
-    string password = 2;
-}
-
-message UpdateUserPasswordResponse {
-    string user_uuid = 1;
+message CompleteAuthenticationReply {
+  string id = 1;
+  Tokens tokens = 2;
 }
 
 message RefreshTokensRequest {
-    Tokens tokens = 1;
+  string refresh_token = 1;
 }
 
-message RefreshTokensResponse {
-    Tokens tokens = 1;
+message RefreshTokensReply {
+  Tokens tokens = 1;
 }
 
-message LogOutRequest {
-    string user_uuid = 1;
-    Tokens tokens = 2;
+message Session {
+  string id = 1;
+  string created_at = 2;
+  string last_used_at = 3;
 }
 
-message LogOutResponse {
-    string user_uuid = 1;
+message GetSessionsReply {
+  repeated Session sessions = 1;
 }
 
-message RecoverCompromisedAccountRequest {
-    string security_token = 1;
-    string password = 2;
+message RevokeSessionRequest {
+  string session_id = 1;
 }
 
-message RecoverCompromisedAccountResponse {
-    string user_uuid = 1;
+message RevokeSessionReply {
+  string status = 1;
 }
