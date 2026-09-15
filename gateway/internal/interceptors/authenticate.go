@@ -5,20 +5,26 @@ import (
 	"strings"
 
 	authv1 "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
-	"github.com/mikhaeris/sky-bank/gateway/internal/utils"
+	jwt "github.com/mikhaeris/sky-bank/gateway/internal/lib"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/protoregistry"
-	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-func Authenticate(
-	verifier *utils.TokenVerifier,
-) grpc.UnaryClientInterceptor {
+const (
+	identityIDMetadata = "x-identity-id"
+	emailMetadata      = "x-email"
+)
+
+var accessTokenExemptMethods = map[string]struct{}{
+	authv1.Auth_StartAuthentication_FullMethodName:    {},
+	authv1.Auth_CompleteAuthentication_FullMethodName: {},
+	authv1.Auth_RefreshTokens_FullMethodName:          {},
+}
+
+func Authenticate(verifier *jwt.TokenVerifier) grpc.UnaryClientInterceptor {
 	return func(
 		ctx context.Context,
 		method string,
@@ -27,19 +33,12 @@ func Authenticate(
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) error {
-		if !requiresAuthentication(method) {
-			return invoker(
-				ctx,
-				method,
-				req,
-				reply,
-				cc,
-				opts...,
-			)
+		if _, exempt := accessTokenExemptMethods[method]; exempt {
+			return invoker(ctx, method, req, reply, cc, opts...)
 		}
 
-		token, err := utils.ExtractBearerToken(ctx)
-		if err != nil {
+		token, ok := extractBearerToken(ctx)
+		if !ok {
 			return status.Error(
 				codes.Unauthenticated,
 				"access token required",
@@ -54,73 +53,31 @@ func Authenticate(
 			)
 		}
 
-		md, _ := metadata.FromOutgoingContext(ctx)
-		md = md.Copy()
-
-		md.Delete(utils.UserIDMetadata)
-
-		md.Delete("authorization")
-
-		md.Set(
-			utils.UserIDMetadata,
-			claims.Subject,
-		)
-
-		ctx = metadata.NewOutgoingContext(ctx, md)
-
-		return invoker(
+		ctx = metadata.AppendToOutgoingContext(
 			ctx,
-			method,
-			req,
-			reply,
-			cc,
-			opts...,
+			identityIDMetadata, claims.Subject,
+			emailMetadata, claims.Email,
 		)
+
+		return invoker(ctx, method, req, reply, cc, opts...)
 	}
 }
 
-func requiresAuthentication(method string) bool {
-	policy, ok := getAuthPolicy(method)
-
+func extractBearerToken(ctx context.Context) (string, bool) {
+	md, ok := metadata.FromOutgoingContext(ctx)
 	if !ok {
-		return true
+		return "", false
 	}
 
-	return policy.Authentication !=
-		authv1.Authentication_AUTHENTICATION_PUBLIC
-}
-
-func getAuthPolicy(method string) (*authv1.AuthPolicy, bool) {
-	fullName := strings.TrimPrefix(method, "/")
-	fullName = strings.ReplaceAll(fullName, "/", ".")
-
-	descriptor, err := protoregistry.GlobalFiles.FindDescriptorByName(
-		protoreflect.FullName(fullName),
-	)
-	if err != nil {
-		return nil, false
+	values := md.Get("authorization")
+	if len(values) == 0 {
+		return "", false
 	}
 
-	methodDescriptor, ok := descriptor.(protoreflect.MethodDescriptor)
-	if !ok {
-		return nil, false
+	parts := strings.Fields(values[0])
+	if len(parts) != 2 || !strings.EqualFold(parts[0], "Bearer") {
+		return "", false
 	}
 
-	options, ok := methodDescriptor.Options().(*descriptorpb.MethodOptions)
-	if !ok {
-		return nil, false
-	}
-
-	if !proto.HasExtension(options, authv1.E_Auth) {
-		return nil, false
-	}
-
-	value := proto.GetExtension(options, authv1.E_Auth)
-
-	policy, ok := value.(*authv1.AuthPolicy)
-	if !ok || policy == nil {
-		return nil, false
-	}
-
-	return policy, true
+	return parts[1], true
 }

@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/mikhaeris/sky-bank/gateway/internal/config"
+	jwt "github.com/mikhaeris/sky-bank/gateway/internal/lib"
 	"github.com/mikhaeris/sky-bank/gateway/internal/registers"
-	"github.com/mikhaeris/sky-bank/gateway/internal/utils"
 )
 
 func main() {
@@ -15,20 +15,27 @@ func main() {
 
 	cfg := config.GetConfig(logger)
 
-	tokenVerifier, err := utils.NewTokenVerifier(cfg.Jwt.PubKeyPath)
+	tokenVerifier, err := jwt.NewTokenVerifier(cfg.Jwt.PubKeyPath)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
 	}
 
-	serverMux, clenup, err := registers.RegisterAll(cfg.Auth.Addr, tokenVerifier)
+	serverMux, cleanup, err := registers.RegisterAll(cfg.Auth.Addr, tokenVerifier)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
 	}
-	defer clenup()
+	defer cleanup()
 
-	err = http.ListenAndServe(cfg.Rest.Addr, serverMux)
+	mux := http.NewServeMux()
+
+	mux.Handle(
+		"/api/v1/",
+		http.StripPrefix("/api/v1", serverMux),
+	)
+
+	err = http.ListenAndServe(cfg.Rest.Addr, mux)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)

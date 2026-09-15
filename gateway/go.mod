@@ -6,9 +6,8 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.30.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
-	github.com/mikhaeris/sky-bank/auth_service v0.0.0-20260912192612-ef3eaa189562
+	github.com/mikhaeris/sky-bank/auth_service v0.0.0-20260915193125-6175b99a1588
 	google.golang.org/grpc v1.83.2
-	google.golang.org/protobuf v1.36.12
 )
 
 require (
@@ -19,6 +18,7 @@ require (
 	golang.org/x/text v0.41.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260803160001-6ac0973c030d // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260803160001-6ac0973c030d // indirect
+	google.golang.org/protobuf v1.36.12 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 )

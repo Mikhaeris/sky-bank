@@ -28,12 +28,11 @@ var (
 )
 
 func GetConfig(logger *slog.Logger) *Config {
-	var once sync.Once
-
-	config := &Config{}
-
 	once.Do(func() {
 		logger.Info("read application config")
+
+		config = &Config{}
+
 		err := cleanenv.ReadConfig(configPath, config)
 		if err != nil {
 			help, _ := cleanenv.GetDescription(config, nil)
