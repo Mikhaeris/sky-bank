@@ -37,7 +37,7 @@ type AuthClient interface {
 	RefreshTokens(ctx context.Context, in *RefreshTokensRequest, opts ...grpc.CallOption) (*RefreshTokensResponse, error)
 	GetSessions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSessionsResponse, error)
 	RevokeSession(ctx context.Context, in *RevokeSessionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RevokeOtherSessions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RevokeOtherSessions(ctx context.Context, in *RevokeSessionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type authClient struct {
@@ -98,7 +98,7 @@ func (c *authClient) RevokeSession(ctx context.Context, in *RevokeSessionRequest
 	return out, nil
 }
 
-func (c *authClient) RevokeOtherSessions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authClient) RevokeOtherSessions(ctx context.Context, in *RevokeSessionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Auth_RevokeOtherSessions_FullMethodName, in, out, cOpts...)
@@ -117,7 +117,7 @@ type AuthServer interface {
 	RefreshTokens(context.Context, *RefreshTokensRequest) (*RefreshTokensResponse, error)
 	GetSessions(context.Context, *emptypb.Empty) (*GetSessionsResponse, error)
 	RevokeSession(context.Context, *RevokeSessionRequest) (*emptypb.Empty, error)
-	RevokeOtherSessions(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	RevokeOtherSessions(context.Context, *RevokeSessionRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -143,7 +143,7 @@ func (UnimplementedAuthServer) GetSessions(context.Context, *emptypb.Empty) (*Ge
 func (UnimplementedAuthServer) RevokeSession(context.Context, *RevokeSessionRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RevokeSession not implemented")
 }
-func (UnimplementedAuthServer) RevokeOtherSessions(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedAuthServer) RevokeOtherSessions(context.Context, *RevokeSessionRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RevokeOtherSessions not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
@@ -258,7 +258,7 @@ func _Auth_RevokeSession_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _Auth_RevokeOtherSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(RevokeSessionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -270,7 +270,7 @@ func _Auth_RevokeOtherSessions_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: Auth_RevokeOtherSessions_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).RevokeOtherSessions(ctx, req.(*emptypb.Empty))
+		return srv.(AuthServer).RevokeOtherSessions(ctx, req.(*RevokeSessionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

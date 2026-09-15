@@ -72,11 +72,17 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /auth/sessions/others:
+    /auth/sessions/others/{sessionId}:
         delete:
             tags:
                 - Auth
             operationId: Auth_RevokeOtherSessions
+            parameters:
+                - name: sessionId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK

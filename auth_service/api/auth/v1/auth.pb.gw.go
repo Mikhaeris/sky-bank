@@ -179,9 +179,18 @@ func local_request_Auth_RevokeSession_0(ctx context.Context, marshaler runtime.M
 
 func request_Auth_RevokeOtherSessions_0(ctx context.Context, marshaler runtime.Marshaler, client AuthClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq RevokeSessionRequest
 		metadata runtime.ServerMetadata
+		err      error
 	)
+	val, ok := pathParams["session_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "session_id")
+	}
+	protoReq.SessionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "session_id", err)
+	}
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
@@ -191,9 +200,18 @@ func request_Auth_RevokeOtherSessions_0(ctx context.Context, marshaler runtime.M
 
 func local_request_Auth_RevokeOtherSessions_0(ctx context.Context, marshaler runtime.Marshaler, server AuthServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq emptypb.Empty
+		protoReq RevokeSessionRequest
 		metadata runtime.ServerMetadata
+		err      error
 	)
+	val, ok := pathParams["session_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "session_id")
+	}
+	protoReq.SessionId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "session_id", err)
+	}
 	msg, err := server.RevokeOtherSessions(ctx, &protoReq)
 	return msg, metadata, err
 }
@@ -310,7 +328,7 @@ func RegisterAuthHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.auth.v1.Auth/RevokeOtherSessions", runtime.WithHTTPPathPattern("/auth/sessions/others"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.auth.v1.Auth/RevokeOtherSessions", runtime.WithHTTPPathPattern("/auth/sessions/others/{session_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -453,7 +471,7 @@ func RegisterAuthHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.auth.v1.Auth/RevokeOtherSessions", runtime.WithHTTPPathPattern("/auth/sessions/others"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.auth.v1.Auth/RevokeOtherSessions", runtime.WithHTTPPathPattern("/auth/sessions/others/{session_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -475,7 +493,7 @@ var (
 	pattern_Auth_RefreshTokens_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "refresh"}, ""))
 	pattern_Auth_GetSessions_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "sessions"}, ""))
 	pattern_Auth_RevokeSession_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"auth", "sessions", "session_id"}, ""))
-	pattern_Auth_RevokeOtherSessions_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"auth", "sessions", "others"}, ""))
+	pattern_Auth_RevokeOtherSessions_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"auth", "sessions", "others", "session_id"}, ""))
 )
 
 var (

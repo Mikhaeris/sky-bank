@@ -536,14 +536,14 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\n" +
 	"session_id\x18\x01 \x01(\tR\tsessionId\"/\n" +
 	"\x15RevokeSessionResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status2\xaf\x05\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status2\xc7\x05\n" +
 	"\x04Auth\x12n\n" +
 	"\x13StartAuthentication\x12'.api.auth.v1.StartAuthenticationRequest\x1a\x16.google.protobuf.Empty\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/start\x12\x8c\x01\n" +
 	"\x16CompleteAuthentication\x12*.api.auth.v1.CompleteAuthenticationRequest\x1a+.api.auth.v1.CompleteAuthenticationResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/auth/complete\x12p\n" +
 	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\".api.auth.v1.RefreshTokensResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/auth/refresh\x12_\n" +
 	"\vGetSessions\x12\x16.google.protobuf.Empty\x1a .api.auth.v1.GetSessionsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/auth/sessions\x12o\n" +
-	"\rRevokeSession\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/auth/sessions/{session_id}\x12d\n" +
-	"\x13RevokeOtherSessions\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x1d\x82\xd3\xe4\x93\x02\x17*\x15/auth/sessions/othersB?Z=github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1b\x06proto3"
+	"\rRevokeSession\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/auth/sessions/{session_id}\x12|\n" +
+	"\x13RevokeOtherSessions\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$*\"/auth/sessions/others/{session_id}B?Z=github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1b\x06proto3"
 
 var (
 	file_auth_v1_auth_proto_rawDescOnce sync.Once
@@ -580,7 +580,7 @@ var file_auth_v1_auth_proto_depIdxs = []int32{
 	4,  // 5: api.auth.v1.Auth.RefreshTokens:input_type -> api.auth.v1.RefreshTokensRequest
 	10, // 6: api.auth.v1.Auth.GetSessions:input_type -> google.protobuf.Empty
 	8,  // 7: api.auth.v1.Auth.RevokeSession:input_type -> api.auth.v1.RevokeSessionRequest
-	10, // 8: api.auth.v1.Auth.RevokeOtherSessions:input_type -> google.protobuf.Empty
+	8,  // 8: api.auth.v1.Auth.RevokeOtherSessions:input_type -> api.auth.v1.RevokeSessionRequest
 	10, // 9: api.auth.v1.Auth.StartAuthentication:output_type -> google.protobuf.Empty
 	3,  // 10: api.auth.v1.Auth.CompleteAuthentication:output_type -> api.auth.v1.CompleteAuthenticationResponse
 	5,  // 11: api.auth.v1.Auth.RefreshTokens:output_type -> api.auth.v1.RefreshTokensResponse

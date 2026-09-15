@@ -29,7 +29,7 @@ service Auth {
     };
   };
 
-  rpc GetSessions(google.protobuf.Empty) returns (GetSessionsResponse) {
+  rpc GetSessions (google.protobuf.Empty) returns (GetSessionsResponse) {
     option (google.api.http) = {
       get: "/auth/sessions"
     };
@@ -41,9 +41,9 @@ service Auth {
     };
   }
 
-  rpc RevokeOtherSessions (google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc RevokeOtherSessions (RevokeSessionRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/auth/sessions/others"
+      delete: "/auth/sessions/others/{session_id}"
     };
   }
 }
