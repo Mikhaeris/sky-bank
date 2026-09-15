@@ -121,7 +121,8 @@ func (x *StartAuthenticationRequest) GetEmail() string {
 
 type CompleteAuthenticationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OtpCode       string                 `protobuf:"bytes,1,opt,name=otp_code,json=otpCode,proto3" json:"otp_code,omitempty"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	OtpCode       string                 `protobuf:"bytes,2,opt,name=otp_code,json=otpCode,proto3" json:"otp_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -154,6 +155,13 @@ func (x *CompleteAuthenticationRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CompleteAuthenticationRequest.ProtoReflect.Descriptor instead.
 func (*CompleteAuthenticationRequest) Descriptor() ([]byte, []int) {
 	return file_auth_v1_auth_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CompleteAuthenticationRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
 }
 
 func (x *CompleteAuthenticationRequest) GetOtpCode() string {
@@ -496,9 +504,10 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
 	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"2\n" +
 	"\x1aStartAuthenticationRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\":\n" +
-	"\x1dCompleteAuthenticationRequest\x12\x19\n" +
-	"\botp_code\x18\x01 \x01(\tR\aotpCode\"M\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"P\n" +
+	"\x1dCompleteAuthenticationRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\x12\x19\n" +
+	"\botp_code\x18\x02 \x01(\tR\aotpCode\"M\n" +
 	"\x1eCompleteAuthenticationResponse\x12+\n" +
 	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\";\n" +
 	"\x14RefreshTokensRequest\x12#\n" +

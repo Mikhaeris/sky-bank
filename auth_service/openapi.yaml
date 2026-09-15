@@ -134,6 +134,8 @@ components:
         CompleteAuthenticationRequest:
             type: object
             properties:
+                email:
+                    type: string
                 otpCode:
                     type: string
         CompleteAuthenticationResponse:

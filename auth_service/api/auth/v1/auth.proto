@@ -58,7 +58,8 @@ message StartAuthenticationRequest {
 }
 
 message CompleteAuthenticationRequest {
-  string otp_code = 1;
+  string email = 1;
+  string otp_code = 2;
 }
 
 message CompleteAuthenticationResponse {
