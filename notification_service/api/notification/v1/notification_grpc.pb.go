@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,14 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NotificationService_SendWelcomeMessage_FullMethodName = "/api.notification.v1.NotificationService/SendWelcomeMessage"
+	NotificationService_SendOtpCode_FullMethodName  = "/api.notification.v1.NotificationService/SendOtpCode"
+	NotificationService_SendNewLogIn_FullMethodName = "/api.notification.v1.NotificationService/SendNewLogIn"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotificationServiceClient interface {
-	SendWelcomeMessage(ctx context.Context, in *WelcomeMessageRequest, opts ...grpc.CallOption) (*WelcomeMessageResponse, error)
+	SendOtpCode(ctx context.Context, in *SendOtpCodeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SendNewLogIn(ctx context.Context, in *SendNewLogInRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type notificationServiceClient struct {
@@ -37,10 +40,20 @@ func NewNotificationServiceClient(cc grpc.ClientConnInterface) NotificationServi
 	return &notificationServiceClient{cc}
 }
 
-func (c *notificationServiceClient) SendWelcomeMessage(ctx context.Context, in *WelcomeMessageRequest, opts ...grpc.CallOption) (*WelcomeMessageResponse, error) {
+func (c *notificationServiceClient) SendOtpCode(ctx context.Context, in *SendOtpCodeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(WelcomeMessageResponse)
-	err := c.cc.Invoke(ctx, NotificationService_SendWelcomeMessage_FullMethodName, in, out, cOpts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, NotificationService_SendOtpCode_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *notificationServiceClient) SendNewLogIn(ctx context.Context, in *SendNewLogInRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, NotificationService_SendNewLogIn_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +64,8 @@ func (c *notificationServiceClient) SendWelcomeMessage(ctx context.Context, in *
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility.
 type NotificationServiceServer interface {
-	SendWelcomeMessage(context.Context, *WelcomeMessageRequest) (*WelcomeMessageResponse, error)
+	SendOtpCode(context.Context, *SendOtpCodeRequest) (*emptypb.Empty, error)
+	SendNewLogIn(context.Context, *SendNewLogInRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -62,8 +76,11 @@ type NotificationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedNotificationServiceServer struct{}
 
-func (UnimplementedNotificationServiceServer) SendWelcomeMessage(context.Context, *WelcomeMessageRequest) (*WelcomeMessageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendWelcomeMessage not implemented")
+func (UnimplementedNotificationServiceServer) SendOtpCode(context.Context, *SendOtpCodeRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendOtpCode not implemented")
+}
+func (UnimplementedNotificationServiceServer) SendNewLogIn(context.Context, *SendNewLogInRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendNewLogIn not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 func (UnimplementedNotificationServiceServer) testEmbeddedByValue()                             {}
@@ -86,20 +103,38 @@ func RegisterNotificationServiceServer(s grpc.ServiceRegistrar, srv Notification
 	s.RegisterService(&NotificationService_ServiceDesc, srv)
 }
 
-func _NotificationService_SendWelcomeMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WelcomeMessageRequest)
+func _NotificationService_SendOtpCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendOtpCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NotificationServiceServer).SendWelcomeMessage(ctx, in)
+		return srv.(NotificationServiceServer).SendOtpCode(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: NotificationService_SendWelcomeMessage_FullMethodName,
+		FullMethod: NotificationService_SendOtpCode_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).SendWelcomeMessage(ctx, req.(*WelcomeMessageRequest))
+		return srv.(NotificationServiceServer).SendOtpCode(ctx, req.(*SendOtpCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _NotificationService_SendNewLogIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendNewLogInRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).SendNewLogIn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationService_SendNewLogIn_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).SendNewLogIn(ctx, req.(*SendNewLogInRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -112,8 +147,12 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*NotificationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SendWelcomeMessage",
-			Handler:    _NotificationService_SendWelcomeMessage_Handler,
+			MethodName: "SendOtpCode",
+			Handler:    _NotificationService_SendOtpCode_Handler,
+		},
+		{
+			MethodName: "SendNewLogIn",
+			Handler:    _NotificationService_SendNewLogIn_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -2,18 +2,20 @@ syntax = "proto3";
 
 package api.notification.v1;
 
+import "google/protobuf/empty.proto";
+
 option go_package = "github.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1";
 
 service NotificationService {
-    rpc SendWelcomeMessage(WelcomeMessageRequest) returns (WelcomeMessageResponse);
+  rpc SendOtpCode (SendOtpCodeRequest) returns (google.protobuf.Empty);
+  rpc SendNewLogIn (SendNewLogInRequest) returns (google.protobuf.Empty);
 }
 
-message WelcomeMessageRequest {
-    string identity_uuid = 1;
-    string email = 2;
-    string activation_token = 3;
+message SendOtpCodeRequest {
+  string email = 1;
+  string otp_code = 2;
 }
 
-message WelcomeMessageResponse {
-    string status = 1;
+message SendNewLogInRequest {
+  string email = 1;
 }

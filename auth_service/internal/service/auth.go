@@ -1,45 +1,44 @@
 package service
 
 import (
-	"context"
-	"uuid"
+	"log/slog"
 
+	otpprovider "github.com/mikhaeris/sky-bank/auth_service/internal/clients/otpProvider"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/lib/jwt"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/repository"
+	notificationv1 "github.com/mikhaeris/sky-bank/notification_service/api/notification/v1"
 )
 
-func (a *AuthService) RegisterUser(ctx context.Context, dto domain.UserDTO) (uuid.UUID, error) {
-	// hash password
-	hash, err := bcrypt.GenerateFromPassword([]byte(dto.Password), 12)
-	if err != nil {
-		return uuid.Nil(), err
-	}
-
-	// generate uuid
-	userUUID := uuid.New()
-
-	// dto to User
-	user := domain.NewUser(dto, userUUID, string(hash))
-
-	// Validate
-
-	// insert to auth_db
-	err = a.userRepo.Insert(ctx, user)
-	if err != nil {
-		return uuid.Nil(), err
-	}
-
-	a.logger.Info("ok", user)
-
-	// send user_service information
-
-	// generate token for email
-
-	// send confirmation email
-
-	return user.ID, nil
+type AuthService struct {
+	jwtKey             *jwt.Keys
+	logger             *slog.Logger
+	codeHash           *domain.CodeHasher
+	otpProvider        otpprovider.OtpProvider
+	notificationClient notificationv1.NotificationServiceClient
+	otpRepo            *repository.OtpRepository
+	sessionRepo        *repository.SessionRepository
+	identityRepo       *repository.IdentityRepository
 }
 
-func (a *AuthService) ActivateUser(ctx context.Context, dto domain.ActivateUserDTO) (domain.User, error) {
-	return domain.User{}, nil
+func NewAuthService(
+	jwtKey *jwt.Keys,
+	logger *slog.Logger,
+	codeHash *domain.CodeHasher,
+	otpProvider otpprovider.OtpProvider,
+	notificationClient notificationv1.NotificationServiceClient,
+	otpRepo *repository.OtpRepository,
+	sessionRepo *repository.SessionRepository,
+	identiRepo *repository.IdentityRepository,
+) *AuthService {
+	return &AuthService{
+		jwtKey:             jwtKey,
+		logger:             logger,
+		codeHash:           codeHash,
+		otpProvider:        otpProvider,
+		notificationClient: notificationClient,
+		otpRepo:            otpRepo,
+		sessionRepo:        sessionRepo,
+		identityRepo:       identiRepo,
+	}
 }

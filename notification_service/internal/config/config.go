@@ -16,14 +16,14 @@ type Config struct {
 	} `yaml:"server"`
 	Smtp struct {
 		Host     string `yaml:"host"`
-		Port     string `yaml:"port"`
+		Port     int    `yaml:"port"`
 		Username string `yaml:"username"`
 		Password string `yaml:"password"`
 		Sender   string `yaml:"sender"`
 	}
 }
 
-const configPath = "config.yml"
+const configPath = "config.yaml"
 
 var (
 	once   sync.Once
@@ -31,12 +31,11 @@ var (
 )
 
 func GetConfig(logger *slog.Logger) *Config {
-	var once sync.Once
-
-	config := &Config{}
-
 	once.Do(func() {
 		logger.Info("read application config")
+
+		config = &Config{}
+
 		err := cleanenv.ReadConfig(configPath, config)
 		if err != nil {
 			logger.Error(

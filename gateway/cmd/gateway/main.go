@@ -1,52 +1,43 @@
 package main
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 
-	pb "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"github.com/mikhaeris/sky-bank/gateway/internal/config"
+	jwt "github.com/mikhaeris/sky-bank/gateway/internal/lib"
+	"github.com/mikhaeris/sky-bank/gateway/internal/registers"
 )
-
-var GrpcClient pb.AuthSericeClient
 
 func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
-	host := "auth"
-	port := "9000"
+	cfg := config.GetConfig(logger)
 
-	addr := fmt.Sprintf("%s:%s", host, port)
-
-	conn, err := grpc.NewClient(
-		addr,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
+	tokenVerifier, err := jwt.NewTokenVerifier(cfg.Jwt.PubKeyPath)
 	if err != nil {
-		logger.Error("could not create grpc client",
-			"error", err,
-		)
+		logger.Error(err.Error())
 		os.Exit(1)
 	}
-	defer conn.Close()
 
-	GrpcClient = pb.NewAuthSericeClient(conn)
+	serverMux, cleanup, err := registers.RegisterAll(cfg.Auth.Addr, tokenVerifier)
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
+	defer cleanup()
 
-	logger.Info("grpc client created",
-		"addr", addr,
+	mux := http.NewServeMux()
+
+	mux.Handle(
+		"/api/v1/",
+		http.StripPrefix("/api/v1", serverMux),
 	)
 
-	conn.Connect()
-
-	handler := AuthHandler{}
-
-	logger.Info("starting server", "addr", 8081)
-	err = http.ListenAndServe(":8081", routes(&handler))
+	err = http.ListenAndServe(cfg.Rest.Addr, mux)
 	if err != nil {
-		logger.Error("error start http server")
+		logger.Error(err.Error())
 		os.Exit(1)
 	}
 }

@@ -6,6 +6,7 @@ import (
 
 	notificationv1 "github.com/mikhaeris/sky-bank/notification_service/api/notification/v1"
 	"github.com/mikhaeris/sky-bank/notification_service/internal/mailer"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type NotificationHandler struct {
@@ -21,18 +22,30 @@ func NewNotificationHandler(logger *slog.Logger, mailer *mailer.Mailer) *Notific
 	}
 }
 
-func (h *NotificationHandler) SendWelcomeMessage(ctx context.Context, in *notificationv1.WelcomeMessageRequest) (*notificationv1.WelcomeMessageResponse, error) {
+func (h *NotificationHandler) SendOtpCode(ctx context.Context, in *notificationv1.SendOtpCodeRequest) (*emptypb.Empty, error) {
 	data := map[string]any{
-		"activationToken": in.ActivationToken,
-		"userID":          in.IdentityUuid,
+		"otpCode": in.OtpCode,
 	}
 
-	err := h.mailer.Send(in.Email, "user_welcome.tmpl", data)
+	err := h.mailer.Send(in.Email, "otp_code.html", data)
 	if err != nil {
 		h.logger.Error(err.Error())
+		return nil, err
 	}
+	h.logger.Info("send otp code email", "email", in.Email)
 
-	return &notificationv1.WelcomeMessageResponse{
-		Status: "ok",
-	}, nil
+	return &emptypb.Empty{}, nil
+}
+
+func (h *NotificationHandler) SendNewLogIn(ctx context.Context, in *notificationv1.SendNewLogInRequest) (*emptypb.Empty, error) {
+	data := map[string]any{}
+
+	err := h.mailer.Send(in.Email, "new_log_in.html", data)
+	if err != nil {
+		h.logger.Error(err.Error())
+		return nil, err
+	}
+	h.logger.Info("send new log in", "email", in.Email)
+
+	return &emptypb.Empty{}, nil
 }

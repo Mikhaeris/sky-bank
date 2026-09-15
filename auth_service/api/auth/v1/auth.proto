@@ -1,26 +1,94 @@
 syntax = "proto3";
 
-package auth.v1;
+package api.auth.v1;
 
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 
-option go_package = "github.com/mikhaeris/sky-bank/auth_service";
+option go_package = "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1";
 
-service AuthSerice {
-    rpc RegisterUser(RegisterRequest) returns (RegisterResponse);
+service Auth {
+  rpc StartAuthentication (StartAuthenticationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/auth/start"
+      body: "*"
+    };
+  };
+
+  rpc CompleteAuthentication (CompleteAuthenticationRequest) returns (CompleteAuthenticationResponse) {
+    option (google.api.http) = {
+      post: "/auth/complete"
+      body: "*"
+    };
+  };
+
+  rpc RefreshTokens (RefreshTokensRequest) returns (RefreshTokensResponse) {
+    option (google.api.http) = {
+      post: "/auth/refresh"
+      body: "*"
+    };
+  };
+
+  rpc GetSessions (google.protobuf.Empty) returns (GetSessionsResponse) {
+    option (google.api.http) = {
+      get: "/auth/sessions"
+    };
+  }
+
+  rpc RevokeSession (RevokeSessionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/auth/sessions/{session_id}"
+    };
+  }
+
+  rpc RevokeOtherSessions (RevokeSessionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/auth/sessions/others/{session_id}"
+    };
+  }
 }
 
-message Tokens {
-    access_token = 1;
-    refresh_token = 2;
+message Tokens{
+  string access_token = 1;
+  string refresh_token = 2;
 }
 
-message RegisterRequest {
-    string email = 1;
-    string password = 2;
+message StartAuthenticationRequest {
+  string email = 1;
 }
 
-message RegisterResponse {
-    string userUUID = 1;
-    Tokens tokens = 2;
+message CompleteAuthenticationRequest {
+  string email = 1;
+  string otp_code = 2;
+}
+
+message CompleteAuthenticationResponse {
+  Tokens tokens = 1;
+}
+
+message RefreshTokensRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokensResponse {
+  Tokens tokens = 1;
+}
+
+message Session {
+  string id = 1;
+  string created_at = 2;
+  string expires_at = 3;
+  string last_used_at = 4;
+}
+
+message GetSessionsResponse {
+  repeated Session sessions = 1;
+}
+
+message RevokeSessionRequest {
+  string session_id = 1;
+}
+
+message RevokeSessionResponse {
+  string status = 1;
 }

@@ -8,6 +8,9 @@ services:
     depends_on:
       auth:
         condition: service_started
+    volumes:
+      - ./secrets/keys/public.pem:/keys/public.pem:ro
+
 
   auth:
     build: auth_service/
@@ -18,8 +21,42 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+      notification:
+        condition: service_started
     volumes:
-      - ./keys/private.pem:/keys/private.pem:ro
+      - ./secrets/keys/private.pem:/keys/private.pem:ro
+      - ./secrets/otp.key:/secrets/otp.key:ro
+
+
+  notification:
+    build: notification_service/
+    command: ./notification
+    container_name: notification
+    ports:
+      - "9001:9001"
+    depends_on:
+      mailpit:
+        condition: service_healthy
+
+  # dev workflow only
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: sky-bank-mailpit
+    restart: unless-stopped
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_MAX_MESSAGES: 5000
+    volumes:
+      - mailpit_data:/data
+    ports:
+      - "8025:8025"
+    expose:
+      - "1025"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8025/readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   postgres:
     image: postgres:18
@@ -52,3 +89,4 @@ services:
 
 volumes:
   postgres_data:
+  mailpit_data:

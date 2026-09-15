@@ -9,6 +9,7 @@ package notificationv1
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -21,29 +22,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type WelcomeMessageRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	IdentityUuid    string                 `protobuf:"bytes,1,opt,name=identity_uuid,json=identityUuid,proto3" json:"identity_uuid,omitempty"`
-	Email           string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	ActivationToken string                 `protobuf:"bytes,3,opt,name=activation_token,json=activationToken,proto3" json:"activation_token,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+type SendOtpCodeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	OtpCode       string                 `protobuf:"bytes,2,opt,name=otp_code,json=otpCode,proto3" json:"otp_code,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *WelcomeMessageRequest) Reset() {
-	*x = WelcomeMessageRequest{}
+func (x *SendOtpCodeRequest) Reset() {
+	*x = SendOtpCodeRequest{}
 	mi := &file_notification_v1_notification_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *WelcomeMessageRequest) String() string {
+func (x *SendOtpCodeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WelcomeMessageRequest) ProtoMessage() {}
+func (*SendOtpCodeRequest) ProtoMessage() {}
 
-func (x *WelcomeMessageRequest) ProtoReflect() protoreflect.Message {
+func (x *SendOtpCodeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_notification_v1_notification_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,53 +55,46 @@ func (x *WelcomeMessageRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use WelcomeMessageRequest.ProtoReflect.Descriptor instead.
-func (*WelcomeMessageRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use SendOtpCodeRequest.ProtoReflect.Descriptor instead.
+func (*SendOtpCodeRequest) Descriptor() ([]byte, []int) {
 	return file_notification_v1_notification_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *WelcomeMessageRequest) GetIdentityUuid() string {
-	if x != nil {
-		return x.IdentityUuid
-	}
-	return ""
-}
-
-func (x *WelcomeMessageRequest) GetEmail() string {
+func (x *SendOtpCodeRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *WelcomeMessageRequest) GetActivationToken() string {
+func (x *SendOtpCodeRequest) GetOtpCode() string {
 	if x != nil {
-		return x.ActivationToken
+		return x.OtpCode
 	}
 	return ""
 }
 
-type WelcomeMessageResponse struct {
+type SendNewLogInRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *WelcomeMessageResponse) Reset() {
-	*x = WelcomeMessageResponse{}
+func (x *SendNewLogInRequest) Reset() {
+	*x = SendNewLogInRequest{}
 	mi := &file_notification_v1_notification_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *WelcomeMessageResponse) String() string {
+func (x *SendNewLogInRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WelcomeMessageResponse) ProtoMessage() {}
+func (*SendNewLogInRequest) ProtoMessage() {}
 
-func (x *WelcomeMessageResponse) ProtoReflect() protoreflect.Message {
+func (x *SendNewLogInRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_notification_v1_notification_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -113,14 +106,14 @@ func (x *WelcomeMessageResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use WelcomeMessageResponse.ProtoReflect.Descriptor instead.
-func (*WelcomeMessageResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use SendNewLogInRequest.ProtoReflect.Descriptor instead.
+func (*SendNewLogInRequest) Descriptor() ([]byte, []int) {
 	return file_notification_v1_notification_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *WelcomeMessageResponse) GetStatus() string {
+func (x *SendNewLogInRequest) GetEmail() string {
 	if x != nil {
-		return x.Status
+		return x.Email
 	}
 	return ""
 }
@@ -129,15 +122,15 @@ var File_notification_v1_notification_proto protoreflect.FileDescriptor
 
 const file_notification_v1_notification_proto_rawDesc = "" +
 	"\n" +
-	"\"notification/v1/notification.proto\x12\x13api.notification.v1\"}\n" +
-	"\x15WelcomeMessageRequest\x12#\n" +
-	"\ridentity_uuid\x18\x01 \x01(\tR\fidentityUuid\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\x12)\n" +
-	"\x10activation_token\x18\x03 \x01(\tR\x0factivationToken\"0\n" +
-	"\x16WelcomeMessageResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status2\x84\x01\n" +
-	"\x13NotificationService\x12m\n" +
-	"\x12SendWelcomeMessage\x12*.api.notification.v1.WelcomeMessageRequest\x1a+.api.notification.v1.WelcomeMessageResponseBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
+	"\"notification/v1/notification.proto\x12\x13api.notification.v1\x1a\x1bgoogle/protobuf/empty.proto\"E\n" +
+	"\x12SendOtpCodeRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\x12\x19\n" +
+	"\botp_code\x18\x02 \x01(\tR\aotpCode\"+\n" +
+	"\x13SendNewLogInRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email2\xb7\x01\n" +
+	"\x13NotificationService\x12N\n" +
+	"\vSendOtpCode\x12'.api.notification.v1.SendOtpCodeRequest\x1a\x16.google.protobuf.Empty\x12P\n" +
+	"\fSendNewLogIn\x12(.api.notification.v1.SendNewLogInRequest\x1a\x16.google.protobuf.EmptyBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
 
 var (
 	file_notification_v1_notification_proto_rawDescOnce sync.Once
@@ -153,14 +146,17 @@ func file_notification_v1_notification_proto_rawDescGZIP() []byte {
 
 var file_notification_v1_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_notification_v1_notification_proto_goTypes = []any{
-	(*WelcomeMessageRequest)(nil),  // 0: api.notification.v1.WelcomeMessageRequest
-	(*WelcomeMessageResponse)(nil), // 1: api.notification.v1.WelcomeMessageResponse
+	(*SendOtpCodeRequest)(nil),  // 0: api.notification.v1.SendOtpCodeRequest
+	(*SendNewLogInRequest)(nil), // 1: api.notification.v1.SendNewLogInRequest
+	(*emptypb.Empty)(nil),       // 2: google.protobuf.Empty
 }
 var file_notification_v1_notification_proto_depIdxs = []int32{
-	0, // 0: api.notification.v1.NotificationService.SendWelcomeMessage:input_type -> api.notification.v1.WelcomeMessageRequest
-	1, // 1: api.notification.v1.NotificationService.SendWelcomeMessage:output_type -> api.notification.v1.WelcomeMessageResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 0: api.notification.v1.NotificationService.SendOtpCode:input_type -> api.notification.v1.SendOtpCodeRequest
+	1, // 1: api.notification.v1.NotificationService.SendNewLogIn:input_type -> api.notification.v1.SendNewLogInRequest
+	2, // 2: api.notification.v1.NotificationService.SendOtpCode:output_type -> google.protobuf.Empty
+	2, // 3: api.notification.v1.NotificationService.SendNewLogIn:output_type -> google.protobuf.Empty
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

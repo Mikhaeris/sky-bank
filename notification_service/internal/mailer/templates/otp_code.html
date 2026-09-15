@@ -1,0 +1,33 @@
+{{define "subject"}}Sky Bank One Time Code!{{end}}
+
+{{define "plainBody"}}
+
+Your one time code:
+{{.otpCode}}
+
+Thanks,
+
+The Sky Bank Team
+{{end}}
+
+
+{{define "htmlBody"}}
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <p>Your one time code</p>
+    <pre><code>
+    {"code": "{{.otpCode}}"}
+    </code></pre>
+    <p>Thanks,</p>
+    <p>The Sky Bank Team</p>
+</body>
+
+</html>
+{{end}}

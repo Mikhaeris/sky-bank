@@ -15,11 +15,17 @@ type Config struct {
 			Addr string `yaml:"addr"`
 		} `yaml:"grpc"`
 	} `yaml:"server"`
+	Client struct {
+		Grpc struct {
+			Addr string `yaml:"addr"`
+		} `yaml:"grpc"`
+	} `yaml:"client"`
 	Storage StorageConfig `yaml:"database"`
 	Jwt     struct {
 		PrivKeyPath    string        `yaml:"priv_key_path"`
 		AccessTokenTtl time.Duration `yaml:"access_token_ttl"`
 	} `yaml:"jwt"`
+	OtpSecretPath string `yaml:"otp_secret_path"`
 }
 
 type StorageConfig struct {
@@ -30,7 +36,7 @@ type StorageConfig struct {
 	Password string `yaml:"password"`
 }
 
-const configPath = "config.yml"
+const configPath = "config.yaml"
 
 var (
 	once   sync.Once
@@ -38,14 +44,15 @@ var (
 )
 
 func GetConfig(logger *slog.Logger) *Config {
-	var once sync.Once
-
-	config := &Config{}
-
 	once.Do(func() {
 		logger.Info("read application config")
+
+		config = &Config{}
+
 		err := cleanenv.ReadConfig(configPath, config)
 		if err != nil {
+			help, _ := cleanenv.GetDescription(config, nil)
+			logger.Info(help)
 			logger.Error(
 				"can't read config",
 				"path", configPath,
