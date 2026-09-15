@@ -25,6 +25,7 @@ type Config struct {
 		PrivKeyPath    string        `yaml:"priv_key_path"`
 		AccessTokenTtl time.Duration `yaml:"access_token_ttl"`
 	} `yaml:"jwt"`
+	OtpSecretPath string `yaml:"otp_secret_path"`
 }
 
 type StorageConfig struct {
@@ -43,12 +44,11 @@ var (
 )
 
 func GetConfig(logger *slog.Logger) *Config {
-	var once sync.Once
-
-	config := &Config{}
-
 	once.Do(func() {
 		logger.Info("read application config")
+
+		config = &Config{}
+
 		err := cleanenv.ReadConfig(configPath, config)
 		if err != nil {
 			help, _ := cleanenv.GetDescription(config, nil)

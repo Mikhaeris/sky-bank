@@ -3,25 +3,42 @@ package service
 import (
 	"log/slog"
 
+	otpprovider "github.com/mikhaeris/sky-bank/auth_service/internal/clients/otpProvider"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/lib/jwt"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/repository"
-	"github.com/mikhaeris/sky-bank/auth_service/internal/utils"
 	notificationv1 "github.com/mikhaeris/sky-bank/notification_service/api/notification/v1"
 )
 
 type AuthService struct {
-	jwtKey             *utils.Keys
+	jwtKey             *jwt.Keys
 	logger             *slog.Logger
+	codeHash           *domain.CodeHasher
+	otpProvider        otpprovider.OtpProvider
 	notificationClient notificationv1.NotificationServiceClient
-	tokenRepo          *repository.TokenRepository
-	identiRepo         *repository.IdentityRepository
+	otpRepo            *repository.OtpRepository
+	sessionRepo        *repository.SessionRepository
+	identityRepo       *repository.IdentityRepository
 }
 
-func NewAuthService(jwtKey *utils.Keys, logger *slog.Logger, notificationClient notificationv1.NotificationServiceClient, tokenRepo *repository.TokenRepository, identiRepo *repository.IdentityRepository) *AuthService {
+func NewAuthService(
+	jwtKey *jwt.Keys,
+	logger *slog.Logger,
+	codeHash *domain.CodeHasher,
+	otpProvider otpprovider.OtpProvider,
+	notificationClient notificationv1.NotificationServiceClient,
+	otpRepo *repository.OtpRepository,
+	sessionRepo *repository.SessionRepository,
+	identiRepo *repository.IdentityRepository,
+) *AuthService {
 	return &AuthService{
 		jwtKey:             jwtKey,
 		logger:             logger,
+		codeHash:           codeHash,
+		otpProvider:        otpProvider,
 		notificationClient: notificationClient,
-		tokenRepo:          tokenRepo,
-		identiRepo:         identiRepo,
+		otpRepo:            otpRepo,
+		sessionRepo:        sessionRepo,
+		identityRepo:       identiRepo,
 	}
 }

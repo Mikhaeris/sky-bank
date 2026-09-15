@@ -15,3 +15,8 @@ grpc/generate:
 		--grpc-gateway_out=paths=source_relative:./api \
 		--openapi_out==paths=source_relative:. \
 		auth/v1/auth.proto
+
+## services/update_grpc commit=$1: update grpc for commit
+.PHONY:
+services/update_grpc:
+	go get github.com/mikhaeris/sky-bank/notification_service/api/notification/v1@${commit}

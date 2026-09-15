@@ -1,4 +1,4 @@
-package utils
+package jwt
 
 import (
 	"crypto"
@@ -42,18 +42,18 @@ type UserClaims struct {
 	UserInfo
 }
 
-func (k *Keys) CreateToken(user *domain.User) (string, error) {
+func (k *Keys) CreateToken(identity *domain.Identity) (string, error) {
 	t := jwt.New(jwt.SigningMethodEdDSA)
 
 	t.Claims = &UserClaims{
 		jwt.RegisteredClaims{
-			Subject: user.Id.String(),
+			Subject: identity.ID.String(),
 
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(k.ttl)),
 		},
 		UserInfo{
-			Email: user.Email,
+			Email: identity.Email,
 		},
 	}
 

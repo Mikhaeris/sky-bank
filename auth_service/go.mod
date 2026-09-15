@@ -7,8 +7,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.30.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/lib/pq v1.12.3
-	github.com/mikhaeris/sky-bank/notification_service v0.0.0-20260912192518-9815b31660fb
-	golang.org/x/crypto v0.56.0
+	github.com/mikhaeris/sky-bank/notification_service v0.0.0-20260915093244-40a345a30fb5
 	google.golang.org/genproto/googleapis/api v0.0.0-20260803160001-6ac0973c030d
 	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.12

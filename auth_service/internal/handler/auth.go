@@ -8,7 +8,7 @@ import (
 )
 
 type AuthHandler struct {
-	v1.UnimplementedAuthServiceServer
+	v1.UnimplementedAuthServer
 	logger      *slog.Logger
 	authService *service.AuthService
 }

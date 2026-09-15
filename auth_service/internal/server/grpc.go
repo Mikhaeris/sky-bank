@@ -13,7 +13,7 @@ func NewGRPCServer(auth *handler.AuthHandler, logger *slog.Logger) *grpc.Server 
 	logger.Info("new grpc server")
 	grpcServer := grpc.NewServer()
 
-	authv1.RegisterAuthServiceServer(grpcServer, auth)
+	authv1.RegisterAuthServer(grpcServer, auth)
 
 	return grpcServer
 }
