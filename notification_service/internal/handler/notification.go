@@ -36,3 +36,16 @@ func (h *NotificationHandler) SendOtpCode(ctx context.Context, in *notificationv
 
 	return &emptypb.Empty{}, nil
 }
+
+func (h *NotificationHandler) SendNewLogIn(ctx context.Context, in *notificationv1.SendNewLogInRequest) (*emptypb.Empty, error) {
+	data := map[string]any{}
+
+	err := h.mailer.Send(in.Email, "new_log_in.html", data)
+	if err != nil {
+		h.logger.Error(err.Error())
+		return nil, err
+	}
+	h.logger.Info("send new log in", "email", in.Email)
+
+	return &emptypb.Empty{}, nil
+}

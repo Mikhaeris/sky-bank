@@ -8,9 +8,14 @@ option go_package = "github.com/mikhaeris/sky-bank/notification_service/api/noti
 
 service NotificationService {
   rpc SendOtpCode (SendOtpCodeRequest) returns (google.protobuf.Empty);
+  rpc SendNewLogIn (SendNewLogInRequest) returns (google.protobuf.Empty);
 }
 
 message SendOtpCodeRequest {
   string email = 1;
   string otp_code = 2;
+}
+
+message SendNewLogInRequest {
+  string email = 1;
 }

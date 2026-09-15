@@ -20,7 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NotificationService_SendOtpCode_FullMethodName = "/api.notification.v1.NotificationService/SendOtpCode"
+	NotificationService_SendOtpCode_FullMethodName  = "/api.notification.v1.NotificationService/SendOtpCode"
+	NotificationService_SendNewLogIn_FullMethodName = "/api.notification.v1.NotificationService/SendNewLogIn"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
@@ -28,6 +29,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotificationServiceClient interface {
 	SendOtpCode(ctx context.Context, in *SendOtpCodeRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SendNewLogIn(ctx context.Context, in *SendNewLogInRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type notificationServiceClient struct {
@@ -48,11 +50,22 @@ func (c *notificationServiceClient) SendOtpCode(ctx context.Context, in *SendOtp
 	return out, nil
 }
 
+func (c *notificationServiceClient) SendNewLogIn(ctx context.Context, in *SendNewLogInRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, NotificationService_SendNewLogIn_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NotificationServiceServer is the server API for NotificationService service.
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility.
 type NotificationServiceServer interface {
 	SendOtpCode(context.Context, *SendOtpCodeRequest) (*emptypb.Empty, error)
+	SendNewLogIn(context.Context, *SendNewLogInRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -65,6 +78,9 @@ type UnimplementedNotificationServiceServer struct{}
 
 func (UnimplementedNotificationServiceServer) SendOtpCode(context.Context, *SendOtpCodeRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendOtpCode not implemented")
+}
+func (UnimplementedNotificationServiceServer) SendNewLogIn(context.Context, *SendNewLogInRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendNewLogIn not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 func (UnimplementedNotificationServiceServer) testEmbeddedByValue()                             {}
@@ -105,6 +121,24 @@ func _NotificationService_SendOtpCode_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationService_SendNewLogIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendNewLogInRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).SendNewLogIn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationService_SendNewLogIn_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).SendNewLogIn(ctx, req.(*SendNewLogInRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NotificationService_ServiceDesc is the grpc.ServiceDesc for NotificationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -115,6 +149,10 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendOtpCode",
 			Handler:    _NotificationService_SendOtpCode_Handler,
+		},
+		{
+			MethodName: "SendNewLogIn",
+			Handler:    _NotificationService_SendNewLogIn_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

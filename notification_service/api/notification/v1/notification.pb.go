@@ -74,6 +74,50 @@ func (x *SendOtpCodeRequest) GetOtpCode() string {
 	return ""
 }
 
+type SendNewLogInRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendNewLogInRequest) Reset() {
+	*x = SendNewLogInRequest{}
+	mi := &file_notification_v1_notification_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendNewLogInRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendNewLogInRequest) ProtoMessage() {}
+
+func (x *SendNewLogInRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_notification_v1_notification_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendNewLogInRequest.ProtoReflect.Descriptor instead.
+func (*SendNewLogInRequest) Descriptor() ([]byte, []int) {
+	return file_notification_v1_notification_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *SendNewLogInRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
 var File_notification_v1_notification_proto protoreflect.FileDescriptor
 
 const file_notification_v1_notification_proto_rawDesc = "" +
@@ -81,9 +125,12 @@ const file_notification_v1_notification_proto_rawDesc = "" +
 	"\"notification/v1/notification.proto\x12\x13api.notification.v1\x1a\x1bgoogle/protobuf/empty.proto\"E\n" +
 	"\x12SendOtpCodeRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x19\n" +
-	"\botp_code\x18\x02 \x01(\tR\aotpCode2e\n" +
+	"\botp_code\x18\x02 \x01(\tR\aotpCode\"+\n" +
+	"\x13SendNewLogInRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email2\xb7\x01\n" +
 	"\x13NotificationService\x12N\n" +
-	"\vSendOtpCode\x12'.api.notification.v1.SendOtpCodeRequest\x1a\x16.google.protobuf.EmptyBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
+	"\vSendOtpCode\x12'.api.notification.v1.SendOtpCodeRequest\x1a\x16.google.protobuf.Empty\x12P\n" +
+	"\fSendNewLogIn\x12(.api.notification.v1.SendNewLogInRequest\x1a\x16.google.protobuf.EmptyBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
 
 var (
 	file_notification_v1_notification_proto_rawDescOnce sync.Once
@@ -97,16 +144,19 @@ func file_notification_v1_notification_proto_rawDescGZIP() []byte {
 	return file_notification_v1_notification_proto_rawDescData
 }
 
-var file_notification_v1_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_notification_v1_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_notification_v1_notification_proto_goTypes = []any{
-	(*SendOtpCodeRequest)(nil), // 0: api.notification.v1.SendOtpCodeRequest
-	(*emptypb.Empty)(nil),      // 1: google.protobuf.Empty
+	(*SendOtpCodeRequest)(nil),  // 0: api.notification.v1.SendOtpCodeRequest
+	(*SendNewLogInRequest)(nil), // 1: api.notification.v1.SendNewLogInRequest
+	(*emptypb.Empty)(nil),       // 2: google.protobuf.Empty
 }
 var file_notification_v1_notification_proto_depIdxs = []int32{
 	0, // 0: api.notification.v1.NotificationService.SendOtpCode:input_type -> api.notification.v1.SendOtpCodeRequest
-	1, // 1: api.notification.v1.NotificationService.SendOtpCode:output_type -> google.protobuf.Empty
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	1, // 1: api.notification.v1.NotificationService.SendNewLogIn:input_type -> api.notification.v1.SendNewLogInRequest
+	2, // 2: api.notification.v1.NotificationService.SendOtpCode:output_type -> google.protobuf.Empty
+	2, // 3: api.notification.v1.NotificationService.SendNewLogIn:output_type -> google.protobuf.Empty
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -123,7 +173,7 @@ func file_notification_v1_notification_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_notification_v1_notification_proto_rawDesc), len(file_notification_v1_notification_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
