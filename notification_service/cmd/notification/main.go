@@ -16,7 +16,7 @@ func main() {
 
 	cfg := config.GetConfig(logger)
 
-	mailer, err := mailer.New(cfg.Smtp.Host /*, cfg.smtp.port */, cfg.Smtp.Username, cfg.Smtp.Password, cfg.Smtp.Sender)
+	mailer, err := mailer.New(cfg.Smtp.Host, cfg.Smtp.Port, cfg.Smtp.Username, cfg.Smtp.Password, cfg.Smtp.Sender)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
