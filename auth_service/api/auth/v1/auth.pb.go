@@ -307,7 +307,8 @@ type Session struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	CreatedAt     string                 `protobuf:"bytes,2,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	LastUsedAt    string                 `protobuf:"bytes,3,opt,name=last_used_at,json=lastUsedAt,proto3" json:"last_used_at,omitempty"`
+	ExpiresAt     string                 `protobuf:"bytes,3,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
+	LastUsedAt    string                 `protobuf:"bytes,4,opt,name=last_used_at,json=lastUsedAt,proto3" json:"last_used_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -352,6 +353,13 @@ func (x *Session) GetId() string {
 func (x *Session) GetCreatedAt() string {
 	if x != nil {
 		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *Session) GetExpiresAt() string {
+	if x != nil {
+		return x.ExpiresAt
 	}
 	return ""
 }
@@ -513,12 +521,14 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\x14RefreshTokensRequest\x12#\n" +
 	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"D\n" +
 	"\x15RefreshTokensResponse\x12+\n" +
-	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\"Z\n" +
+	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\"y\n" +
 	"\aSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x02 \x01(\tR\tcreatedAt\x12 \n" +
-	"\flast_used_at\x18\x03 \x01(\tR\n" +
+	"created_at\x18\x02 \x01(\tR\tcreatedAt\x12\x1d\n" +
+	"\n" +
+	"expires_at\x18\x03 \x01(\tR\texpiresAt\x12 \n" +
+	"\flast_used_at\x18\x04 \x01(\tR\n" +
 	"lastUsedAt\"G\n" +
 	"\x13GetSessionsResponse\x120\n" +
 	"\bsessions\x18\x01 \x03(\v2\x14.api.auth.v1.SessionR\bsessions\"5\n" +
