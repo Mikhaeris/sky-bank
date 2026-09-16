@@ -1,0 +1,234 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Customer API
+    version: 0.0.1
+paths:
+    /customer:
+        get:
+            tags:
+                - Customer
+            operationId: Customer_GetCustomer
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetCustomerResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Customer
+            operationId: Customer_CompleteProfile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CompleteProfileRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CompleteProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - Customer
+            operationId: Customer_UpdateProfile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateProfileRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /customer/email-verification/complete:
+        post:
+            tags:
+                - Customer
+            operationId: Customer_CompleteEmailVerification
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CompleteEmailVerificationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /customer/email-verification/start:
+        post:
+            tags:
+                - Customer
+            operationId: Customer_StartEmailVerification
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/StartEmailVerificationRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StartEmailVerificationResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /customer/kyc/submit:
+        post:
+            tags:
+                - Customer
+            operationId: Customer_SubmitCustomerKYC
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SubmitCustomerKYCRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CompleteEmailVerificationRequest:
+            type: object
+            properties:
+                challengeId:
+                    type: string
+                email:
+                    type: string
+                otpCode:
+                    type: string
+        CompleteProfileRequest:
+            type: object
+            properties:
+                profile:
+                    $ref: '#/components/schemas/Profile'
+        CompleteProfileResponse:
+            type: object
+            properties:
+                profile:
+                    $ref: '#/components/schemas/Profile'
+                emailVerified:
+                    type: boolean
+                profileCompleted:
+                    type: boolean
+                kycStatus:
+                    type: string
+        GetCustomerResponse:
+            type: object
+            properties:
+                profile:
+                    $ref: '#/components/schemas/Profile'
+                emailVerified:
+                    type: boolean
+                profileCompleted:
+                    type: boolean
+                kycStatus:
+                    type: string
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        Profile:
+            type: object
+            properties:
+                email:
+                    type: string
+                firstName:
+                    type: string
+                lastName:
+                    type: string
+                middleName:
+                    type: string
+                birthDate:
+                    type: string
+                gender:
+                    type: string
+        StartEmailVerificationRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+        StartEmailVerificationResponse:
+            type: object
+            properties:
+                challengeId:
+                    type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        SubmitCustomerKYCRequest:
+            type: object
+            properties:
+                profile:
+                    $ref: '#/components/schemas/Profile'
+        UpdateProfileRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+tags:
+    - name: Customer

@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package api.customer.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/mikhaeris/sky-bank/customer_service/api/customer/v1;customerv1";
+
+service Customer {
+  rpc CompleteProfile (CompleteProfileRequest) returns (CompleteProfileResponse) {
+    option (google.api.http) = {
+      post: "/customer"
+      body: "*"
+    };
+  }
+
+  rpc StartEmailVerification (StartEmailVerificationRequest) returns (StartEmailVerificationResponse) {
+    option (google.api.http) = {
+      post: "/customer/email-verification/start"
+      body: "*"
+    };
+  }
+
+  rpc CompleteEmailVerification (CompleteEmailVerificationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/customer/email-verification/complete"
+      body: "*"
+    };
+  }
+
+  rpc GetCustomer (google.protobuf.Empty) returns (GetCustomerResponse) {
+    option (google.api.http) = {
+      get: "/customer"
+    };
+  }
+
+  rpc UpdateProfile (UpdateProfileRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/customer"
+      body: "*"
+    };
+  }
+
+  rpc SubmitCustomerKYC (SubmitCustomerKYCRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/customer/kyc/submit"
+      body: "*"
+    };
+  }
+}
+
+message Profile {
+  string email = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string middle_name = 4;
+  string birth_date = 5;
+  string gender = 6;
+}
+
+message CompleteProfileRequest {
+  Profile profile = 1;
+}
+
+message CompleteProfileResponse {
+  Profile profile = 1;
+  bool email_verified = 2;
+  bool profile_completed = 3;
+  string kyc_status = 4;
+}
+
+message StartEmailVerificationRequest {
+  string email = 1;
+}
+
+message StartEmailVerificationResponse {
+  string challenge_id = 1;
+}
+
+message CompleteEmailVerificationRequest {
+  string challenge_id = 1;
+  string email = 2;
+  string otp_code = 3;
+}
+
+message GetCustomerResponse {
+  Profile profile = 1;
+  bool email_verified = 2;
+  bool profile_completed = 3;
+  string kyc_status = 4;
+}
+
+message UpdateProfileRequest {
+  string email = 1;
+}
+
+message SubmitCustomerKYCRequest {
+  Profile profile = 1;
+}

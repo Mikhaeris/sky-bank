@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package api.customer.v1;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/mikhaeris/sky-bank/customer_service/api/customer/v1;customerv1";
+
+service CustomerPrivate {
+  rpc CreateEmptyCustomer (CreateEmptyCustomerRequest) returns (google.protobuf.Empty);
+}
+
+message CreateEmptyCustomerRequest {
+  string identity_id = 1;
+}
