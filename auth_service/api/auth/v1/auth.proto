@@ -8,7 +8,7 @@ import "google/protobuf/empty.proto";
 option go_package = "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1";
 
 service Auth {
-  rpc StartAuthentication (StartAuthenticationRequest) returns (google.protobuf.Empty) {
+  rpc StartAuthentication (StartAuthenticationRequest) returns (StartAuthenticationResponse) {
     option (google.api.http) = {
       post: "/auth/start"
       body: "*"
@@ -57,9 +57,14 @@ message StartAuthenticationRequest {
   string email = 1;
 }
 
+message StartAuthenticationResponse {
+  string challenge_id = 1;
+}
+
 message CompleteAuthenticationRequest {
-  string email = 1;
-  string otp_code = 2;
+  string challenge_id = 1;
+  string email = 2;
+  string otp_code = 3;
 }
 
 message CompleteAuthenticationResponse {

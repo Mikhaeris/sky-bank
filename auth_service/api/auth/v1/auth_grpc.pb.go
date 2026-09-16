@@ -32,7 +32,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
-	StartAuthentication(ctx context.Context, in *StartAuthenticationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	StartAuthentication(ctx context.Context, in *StartAuthenticationRequest, opts ...grpc.CallOption) (*StartAuthenticationResponse, error)
 	CompleteAuthentication(ctx context.Context, in *CompleteAuthenticationRequest, opts ...grpc.CallOption) (*CompleteAuthenticationResponse, error)
 	RefreshTokens(ctx context.Context, in *RefreshTokensRequest, opts ...grpc.CallOption) (*RefreshTokensResponse, error)
 	GetSessions(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSessionsResponse, error)
@@ -48,9 +48,9 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) StartAuthentication(ctx context.Context, in *StartAuthenticationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authClient) StartAuthentication(ctx context.Context, in *StartAuthenticationRequest, opts ...grpc.CallOption) (*StartAuthenticationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(StartAuthenticationResponse)
 	err := c.cc.Invoke(ctx, Auth_StartAuthentication_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ func (c *authClient) RevokeOtherSessions(ctx context.Context, in *RevokeSessionR
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility.
 type AuthServer interface {
-	StartAuthentication(context.Context, *StartAuthenticationRequest) (*emptypb.Empty, error)
+	StartAuthentication(context.Context, *StartAuthenticationRequest) (*StartAuthenticationResponse, error)
 	CompleteAuthentication(context.Context, *CompleteAuthenticationRequest) (*CompleteAuthenticationResponse, error)
 	RefreshTokens(context.Context, *RefreshTokensRequest) (*RefreshTokensResponse, error)
 	GetSessions(context.Context, *emptypb.Empty) (*GetSessionsResponse, error)
@@ -128,7 +128,7 @@ type AuthServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServer struct{}
 
-func (UnimplementedAuthServer) StartAuthentication(context.Context, *StartAuthenticationRequest) (*emptypb.Empty, error) {
+func (UnimplementedAuthServer) StartAuthentication(context.Context, *StartAuthenticationRequest) (*StartAuthenticationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StartAuthentication not implemented")
 }
 func (UnimplementedAuthServer) CompleteAuthentication(context.Context, *CompleteAuthenticationRequest) (*CompleteAuthenticationResponse, error) {

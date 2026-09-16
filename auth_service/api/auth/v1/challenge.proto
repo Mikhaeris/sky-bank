@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package api.auth.v1;
+
+option go_package = "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1";
+
+service OtpService {
+  rpc CreateChallenge(CreateChallengeRequest) returns (CreateChallengeResponse);
+
+  rpc VerifyChallenge(VerifyChallengeRequest) returns (VerifyChallengeResponse);
+}
+
+message CreateChallengeRequest {
+  string subject_id = 1;
+  string destination = 2;
+  OtpChannel channel = 3;
+  OtpPurpose purpose = 4;
+}
+
+message CreateChallengeResponse {
+  string challenge_id = 1;
+}
+
+enum OtpChannel {
+  OTP_CHANNEL_EMAIL = 0;
+  OTP_CHANNEL_SMS = 1;
+}
+
+enum OtpPurpose {
+  OTP_PURPOSE_EMAIL_VERIFICATION = 0;
+}
+
+message VerifyChallengeRequest {
+  string challenge_id = 1;
+  string code = 2;
+}
+
+message VerifyChallengeResponse {
+  bool verified = 1;
+}
