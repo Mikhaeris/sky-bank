@@ -128,7 +128,10 @@ paths:
             responses:
                 "200":
                     description: OK
-                    content: {}
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StartAuthenticationResponse'
                 default:
                     description: Default error response
                     content:
@@ -140,6 +143,8 @@ components:
         CompleteAuthenticationRequest:
             type: object
             properties:
+                challengeId:
+                    type: string
                 email:
                     type: string
                 otpCode:
@@ -189,6 +194,11 @@ components:
             type: object
             properties:
                 email:
+                    type: string
+        StartAuthenticationResponse:
+            type: object
+            properties:
+                challengeId:
                     type: string
         Status:
             type: object
