@@ -152,13 +152,12 @@ func (x *CompleteProfileRequest) GetProfile() *Profile {
 }
 
 type CompleteProfileResponse struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Profile          *Profile               `protobuf:"bytes,1,opt,name=profile,proto3" json:"profile,omitempty"`
-	EmailVerified    bool                   `protobuf:"varint,2,opt,name=email_verified,json=emailVerified,proto3" json:"email_verified,omitempty"`
-	ProfileCompleted bool                   `protobuf:"varint,3,opt,name=profile_completed,json=profileCompleted,proto3" json:"profile_completed,omitempty"`
-	KycStatus        string                 `protobuf:"bytes,4,opt,name=kyc_status,json=kycStatus,proto3" json:"kyc_status,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Profile       *Profile               `protobuf:"bytes,1,opt,name=profile,proto3" json:"profile,omitempty"`
+	EmailVerified bool                   `protobuf:"varint,2,opt,name=email_verified,json=emailVerified,proto3" json:"email_verified,omitempty"`
+	KycStatus     string                 `protobuf:"bytes,3,opt,name=kyc_status,json=kycStatus,proto3" json:"kyc_status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CompleteProfileResponse) Reset() {
@@ -201,13 +200,6 @@ func (x *CompleteProfileResponse) GetProfile() *Profile {
 func (x *CompleteProfileResponse) GetEmailVerified() bool {
 	if x != nil {
 		return x.EmailVerified
-	}
-	return false
-}
-
-func (x *CompleteProfileResponse) GetProfileCompleted() bool {
-	if x != nil {
-		return x.ProfileCompleted
 	}
 	return false
 }
@@ -310,8 +302,7 @@ func (x *StartEmailVerificationResponse) GetChallengeId() string {
 type CompleteEmailVerificationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ChallengeId   string                 `protobuf:"bytes,1,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	OtpCode       string                 `protobuf:"bytes,3,opt,name=otp_code,json=otpCode,proto3" json:"otp_code,omitempty"`
+	OtpCode       string                 `protobuf:"bytes,2,opt,name=otp_code,json=otpCode,proto3" json:"otp_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -353,13 +344,6 @@ func (x *CompleteEmailVerificationRequest) GetChallengeId() string {
 	return ""
 }
 
-func (x *CompleteEmailVerificationRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
 func (x *CompleteEmailVerificationRequest) GetOtpCode() string {
 	if x != nil {
 		return x.OtpCode
@@ -368,13 +352,12 @@ func (x *CompleteEmailVerificationRequest) GetOtpCode() string {
 }
 
 type GetCustomerResponse struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Profile          *Profile               `protobuf:"bytes,1,opt,name=profile,proto3" json:"profile,omitempty"`
-	EmailVerified    bool                   `protobuf:"varint,2,opt,name=email_verified,json=emailVerified,proto3" json:"email_verified,omitempty"`
-	ProfileCompleted bool                   `protobuf:"varint,3,opt,name=profile_completed,json=profileCompleted,proto3" json:"profile_completed,omitempty"`
-	KycStatus        string                 `protobuf:"bytes,4,opt,name=kyc_status,json=kycStatus,proto3" json:"kyc_status,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Profile       *Profile               `protobuf:"bytes,1,opt,name=profile,proto3" json:"profile,omitempty"`
+	EmailVerified bool                   `protobuf:"varint,2,opt,name=email_verified,json=emailVerified,proto3" json:"email_verified,omitempty"`
+	KycStatus     string                 `protobuf:"bytes,3,opt,name=kyc_status,json=kycStatus,proto3" json:"kyc_status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetCustomerResponse) Reset() {
@@ -417,13 +400,6 @@ func (x *GetCustomerResponse) GetProfile() *Profile {
 func (x *GetCustomerResponse) GetEmailVerified() bool {
 	if x != nil {
 		return x.EmailVerified
-	}
-	return false
-}
-
-func (x *GetCustomerResponse) GetProfileCompleted() bool {
-	if x != nil {
-		return x.ProfileCompleted
 	}
 	return false
 }
@@ -539,38 +515,35 @@ const file_customer_v1_customer_proto_rawDesc = "" +
 	"birth_date\x18\x05 \x01(\tR\tbirthDate\x12\x16\n" +
 	"\x06gender\x18\x06 \x01(\tR\x06gender\"L\n" +
 	"\x16CompleteProfileRequest\x122\n" +
-	"\aprofile\x18\x01 \x01(\v2\x18.api.customer.v1.ProfileR\aprofile\"\xc0\x01\n" +
+	"\aprofile\x18\x01 \x01(\v2\x18.api.customer.v1.ProfileR\aprofile\"\x93\x01\n" +
 	"\x17CompleteProfileResponse\x122\n" +
 	"\aprofile\x18\x01 \x01(\v2\x18.api.customer.v1.ProfileR\aprofile\x12%\n" +
-	"\x0eemail_verified\x18\x02 \x01(\bR\remailVerified\x12+\n" +
-	"\x11profile_completed\x18\x03 \x01(\bR\x10profileCompleted\x12\x1d\n" +
+	"\x0eemail_verified\x18\x02 \x01(\bR\remailVerified\x12\x1d\n" +
 	"\n" +
-	"kyc_status\x18\x04 \x01(\tR\tkycStatus\"5\n" +
+	"kyc_status\x18\x03 \x01(\tR\tkycStatus\"5\n" +
 	"\x1dStartEmailVerificationRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\"C\n" +
 	"\x1eStartEmailVerificationResponse\x12!\n" +
-	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"v\n" +
+	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"`\n" +
 	" CompleteEmailVerificationRequest\x12!\n" +
-	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\x12\x19\n" +
-	"\botp_code\x18\x03 \x01(\tR\aotpCode\"\xbc\x01\n" +
+	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x19\n" +
+	"\botp_code\x18\x02 \x01(\tR\aotpCode\"\x8f\x01\n" +
 	"\x13GetCustomerResponse\x122\n" +
 	"\aprofile\x18\x01 \x01(\v2\x18.api.customer.v1.ProfileR\aprofile\x12%\n" +
-	"\x0eemail_verified\x18\x02 \x01(\bR\remailVerified\x12+\n" +
-	"\x11profile_completed\x18\x03 \x01(\bR\x10profileCompleted\x12\x1d\n" +
+	"\x0eemail_verified\x18\x02 \x01(\bR\remailVerified\x12\x1d\n" +
 	"\n" +
-	"kyc_status\x18\x04 \x01(\tR\tkycStatus\",\n" +
+	"kyc_status\x18\x03 \x01(\tR\tkycStatus\",\n" +
 	"\x14UpdateProfileRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\"N\n" +
 	"\x18SubmitCustomerKYCRequest\x122\n" +
-	"\aprofile\x18\x01 \x01(\v2\x18.api.customer.v1.ProfileR\aprofile2\x8b\x06\n" +
+	"\aprofile\x18\x01 \x01(\v2\x18.api.customer.v1.ProfileR\aprofile2\x84\x06\n" +
 	"\bCustomer\x12z\n" +
 	"\x0fCompleteProfile\x12'.api.customer.v1.CompleteProfileRequest\x1a(.api.customer.v1.CompleteProfileResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/customer\x12\xa8\x01\n" +
 	"\x16StartEmailVerification\x12..api.customer.v1.StartEmailVerificationRequest\x1a/.api.customer.v1.StartEmailVerificationResponse\"-\x82\xd3\xe4\x93\x02':\x01*\"\"/customer/email-verification/start\x12\x98\x01\n" +
 	"\x19CompleteEmailVerification\x121.api.customer.v1.CompleteEmailVerificationRequest\x1a\x16.google.protobuf.Empty\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/customer/email-verification/complete\x12^\n" +
 	"\vGetCustomer\x12\x16.google.protobuf.Empty\x1a$.api.customer.v1.GetCustomerResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/customer\x12d\n" +
-	"\rUpdateProfile\x12%.api.customer.v1.UpdateProfileRequest\x1a\x16.google.protobuf.Empty\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*2\t/customer\x12w\n" +
-	"\x11SubmitCustomerKYC\x12).api.customer.v1.SubmitCustomerKYCRequest\x1a\x16.google.protobuf.Empty\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/customer/kyc/submitBKZIgithub.com/mikhaeris/sky-bank/customer_service/api/customer/v1;customerv1b\x06proto3"
+	"\rUpdateProfile\x12%.api.customer.v1.UpdateProfileRequest\x1a\x16.google.protobuf.Empty\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*2\t/customer\x12p\n" +
+	"\x11SubmitCustomerKYC\x12).api.customer.v1.SubmitCustomerKYCRequest\x1a\x16.google.protobuf.Empty\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/customer/kycBKZIgithub.com/mikhaeris/sky-bank/customer_service/api/customer/v1;customerv1b\x06proto3"
 
 var (
 	file_customer_v1_customer_proto_rawDescOnce sync.Once

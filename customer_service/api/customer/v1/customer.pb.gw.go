@@ -304,7 +304,7 @@ func RegisterCustomerHandlerServer(ctx context.Context, mux *runtime.ServeMux, s
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.customer.v1.Customer/SubmitCustomerKYC", runtime.WithHTTPPathPattern("/customer/kyc/submit"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.customer.v1.Customer/SubmitCustomerKYC", runtime.WithHTTPPathPattern("/customer/kyc"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -447,7 +447,7 @@ func RegisterCustomerHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.customer.v1.Customer/SubmitCustomerKYC", runtime.WithHTTPPathPattern("/customer/kyc/submit"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.customer.v1.Customer/SubmitCustomerKYC", runtime.WithHTTPPathPattern("/customer/kyc"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -469,7 +469,7 @@ var (
 	pattern_Customer_CompleteEmailVerification_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"customer", "email-verification", "complete"}, ""))
 	pattern_Customer_GetCustomer_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"customer"}, ""))
 	pattern_Customer_UpdateProfile_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"customer"}, ""))
-	pattern_Customer_SubmitCustomerKYC_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"customer", "kyc", "submit"}, ""))
+	pattern_Customer_SubmitCustomerKYC_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"customer", "kyc"}, ""))
 )
 
 var (

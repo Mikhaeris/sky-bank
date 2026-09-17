@@ -112,10 +112,9 @@ func (OtpPurpose) EnumDescriptor() ([]byte, []int) {
 
 type CreateChallengeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	SubjectId     string                 `protobuf:"bytes,1,opt,name=subject_id,json=subjectId,proto3" json:"subject_id,omitempty"`
-	Destination   string                 `protobuf:"bytes,2,opt,name=destination,proto3" json:"destination,omitempty"`
-	Channel       OtpChannel             `protobuf:"varint,3,opt,name=channel,proto3,enum=api.auth.v1.OtpChannel" json:"channel,omitempty"`
-	Purpose       OtpPurpose             `protobuf:"varint,4,opt,name=purpose,proto3,enum=api.auth.v1.OtpPurpose" json:"purpose,omitempty"`
+	Destination   string                 `protobuf:"bytes,1,opt,name=destination,proto3" json:"destination,omitempty"`
+	Channel       OtpChannel             `protobuf:"varint,2,opt,name=channel,proto3,enum=api.auth.v1.OtpChannel" json:"channel,omitempty"`
+	Purpose       OtpPurpose             `protobuf:"varint,3,opt,name=purpose,proto3,enum=api.auth.v1.OtpPurpose" json:"purpose,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -148,13 +147,6 @@ func (x *CreateChallengeRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateChallengeRequest.ProtoReflect.Descriptor instead.
 func (*CreateChallengeRequest) Descriptor() ([]byte, []int) {
 	return file_auth_v1_challenge_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *CreateChallengeRequest) GetSubjectId() string {
-	if x != nil {
-		return x.SubjectId
-	}
-	return ""
 }
 
 func (x *CreateChallengeRequest) GetDestination() string {
@@ -225,7 +217,8 @@ func (x *CreateChallengeResponse) GetChallengeId() string {
 type VerifyChallengeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ChallengeId   string                 `protobuf:"bytes,1,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
-	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
+	Purpose       OtpPurpose             `protobuf:"varint,2,opt,name=purpose,proto3,enum=api.auth.v1.OtpPurpose" json:"purpose,omitempty"`
+	Code          string                 `protobuf:"bytes,3,opt,name=code,proto3" json:"code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -265,6 +258,13 @@ func (x *VerifyChallengeRequest) GetChallengeId() string {
 		return x.ChallengeId
 	}
 	return ""
+}
+
+func (x *VerifyChallengeRequest) GetPurpose() OtpPurpose {
+	if x != nil {
+		return x.Purpose
+	}
+	return OtpPurpose_OTP_PURPOSE_EMAIL_VERIFICATION
 }
 
 func (x *VerifyChallengeRequest) GetCode() string {
@@ -322,18 +322,17 @@ var File_auth_v1_challenge_proto protoreflect.FileDescriptor
 
 const file_auth_v1_challenge_proto_rawDesc = "" +
 	"\n" +
-	"\x17auth/v1/challenge.proto\x12\vapi.auth.v1\"\xbf\x01\n" +
-	"\x16CreateChallengeRequest\x12\x1d\n" +
-	"\n" +
-	"subject_id\x18\x01 \x01(\tR\tsubjectId\x12 \n" +
-	"\vdestination\x18\x02 \x01(\tR\vdestination\x121\n" +
-	"\achannel\x18\x03 \x01(\x0e2\x17.api.auth.v1.OtpChannelR\achannel\x121\n" +
-	"\apurpose\x18\x04 \x01(\x0e2\x17.api.auth.v1.OtpPurposeR\apurpose\"<\n" +
+	"\x17auth/v1/challenge.proto\x12\vapi.auth.v1\"\xa0\x01\n" +
+	"\x16CreateChallengeRequest\x12 \n" +
+	"\vdestination\x18\x01 \x01(\tR\vdestination\x121\n" +
+	"\achannel\x18\x02 \x01(\x0e2\x17.api.auth.v1.OtpChannelR\achannel\x121\n" +
+	"\apurpose\x18\x03 \x01(\x0e2\x17.api.auth.v1.OtpPurposeR\apurpose\"<\n" +
 	"\x17CreateChallengeResponse\x12!\n" +
-	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"O\n" +
+	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"\x82\x01\n" +
 	"\x16VerifyChallengeRequest\x12!\n" +
-	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\"5\n" +
+	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x121\n" +
+	"\apurpose\x18\x02 \x01(\x0e2\x17.api.auth.v1.OtpPurposeR\apurpose\x12\x12\n" +
+	"\x04code\x18\x03 \x01(\tR\x04code\"5\n" +
 	"\x17VerifyChallengeResponse\x12\x1a\n" +
 	"\bverified\x18\x01 \x01(\bR\bverified*8\n" +
 	"\n" +
@@ -373,15 +372,16 @@ var file_auth_v1_challenge_proto_goTypes = []any{
 var file_auth_v1_challenge_proto_depIdxs = []int32{
 	0, // 0: api.auth.v1.CreateChallengeRequest.channel:type_name -> api.auth.v1.OtpChannel
 	1, // 1: api.auth.v1.CreateChallengeRequest.purpose:type_name -> api.auth.v1.OtpPurpose
-	2, // 2: api.auth.v1.OtpService.CreateChallenge:input_type -> api.auth.v1.CreateChallengeRequest
-	4, // 3: api.auth.v1.OtpService.VerifyChallenge:input_type -> api.auth.v1.VerifyChallengeRequest
-	3, // 4: api.auth.v1.OtpService.CreateChallenge:output_type -> api.auth.v1.CreateChallengeResponse
-	5, // 5: api.auth.v1.OtpService.VerifyChallenge:output_type -> api.auth.v1.VerifyChallengeResponse
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	1, // 2: api.auth.v1.VerifyChallengeRequest.purpose:type_name -> api.auth.v1.OtpPurpose
+	2, // 3: api.auth.v1.OtpService.CreateChallenge:input_type -> api.auth.v1.CreateChallengeRequest
+	4, // 4: api.auth.v1.OtpService.VerifyChallenge:input_type -> api.auth.v1.VerifyChallengeRequest
+	3, // 5: api.auth.v1.OtpService.CreateChallenge:output_type -> api.auth.v1.CreateChallengeResponse
+	5, // 6: api.auth.v1.OtpService.VerifyChallenge:output_type -> api.auth.v1.VerifyChallengeResponse
+	5, // [5:7] is the sub-list for method output_type
+	3, // [3:5] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_auth_v1_challenge_proto_init() }

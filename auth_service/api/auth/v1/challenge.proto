@@ -10,17 +10,6 @@ service OtpService {
   rpc VerifyChallenge(VerifyChallengeRequest) returns (VerifyChallengeResponse);
 }
 
-message CreateChallengeRequest {
-  string subject_id = 1;
-  string destination = 2;
-  OtpChannel channel = 3;
-  OtpPurpose purpose = 4;
-}
-
-message CreateChallengeResponse {
-  string challenge_id = 1;
-}
-
 enum OtpChannel {
   OTP_CHANNEL_EMAIL = 0;
   OTP_CHANNEL_SMS = 1;
@@ -30,9 +19,20 @@ enum OtpPurpose {
   OTP_PURPOSE_EMAIL_VERIFICATION = 0;
 }
 
+message CreateChallengeRequest {
+  string destination = 1;
+  OtpChannel channel = 2;
+  OtpPurpose purpose = 3;
+}
+
+message CreateChallengeResponse {
+  string challenge_id = 1;
+}
+
 message VerifyChallengeRequest {
   string challenge_id = 1;
-  string code = 2;
+  OtpPurpose purpose = 2;
+  string code = 3;
 }
 
 message VerifyChallengeResponse {

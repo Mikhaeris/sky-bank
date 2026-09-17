@@ -112,7 +112,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /customer/kyc/submit:
+    /customer/kyc:
         post:
             tags:
                 - Customer
@@ -140,8 +140,6 @@ components:
             properties:
                 challengeId:
                     type: string
-                email:
-                    type: string
                 otpCode:
                     type: string
         CompleteProfileRequest:
@@ -156,8 +154,6 @@ components:
                     $ref: '#/components/schemas/Profile'
                 emailVerified:
                     type: boolean
-                profileCompleted:
-                    type: boolean
                 kycStatus:
                     type: string
         GetCustomerResponse:
@@ -166,8 +162,6 @@ components:
                 profile:
                     $ref: '#/components/schemas/Profile'
                 emailVerified:
-                    type: boolean
-                profileCompleted:
                     type: boolean
                 kycStatus:
                     type: string

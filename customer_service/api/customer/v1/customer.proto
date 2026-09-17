@@ -44,7 +44,7 @@ service Customer {
 
   rpc SubmitCustomerKYC (SubmitCustomerKYCRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/customer/kyc/submit"
+      post: "/customer/kyc"
       body: "*"
     };
   }
@@ -66,8 +66,7 @@ message CompleteProfileRequest {
 message CompleteProfileResponse {
   Profile profile = 1;
   bool email_verified = 2;
-  bool profile_completed = 3;
-  string kyc_status = 4;
+  string kyc_status = 3;
 }
 
 message StartEmailVerificationRequest {
@@ -80,15 +79,13 @@ message StartEmailVerificationResponse {
 
 message CompleteEmailVerificationRequest {
   string challenge_id = 1;
-  string email = 2;
-  string otp_code = 3;
+  string otp_code = 2;
 }
 
 message GetCustomerResponse {
   Profile profile = 1;
   bool email_verified = 2;
-  bool profile_completed = 3;
-  string kyc_status = 4;
+  string kyc_status = 3;
 }
 
 message UpdateProfileRequest {
