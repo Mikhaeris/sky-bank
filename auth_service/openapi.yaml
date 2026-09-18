@@ -145,8 +145,6 @@ components:
             properties:
                 challengeId:
                     type: string
-                email:
-                    type: string
                 otpCode:
                     type: string
         CompleteAuthenticationResponse:

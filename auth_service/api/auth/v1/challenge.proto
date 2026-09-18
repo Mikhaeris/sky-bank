@@ -6,17 +6,18 @@ option go_package = "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;auth
 
 service OtpService {
   rpc CreateChallenge(CreateChallengeRequest) returns (CreateChallengeResponse);
-
   rpc VerifyChallenge(VerifyChallengeRequest) returns (VerifyChallengeResponse);
 }
 
 enum OtpChannel {
-  OTP_CHANNEL_EMAIL = 0;
-  OTP_CHANNEL_SMS = 1;
+  OTP_CHANNEL_UNSPECIFIED = 0;
+  OTP_CHANNEL_EMAIL = 1;
+  OTP_CHANNEL_SMS = 2;
 }
 
 enum OtpPurpose {
-  OTP_PURPOSE_EMAIL_VERIFICATION = 0;
+  OTP_PURPOSE_UNSPECIFIED = 0;
+  OTP_PURPOSE_EMAIL_VERIFICATION = 1;
 }
 
 message CreateChallengeRequest {
@@ -31,8 +32,7 @@ message CreateChallengeResponse {
 
 message VerifyChallengeRequest {
   string challenge_id = 1;
-  OtpPurpose purpose = 2;
-  string code = 3;
+  string code = 2;
 }
 
 message VerifyChallengeResponse {

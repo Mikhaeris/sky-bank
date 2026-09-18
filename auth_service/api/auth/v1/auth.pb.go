@@ -166,8 +166,7 @@ func (x *StartAuthenticationResponse) GetChallengeId() string {
 type CompleteAuthenticationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ChallengeId   string                 `protobuf:"bytes,1,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	OtpCode       string                 `protobuf:"bytes,3,opt,name=otp_code,json=otpCode,proto3" json:"otp_code,omitempty"`
+	OtpCode       string                 `protobuf:"bytes,2,opt,name=otp_code,json=otpCode,proto3" json:"otp_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -205,13 +204,6 @@ func (*CompleteAuthenticationRequest) Descriptor() ([]byte, []int) {
 func (x *CompleteAuthenticationRequest) GetChallengeId() string {
 	if x != nil {
 		return x.ChallengeId
-	}
-	return ""
-}
-
-func (x *CompleteAuthenticationRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
 	}
 	return ""
 }
@@ -566,11 +558,10 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\x1aStartAuthenticationRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\"@\n" +
 	"\x1bStartAuthenticationResponse\x12!\n" +
-	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"s\n" +
+	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"]\n" +
 	"\x1dCompleteAuthenticationRequest\x12!\n" +
-	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\x12\x19\n" +
-	"\botp_code\x18\x03 \x01(\tR\aotpCode\"M\n" +
+	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x19\n" +
+	"\botp_code\x18\x02 \x01(\tR\aotpCode\"M\n" +
 	"\x1eCompleteAuthenticationResponse\x12+\n" +
 	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\";\n" +
 	"\x14RefreshTokensRequest\x12#\n" +

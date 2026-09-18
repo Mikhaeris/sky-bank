@@ -63,8 +63,7 @@ message StartAuthenticationResponse {
 
 message CompleteAuthenticationRequest {
   string challenge_id = 1;
-  string email = 2;
-  string otp_code = 3;
+  string otp_code = 2;
 }
 
 message CompleteAuthenticationResponse {
