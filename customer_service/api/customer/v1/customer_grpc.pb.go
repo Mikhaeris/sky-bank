@@ -33,7 +33,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CustomerClient interface {
 	CompleteProfile(ctx context.Context, in *CompleteProfileRequest, opts ...grpc.CallOption) (*CompleteProfileResponse, error)
-	StartEmailVerification(ctx context.Context, in *StartEmailVerificationRequest, opts ...grpc.CallOption) (*StartEmailVerificationResponse, error)
+	StartEmailVerification(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StartEmailVerificationResponse, error)
 	CompleteEmailVerification(ctx context.Context, in *CompleteEmailVerificationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetCustomer(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCustomerResponse, error)
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -58,7 +58,7 @@ func (c *customerClient) CompleteProfile(ctx context.Context, in *CompleteProfil
 	return out, nil
 }
 
-func (c *customerClient) StartEmailVerification(ctx context.Context, in *StartEmailVerificationRequest, opts ...grpc.CallOption) (*StartEmailVerificationResponse, error) {
+func (c *customerClient) StartEmailVerification(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*StartEmailVerificationResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(StartEmailVerificationResponse)
 	err := c.cc.Invoke(ctx, Customer_StartEmailVerification_FullMethodName, in, out, cOpts...)
@@ -113,7 +113,7 @@ func (c *customerClient) SubmitCustomerKYC(ctx context.Context, in *SubmitCustom
 // for forward compatibility.
 type CustomerServer interface {
 	CompleteProfile(context.Context, *CompleteProfileRequest) (*CompleteProfileResponse, error)
-	StartEmailVerification(context.Context, *StartEmailVerificationRequest) (*StartEmailVerificationResponse, error)
+	StartEmailVerification(context.Context, *emptypb.Empty) (*StartEmailVerificationResponse, error)
 	CompleteEmailVerification(context.Context, *CompleteEmailVerificationRequest) (*emptypb.Empty, error)
 	GetCustomer(context.Context, *emptypb.Empty) (*GetCustomerResponse, error)
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*emptypb.Empty, error)
@@ -131,7 +131,7 @@ type UnimplementedCustomerServer struct{}
 func (UnimplementedCustomerServer) CompleteProfile(context.Context, *CompleteProfileRequest) (*CompleteProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CompleteProfile not implemented")
 }
-func (UnimplementedCustomerServer) StartEmailVerification(context.Context, *StartEmailVerificationRequest) (*StartEmailVerificationResponse, error) {
+func (UnimplementedCustomerServer) StartEmailVerification(context.Context, *emptypb.Empty) (*StartEmailVerificationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StartEmailVerification not implemented")
 }
 func (UnimplementedCustomerServer) CompleteEmailVerification(context.Context, *CompleteEmailVerificationRequest) (*emptypb.Empty, error) {
@@ -186,7 +186,7 @@ func _Customer_CompleteProfile_Handler(srv interface{}, ctx context.Context, dec
 }
 
 func _Customer_StartEmailVerification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StartEmailVerificationRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -198,7 +198,7 @@ func _Customer_StartEmailVerification_Handler(srv interface{}, ctx context.Conte
 		FullMethod: Customer_StartEmailVerification_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CustomerServer).StartEmailVerification(ctx, req.(*StartEmailVerificationRequest))
+		return srv.(CustomerServer).StartEmailVerification(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -211,50 +211,6 @@ func (x *CompleteProfileResponse) GetKycStatus() string {
 	return ""
 }
 
-type StartEmailVerificationRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *StartEmailVerificationRequest) Reset() {
-	*x = StartEmailVerificationRequest{}
-	mi := &file_customer_v1_customer_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *StartEmailVerificationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*StartEmailVerificationRequest) ProtoMessage() {}
-
-func (x *StartEmailVerificationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_customer_v1_customer_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use StartEmailVerificationRequest.ProtoReflect.Descriptor instead.
-func (*StartEmailVerificationRequest) Descriptor() ([]byte, []int) {
-	return file_customer_v1_customer_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *StartEmailVerificationRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
 type StartEmailVerificationResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ChallengeId   string                 `protobuf:"bytes,1,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
@@ -264,7 +220,7 @@ type StartEmailVerificationResponse struct {
 
 func (x *StartEmailVerificationResponse) Reset() {
 	*x = StartEmailVerificationResponse{}
-	mi := &file_customer_v1_customer_proto_msgTypes[4]
+	mi := &file_customer_v1_customer_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -276,7 +232,7 @@ func (x *StartEmailVerificationResponse) String() string {
 func (*StartEmailVerificationResponse) ProtoMessage() {}
 
 func (x *StartEmailVerificationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_customer_v1_customer_proto_msgTypes[4]
+	mi := &file_customer_v1_customer_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -289,7 +245,7 @@ func (x *StartEmailVerificationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StartEmailVerificationResponse.ProtoReflect.Descriptor instead.
 func (*StartEmailVerificationResponse) Descriptor() ([]byte, []int) {
-	return file_customer_v1_customer_proto_rawDescGZIP(), []int{4}
+	return file_customer_v1_customer_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *StartEmailVerificationResponse) GetChallengeId() string {
@@ -309,7 +265,7 @@ type CompleteEmailVerificationRequest struct {
 
 func (x *CompleteEmailVerificationRequest) Reset() {
 	*x = CompleteEmailVerificationRequest{}
-	mi := &file_customer_v1_customer_proto_msgTypes[5]
+	mi := &file_customer_v1_customer_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -321,7 +277,7 @@ func (x *CompleteEmailVerificationRequest) String() string {
 func (*CompleteEmailVerificationRequest) ProtoMessage() {}
 
 func (x *CompleteEmailVerificationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_customer_v1_customer_proto_msgTypes[5]
+	mi := &file_customer_v1_customer_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -334,7 +290,7 @@ func (x *CompleteEmailVerificationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CompleteEmailVerificationRequest.ProtoReflect.Descriptor instead.
 func (*CompleteEmailVerificationRequest) Descriptor() ([]byte, []int) {
-	return file_customer_v1_customer_proto_rawDescGZIP(), []int{5}
+	return file_customer_v1_customer_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CompleteEmailVerificationRequest) GetChallengeId() string {
@@ -362,7 +318,7 @@ type GetCustomerResponse struct {
 
 func (x *GetCustomerResponse) Reset() {
 	*x = GetCustomerResponse{}
-	mi := &file_customer_v1_customer_proto_msgTypes[6]
+	mi := &file_customer_v1_customer_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -374,7 +330,7 @@ func (x *GetCustomerResponse) String() string {
 func (*GetCustomerResponse) ProtoMessage() {}
 
 func (x *GetCustomerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_customer_v1_customer_proto_msgTypes[6]
+	mi := &file_customer_v1_customer_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -387,7 +343,7 @@ func (x *GetCustomerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCustomerResponse.ProtoReflect.Descriptor instead.
 func (*GetCustomerResponse) Descriptor() ([]byte, []int) {
-	return file_customer_v1_customer_proto_rawDescGZIP(), []int{6}
+	return file_customer_v1_customer_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetCustomerResponse) GetProfile() *Profile {
@@ -420,7 +376,7 @@ type UpdateProfileRequest struct {
 
 func (x *UpdateProfileRequest) Reset() {
 	*x = UpdateProfileRequest{}
-	mi := &file_customer_v1_customer_proto_msgTypes[7]
+	mi := &file_customer_v1_customer_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -432,7 +388,7 @@ func (x *UpdateProfileRequest) String() string {
 func (*UpdateProfileRequest) ProtoMessage() {}
 
 func (x *UpdateProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_customer_v1_customer_proto_msgTypes[7]
+	mi := &file_customer_v1_customer_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -445,7 +401,7 @@ func (x *UpdateProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateProfileRequest.ProtoReflect.Descriptor instead.
 func (*UpdateProfileRequest) Descriptor() ([]byte, []int) {
-	return file_customer_v1_customer_proto_rawDescGZIP(), []int{7}
+	return file_customer_v1_customer_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *UpdateProfileRequest) GetEmail() string {
@@ -464,7 +420,7 @@ type SubmitCustomerKYCRequest struct {
 
 func (x *SubmitCustomerKYCRequest) Reset() {
 	*x = SubmitCustomerKYCRequest{}
-	mi := &file_customer_v1_customer_proto_msgTypes[8]
+	mi := &file_customer_v1_customer_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -476,7 +432,7 @@ func (x *SubmitCustomerKYCRequest) String() string {
 func (*SubmitCustomerKYCRequest) ProtoMessage() {}
 
 func (x *SubmitCustomerKYCRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_customer_v1_customer_proto_msgTypes[8]
+	mi := &file_customer_v1_customer_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -489,7 +445,7 @@ func (x *SubmitCustomerKYCRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitCustomerKYCRequest.ProtoReflect.Descriptor instead.
 func (*SubmitCustomerKYCRequest) Descriptor() ([]byte, []int) {
-	return file_customer_v1_customer_proto_rawDescGZIP(), []int{8}
+	return file_customer_v1_customer_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *SubmitCustomerKYCRequest) GetProfile() *Profile {
@@ -520,9 +476,7 @@ const file_customer_v1_customer_proto_rawDesc = "" +
 	"\aprofile\x18\x01 \x01(\v2\x18.api.customer.v1.ProfileR\aprofile\x12%\n" +
 	"\x0eemail_verified\x18\x02 \x01(\bR\remailVerified\x12\x1d\n" +
 	"\n" +
-	"kyc_status\x18\x03 \x01(\tR\tkycStatus\"5\n" +
-	"\x1dStartEmailVerificationRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"C\n" +
+	"kyc_status\x18\x03 \x01(\tR\tkycStatus\"C\n" +
 	"\x1eStartEmailVerificationResponse\x12!\n" +
 	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"`\n" +
 	" CompleteEmailVerificationRequest\x12!\n" +
@@ -536,10 +490,10 @@ const file_customer_v1_customer_proto_rawDesc = "" +
 	"\x14UpdateProfileRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\"N\n" +
 	"\x18SubmitCustomerKYCRequest\x122\n" +
-	"\aprofile\x18\x01 \x01(\v2\x18.api.customer.v1.ProfileR\aprofile2\x84\x06\n" +
+	"\aprofile\x18\x01 \x01(\v2\x18.api.customer.v1.ProfileR\aprofile2\xe9\x05\n" +
 	"\bCustomer\x12z\n" +
-	"\x0fCompleteProfile\x12'.api.customer.v1.CompleteProfileRequest\x1a(.api.customer.v1.CompleteProfileResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/customer\x12\xa8\x01\n" +
-	"\x16StartEmailVerification\x12..api.customer.v1.StartEmailVerificationRequest\x1a/.api.customer.v1.StartEmailVerificationResponse\"-\x82\xd3\xe4\x93\x02':\x01*\"\"/customer/email-verification/start\x12\x98\x01\n" +
+	"\x0fCompleteProfile\x12'.api.customer.v1.CompleteProfileRequest\x1a(.api.customer.v1.CompleteProfileResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/customer\x12\x8d\x01\n" +
+	"\x16StartEmailVerification\x12\x16.google.protobuf.Empty\x1a/.api.customer.v1.StartEmailVerificationResponse\"*\x82\xd3\xe4\x93\x02$\"\"/customer/email-verification/start\x12\x98\x01\n" +
 	"\x19CompleteEmailVerification\x121.api.customer.v1.CompleteEmailVerificationRequest\x1a\x16.google.protobuf.Empty\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/customer/email-verification/complete\x12^\n" +
 	"\vGetCustomer\x12\x16.google.protobuf.Empty\x1a$.api.customer.v1.GetCustomerResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/customer\x12d\n" +
 	"\rUpdateProfile\x12%.api.customer.v1.UpdateProfileRequest\x1a\x16.google.protobuf.Empty\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*2\t/customer\x12p\n" +
@@ -557,18 +511,17 @@ func file_customer_v1_customer_proto_rawDescGZIP() []byte {
 	return file_customer_v1_customer_proto_rawDescData
 }
 
-var file_customer_v1_customer_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_customer_v1_customer_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_customer_v1_customer_proto_goTypes = []any{
 	(*Profile)(nil),                          // 0: api.customer.v1.Profile
 	(*CompleteProfileRequest)(nil),           // 1: api.customer.v1.CompleteProfileRequest
 	(*CompleteProfileResponse)(nil),          // 2: api.customer.v1.CompleteProfileResponse
-	(*StartEmailVerificationRequest)(nil),    // 3: api.customer.v1.StartEmailVerificationRequest
-	(*StartEmailVerificationResponse)(nil),   // 4: api.customer.v1.StartEmailVerificationResponse
-	(*CompleteEmailVerificationRequest)(nil), // 5: api.customer.v1.CompleteEmailVerificationRequest
-	(*GetCustomerResponse)(nil),              // 6: api.customer.v1.GetCustomerResponse
-	(*UpdateProfileRequest)(nil),             // 7: api.customer.v1.UpdateProfileRequest
-	(*SubmitCustomerKYCRequest)(nil),         // 8: api.customer.v1.SubmitCustomerKYCRequest
-	(*emptypb.Empty)(nil),                    // 9: google.protobuf.Empty
+	(*StartEmailVerificationResponse)(nil),   // 3: api.customer.v1.StartEmailVerificationResponse
+	(*CompleteEmailVerificationRequest)(nil), // 4: api.customer.v1.CompleteEmailVerificationRequest
+	(*GetCustomerResponse)(nil),              // 5: api.customer.v1.GetCustomerResponse
+	(*UpdateProfileRequest)(nil),             // 6: api.customer.v1.UpdateProfileRequest
+	(*SubmitCustomerKYCRequest)(nil),         // 7: api.customer.v1.SubmitCustomerKYCRequest
+	(*emptypb.Empty)(nil),                    // 8: google.protobuf.Empty
 }
 var file_customer_v1_customer_proto_depIdxs = []int32{
 	0,  // 0: api.customer.v1.CompleteProfileRequest.profile:type_name -> api.customer.v1.Profile
@@ -576,17 +529,17 @@ var file_customer_v1_customer_proto_depIdxs = []int32{
 	0,  // 2: api.customer.v1.GetCustomerResponse.profile:type_name -> api.customer.v1.Profile
 	0,  // 3: api.customer.v1.SubmitCustomerKYCRequest.profile:type_name -> api.customer.v1.Profile
 	1,  // 4: api.customer.v1.Customer.CompleteProfile:input_type -> api.customer.v1.CompleteProfileRequest
-	3,  // 5: api.customer.v1.Customer.StartEmailVerification:input_type -> api.customer.v1.StartEmailVerificationRequest
-	5,  // 6: api.customer.v1.Customer.CompleteEmailVerification:input_type -> api.customer.v1.CompleteEmailVerificationRequest
-	9,  // 7: api.customer.v1.Customer.GetCustomer:input_type -> google.protobuf.Empty
-	7,  // 8: api.customer.v1.Customer.UpdateProfile:input_type -> api.customer.v1.UpdateProfileRequest
-	8,  // 9: api.customer.v1.Customer.SubmitCustomerKYC:input_type -> api.customer.v1.SubmitCustomerKYCRequest
+	8,  // 5: api.customer.v1.Customer.StartEmailVerification:input_type -> google.protobuf.Empty
+	4,  // 6: api.customer.v1.Customer.CompleteEmailVerification:input_type -> api.customer.v1.CompleteEmailVerificationRequest
+	8,  // 7: api.customer.v1.Customer.GetCustomer:input_type -> google.protobuf.Empty
+	6,  // 8: api.customer.v1.Customer.UpdateProfile:input_type -> api.customer.v1.UpdateProfileRequest
+	7,  // 9: api.customer.v1.Customer.SubmitCustomerKYC:input_type -> api.customer.v1.SubmitCustomerKYCRequest
 	2,  // 10: api.customer.v1.Customer.CompleteProfile:output_type -> api.customer.v1.CompleteProfileResponse
-	4,  // 11: api.customer.v1.Customer.StartEmailVerification:output_type -> api.customer.v1.StartEmailVerificationResponse
-	9,  // 12: api.customer.v1.Customer.CompleteEmailVerification:output_type -> google.protobuf.Empty
-	6,  // 13: api.customer.v1.Customer.GetCustomer:output_type -> api.customer.v1.GetCustomerResponse
-	9,  // 14: api.customer.v1.Customer.UpdateProfile:output_type -> google.protobuf.Empty
-	9,  // 15: api.customer.v1.Customer.SubmitCustomerKYC:output_type -> google.protobuf.Empty
+	3,  // 11: api.customer.v1.Customer.StartEmailVerification:output_type -> api.customer.v1.StartEmailVerificationResponse
+	8,  // 12: api.customer.v1.Customer.CompleteEmailVerification:output_type -> google.protobuf.Empty
+	5,  // 13: api.customer.v1.Customer.GetCustomer:output_type -> api.customer.v1.GetCustomerResponse
+	8,  // 14: api.customer.v1.Customer.UpdateProfile:output_type -> google.protobuf.Empty
+	8,  // 15: api.customer.v1.Customer.SubmitCustomerKYC:output_type -> google.protobuf.Empty
 	10, // [10:16] is the sub-list for method output_type
 	4,  // [4:10] is the sub-list for method input_type
 	4,  // [4:4] is the sub-list for extension type_name
@@ -605,7 +558,7 @@ func file_customer_v1_customer_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_customer_v1_customer_proto_rawDesc), len(file_customer_v1_customer_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

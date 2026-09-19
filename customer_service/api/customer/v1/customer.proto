@@ -15,10 +15,9 @@ service Customer {
     };
   }
 
-  rpc StartEmailVerification (StartEmailVerificationRequest) returns (StartEmailVerificationResponse) {
+  rpc StartEmailVerification (google.protobuf.Empty) returns (StartEmailVerificationResponse) {
     option (google.api.http) = {
       post: "/customer/email-verification/start"
-      body: "*"
     };
   }
 
@@ -67,10 +66,6 @@ message CompleteProfileResponse {
   Profile profile = 1;
   bool email_verified = 2;
   string kyc_status = 3;
-}
-
-message StartEmailVerificationRequest {
-  string email = 1;
 }
 
 message StartEmailVerificationResponse {

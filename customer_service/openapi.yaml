@@ -93,12 +93,6 @@ paths:
             tags:
                 - Customer
             operationId: Customer_StartEmailVerification
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/StartEmailVerificationRequest'
-                required: true
             responses:
                 "200":
                     description: OK
@@ -187,11 +181,6 @@ components:
                 birthDate:
                     type: string
                 gender:
-                    type: string
-        StartEmailVerificationRequest:
-            type: object
-            properties:
-                email:
                     type: string
         StartEmailVerificationResponse:
             type: object
