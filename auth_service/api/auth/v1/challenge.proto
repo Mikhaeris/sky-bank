@@ -33,6 +33,7 @@ message CreateChallengeResponse {
 message VerifyChallengeRequest {
   string challenge_id = 1;
   string code = 2;
+  string channel = 3;
 }
 
 message VerifyChallengeResponse {
