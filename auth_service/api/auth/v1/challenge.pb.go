@@ -224,6 +224,7 @@ type VerifyChallengeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ChallengeId   string                 `protobuf:"bytes,1,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
 	Code          string                 `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
+	Destination   string                 `protobuf:"bytes,3,opt,name=destination,proto3" json:"destination,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -268,6 +269,13 @@ func (x *VerifyChallengeRequest) GetChallengeId() string {
 func (x *VerifyChallengeRequest) GetCode() string {
 	if x != nil {
 		return x.Code
+	}
+	return ""
+}
+
+func (x *VerifyChallengeRequest) GetDestination() string {
+	if x != nil {
+		return x.Destination
 	}
 	return ""
 }
@@ -326,10 +334,11 @@ const file_auth_v1_challenge_proto_rawDesc = "" +
 	"\achannel\x18\x02 \x01(\x0e2\x17.api.auth.v1.OtpChannelR\achannel\x121\n" +
 	"\apurpose\x18\x03 \x01(\x0e2\x17.api.auth.v1.OtpPurposeR\apurpose\"<\n" +
 	"\x17CreateChallengeResponse\x12!\n" +
-	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"O\n" +
+	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"q\n" +
 	"\x16VerifyChallengeRequest\x12!\n" +
 	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04code\"5\n" +
+	"\x04code\x18\x02 \x01(\tR\x04code\x12 \n" +
+	"\vdestination\x18\x03 \x01(\tR\vdestination\"5\n" +
 	"\x17VerifyChallengeResponse\x12\x1a\n" +
 	"\bverified\x18\x01 \x01(\bR\bverified*U\n" +
 	"\n" +
