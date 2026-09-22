@@ -589,7 +589,7 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\".api.auth.v1.RefreshTokensResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/auth/refresh\x12_\n" +
 	"\vGetSessions\x12\x16.google.protobuf.Empty\x1a .api.auth.v1.GetSessionsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/auth/sessions\x12o\n" +
 	"\rRevokeSession\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/auth/sessions/{session_id}\x12|\n" +
-	"\x13RevokeOtherSessions\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$*\"/auth/sessions/others/{session_id}B?Z=github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1b\x06proto3"
+	"\x13RevokeOtherSessions\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$*\"/auth/sessions/others/{session_id}B?Z=github.com/mikhaeris/sky-bank/auth_service/pkg/auth/v1;authv1b\x06proto3"
 
 var (
 	file_auth_v1_auth_proto_rawDescOnce sync.Once

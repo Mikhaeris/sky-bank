@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api.auth.v1;
 
-option go_package = "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1";
+option go_package = "github.com/mikhaeris/sky-bank/auth_service/pkg/auth/v1;authv1";
 
 service OtpService {
   rpc CreateChallenge(CreateChallengeRequest) returns (CreateChallengeResponse);

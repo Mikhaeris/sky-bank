@@ -130,7 +130,7 @@ const file_notification_v1_notification_proto_rawDesc = "" +
 	"\x05email\x18\x01 \x01(\tR\x05email2\xb7\x01\n" +
 	"\x13NotificationService\x12N\n" +
 	"\vSendOtpCode\x12'.api.notification.v1.SendOtpCodeRequest\x1a\x16.google.protobuf.Empty\x12P\n" +
-	"\fSendNewLogIn\x12(.api.notification.v1.SendNewLogInRequest\x1a\x16.google.protobuf.EmptyBWZUgithub.com/mikhaeris/sky-bank/notification_service/api/notification/v1;notificationv1b\x06proto3"
+	"\fSendNewLogIn\x12(.api.notification.v1.SendNewLogInRequest\x1a\x16.google.protobuf.EmptyBWZUgithub.com/mikhaeris/sky-bank/notification_service/pkg/notification/v1;notificationv1b\x06proto3"
 
 var (
 	file_notification_v1_notification_proto_rawDescOnce sync.Once

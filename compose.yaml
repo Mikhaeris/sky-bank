@@ -8,9 +8,10 @@ services:
     depends_on:
       auth:
         condition: service_started
+      customer:
+        condition: service_started
     volumes:
       - ./secrets/keys/public.pem:/keys/public.pem:ro
-
 
   auth:
     build: auth_service/
@@ -19,7 +20,7 @@ services:
     ports:
       - "9000:9000"
     depends_on:
-      migrate:
+      auth-migrate:
         condition: service_completed_successfully
       notification:
         condition: service_started
@@ -27,6 +28,19 @@ services:
       - ./secrets/keys/private.pem:/keys/private.pem:ro
       - ./secrets/otp.key:/secrets/otp.key:ro
 
+  customer:
+    build: customer_service/
+    command: ./customer
+    container_name: customer
+    ports:
+      - "9002:9002"
+    depends_on:
+      customer-migrate:
+        condition: service_completed_successfully
+      notification:
+        condition: service_started
+      auth:
+        condition: service_started
 
   notification:
     build: notification_service/
@@ -37,6 +51,7 @@ services:
     depends_on:
       mailpit:
         condition: service_healthy
+
 
   # dev workflow only
   mailpit:
@@ -68,6 +83,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
+      - ./postgres/init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
@@ -75,17 +91,30 @@ services:
       retries: 10
       start_period: 5s
 
-  migrate:
-      image: migrate/migrate:v4.19.0
-      volumes:
-        - ./auth_service/migrations:/migrations:ro
-      command:
-        - "-path=/migrations"
-        - "-database=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
-        - "up"
-      depends_on:
-        postgres:
-          condition: service_healthy
+  auth-migrate:
+    image: migrate/migrate:v4.19.0
+    volumes:
+      - ./auth_service/migrations:/migrations:ro
+    command:
+      - "-path=/migrations"
+      - "-database=postgres://${AUTH_DB_USER}:${AUTH_DB_PASSWORD}@postgres:5432/${AUTH_DB}?sslmode=disable"
+      - "up"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  customer-migrate:
+    image: migrate/migrate:v4.19.0
+    volumes:
+      - ./customer_service/migrations:/migrations:ro
+    command:
+      - "-path=/migrations"
+      - "-database=postgres://${CUSTOMER_DB_USER}:${CUSTOMER_DB_PASSWORD}@postgres:5432/${CUSTOMER_DB}?sslmode=disable"
+      - "up"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 
 volumes:
   postgres_data:

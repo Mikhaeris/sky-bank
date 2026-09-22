@@ -362,7 +362,7 @@ const file_auth_v1_challenge_proto_rawDesc = "" +
 	"\n" +
 	"OtpService\x12\\\n" +
 	"\x0fCreateChallenge\x12#.api.auth.v1.CreateChallengeRequest\x1a$.api.auth.v1.CreateChallengeResponse\x12\\\n" +
-	"\x0fVerifyChallenge\x12#.api.auth.v1.VerifyChallengeRequest\x1a$.api.auth.v1.VerifyChallengeResponseB?Z=github.com/mikhaeris/sky-bank/auth_service/api/auth/v1;authv1b\x06proto3"
+	"\x0fVerifyChallenge\x12#.api.auth.v1.VerifyChallengeRequest\x1a$.api.auth.v1.VerifyChallengeResponseB?Z=github.com/mikhaeris/sky-bank/auth_service/pkg/auth/v1;authv1b\x06proto3"
 
 var (
 	file_auth_v1_challenge_proto_rawDescOnce sync.Once
