@@ -7,6 +7,7 @@
 package authv1
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -551,21 +552,22 @@ var File_auth_v1_auth_proto protoreflect.FileDescriptor
 
 const file_auth_v1_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x12auth/v1/auth.proto\x12\vapi.auth.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\"P\n" +
+	"\x12auth/v1/auth.proto\x12\vapi.auth.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\"P\n" +
 	"\x06Tokens\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"2\n" +
-	"\x1aStartAuthenticationRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"@\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\";\n" +
+	"\x1aStartAuthenticationRequest\x12\x1d\n" +
+	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\"@\n" +
 	"\x1bStartAuthenticationResponse\x12!\n" +
-	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"]\n" +
-	"\x1dCompleteAuthenticationRequest\x12!\n" +
-	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x19\n" +
-	"\botp_code\x18\x02 \x01(\tR\aotpCode\"M\n" +
+	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\"z\n" +
+	"\x1dCompleteAuthenticationRequest\x12+\n" +
+	"\fchallenge_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\vchallengeId\x12,\n" +
+	"\botp_code\x18\x02 \x01(\tB\x11\xbaH\x0er\f2\n" +
+	"^[0-9]{6}$R\aotpCode\"M\n" +
 	"\x1eCompleteAuthenticationResponse\x12+\n" +
-	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\";\n" +
-	"\x14RefreshTokensRequest\x12#\n" +
-	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"D\n" +
+	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\"D\n" +
+	"\x14RefreshTokensRequest\x12,\n" +
+	"\rrefresh_token\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\frefreshToken\"D\n" +
 	"\x15RefreshTokensResponse\x12+\n" +
 	"\x06tokens\x18\x01 \x01(\v2\x13.api.auth.v1.TokensR\x06tokens\"y\n" +
 	"\aSession\x12\x0e\n" +
@@ -577,10 +579,10 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\flast_used_at\x18\x04 \x01(\tR\n" +
 	"lastUsedAt\"G\n" +
 	"\x13GetSessionsResponse\x120\n" +
-	"\bsessions\x18\x01 \x03(\v2\x14.api.auth.v1.SessionR\bsessions\"5\n" +
-	"\x14RevokeSessionRequest\x12\x1d\n" +
+	"\bsessions\x18\x01 \x03(\v2\x14.api.auth.v1.SessionR\bsessions\"?\n" +
+	"\x14RevokeSessionRequest\x12'\n" +
 	"\n" +
-	"session_id\x18\x01 \x01(\tR\tsessionId\"/\n" +
+	"session_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\tsessionId\"/\n" +
 	"\x15RevokeSessionResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status2\xda\x05\n" +
 	"\x04Auth\x12\x80\x01\n" +

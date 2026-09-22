@@ -4,6 +4,7 @@ package api.auth.v1;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "buf/validate/validate.proto";
 
 option go_package = "github.com/mikhaeris/sky-bank/auth_service/pkg/auth/v1;authv1";
 
@@ -54,7 +55,9 @@ message Tokens{
 }
 
 message StartAuthenticationRequest {
-  string email = 1;
+  string email = 1 [
+    (buf.validate.field).string.email = true
+  ];
 }
 
 message StartAuthenticationResponse {
@@ -62,8 +65,13 @@ message StartAuthenticationResponse {
 }
 
 message CompleteAuthenticationRequest {
-  string challenge_id = 1;
-  string otp_code = 2;
+  string challenge_id = 1 [
+    (buf.validate.field).string.uuid = true
+  ];
+
+  string otp_code = 2 [
+    (buf.validate.field).string.pattern = "^[0-9]{6}$"
+  ];
 }
 
 message CompleteAuthenticationResponse {
@@ -71,7 +79,9 @@ message CompleteAuthenticationResponse {
 }
 
 message RefreshTokensRequest {
-  string refresh_token = 1;
+  string refresh_token = 1 [
+    (buf.validate.field).string.min_len = 1
+  ];
 }
 
 message RefreshTokensResponse {
@@ -90,7 +100,9 @@ message GetSessionsResponse {
 }
 
 message RevokeSessionRequest {
-  string session_id = 1;
+  string session_id = 1 [
+    (buf.validate.field).string.uuid = true
+  ];
 }
 
 message RevokeSessionResponse {

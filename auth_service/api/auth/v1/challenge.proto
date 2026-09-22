@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package api.auth.v1;
 
+import "buf/validate/validate.proto";
+
 option go_package = "github.com/mikhaeris/sky-bank/auth_service/pkg/auth/v1;authv1";
 
 service OtpService {
@@ -21,9 +23,15 @@ enum OtpPurpose {
 }
 
 message CreateChallengeRequest {
-  string destination = 1;
-  OtpChannel channel = 2;
-  OtpPurpose purpose = 3;
+  string destination = 1 [
+    (buf.validate.field).string.min_len = 1
+  ];
+  OtpChannel channel = 2 [
+    (buf.validate.field).enum = {defined_only: true, not_in: [0]}
+  ];
+  OtpPurpose purpose = 3 [
+    (buf.validate.field).enum = {defined_only: true, not_in: [0]}
+  ];
 }
 
 message CreateChallengeResponse {
@@ -31,10 +39,18 @@ message CreateChallengeResponse {
 }
 
 message VerifyChallengeRequest {
-  string challenge_id = 1;
-  string code = 2;
-  string destination = 3;
-  OtpPurpose purpose = 4;
+  string challenge_id = 1 [
+    (buf.validate.field).string.uuid = true
+  ];
+  string code = 2 [
+    (buf.validate.field).string.pattern = "^[0-9]{6}$"
+  ];
+  string destination = 3 [
+    (buf.validate.field).string.min_len = 1
+  ];
+  OtpPurpose purpose = 4 [
+    (buf.validate.field).enum = {defined_only: true, not_in: [0]}
+  ];
 }
 
 message VerifyChallengeResponse {

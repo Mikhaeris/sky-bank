@@ -3,11 +3,12 @@ module github.com/mikhaeris/sky-bank/auth_service
 go 1.27.1
 
 require (
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.12-20260825204119-511051f7f437.2
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.30.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/lib/pq v1.12.3
-	github.com/mikhaeris/sky-bank/notification_service v0.0.0-20260921113951-6a8aec724a90
+	github.com/mikhaeris/sky-bank/notification_service v0.0.0-20260922085607-159ae6aee37c
 	google.golang.org/genproto/googleapis/api v0.0.0-20260911204522-f61a6ca850bd
 	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.12
