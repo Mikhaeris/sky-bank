@@ -14,13 +14,19 @@ type Config struct {
 			Addr string `yaml:"addr"`
 		} `yaml:"grpc"`
 	} `yaml:"server"`
-	Smtp struct {
+	Kafka KafkaConfig `yaml:"kafka"`
+	Smtp  struct {
 		Host     string `yaml:"host"`
 		Port     int    `yaml:"port"`
 		Username string `yaml:"username"`
 		Password string `yaml:"password"`
 		Sender   string `yaml:"sender"`
 	}
+	OtlpEndpoint string `yaml:"otlp_endpoint"`
+}
+
+type KafkaConfig struct {
+	Brokers []string `yaml:"brokers"`
 }
 
 const configPath = "config.yaml"

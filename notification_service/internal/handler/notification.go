@@ -2,50 +2,37 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 
-	notificationv1 "github.com/mikhaeris/sky-bank/notification_service/api/notification/v1"
-	"github.com/mikhaeris/sky-bank/notification_service/internal/mailer"
-	"google.golang.org/protobuf/types/known/emptypb"
+	"github.com/mikhaeris/sky-bank/notification_service/internal/service"
+	ke "github.com/mikhaeris/sky-bank/pkg/kafkaevents"
 )
 
 type NotificationHandler struct {
-	notificationv1.UnimplementedNotificationServiceServer
-	logger *slog.Logger
-	mailer *mailer.Mailer
+	logger              *slog.Logger
+	notificationService *service.NotificationService
 }
 
-func NewNotificationHandler(logger *slog.Logger, mailer *mailer.Mailer) *NotificationHandler {
+func NewNotificationHandler(
+	logger *slog.Logger,
+	notificationService *service.NotificationService,
+) *NotificationHandler {
 	return &NotificationHandler{
-		logger: logger,
-		mailer: mailer,
+		logger:              logger,
+		notificationService: notificationService,
 	}
 }
 
-func (h *NotificationHandler) SendOtpCode(ctx context.Context, in *notificationv1.SendOtpCodeRequest) (*emptypb.Empty, error) {
-	data := map[string]any{
-		"otpCode": in.OtpCode,
+func (h *NotificationHandler) Handle(ctx context.Context, event ke.Event[ke.NotificationPayload]) error {
+	switch event.Payload.NotificationType {
+	case ke.NotificationTypeEmail:
+		return h.notificationService.SendEmail(event)
+	case ke.NotificationTypeSMS:
+		return fmt.Errorf("SMS notification not yet implemented")
+	case ke.NotificationTypePush:
+		return fmt.Errorf("Push notification not yet implemented")
+	default:
+		return fmt.Errorf("unsupported notification type")
 	}
-
-	err := h.mailer.Send(in.Email, "otp_code.html", data)
-	if err != nil {
-		h.logger.Error(err.Error())
-		return nil, err
-	}
-	h.logger.Info("send otp code email", "email", in.Email)
-
-	return &emptypb.Empty{}, nil
-}
-
-func (h *NotificationHandler) SendNewLogIn(ctx context.Context, in *notificationv1.SendNewLogInRequest) (*emptypb.Empty, error) {
-	data := map[string]any{}
-
-	err := h.mailer.Send(in.Email, "new_log_in.html", data)
-	if err != nil {
-		h.logger.Error(err.Error())
-		return nil, err
-	}
-	h.logger.Info("send new log in", "email", in.Email)
-
-	return &emptypb.Empty{}, nil
 }
