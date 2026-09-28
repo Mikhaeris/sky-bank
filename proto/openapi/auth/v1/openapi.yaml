@@ -221,5 +221,7 @@ components:
                     type: string
                 refreshToken:
                     type: string
+                expiresAt:
+                    type: string
 tags:
     - name: Auth

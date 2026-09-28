@@ -5,7 +5,7 @@ package api.customer.v1;
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
-option go_package = "github.com/mikhaeris/sky-bank/customer_service/pkg/customer/v1;customerv1";
+option go_package = "github.com/mikhaeris/sky-bank/proto/gen/customer/v1;customerv1";
 
 service Customer {
   rpc CompleteProfile (CompleteProfileRequest) returns (CompleteProfileResponse) {

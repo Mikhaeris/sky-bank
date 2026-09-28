@@ -4,26 +4,12 @@ db/migration/new:
 	@echo 'Creating migration files for ${name}...'
 	migrate create -seq -ext=.sql -dir=./migrations ${name}
 
-## grpc/generate: generate proto contracts
+## grpc/generate: regenerate shared RPC contracts and OpenAPI
 .PHONY: grpc/generate
 grpc/generate:
-	mkdir -p ./pkg
-	protoc \
-		--proto_path=./api \
-		--proto_path=./third_party \
-		--go_out=paths=source_relative:./pkg \
-		--go-grpc_out=paths=source_relative:./pkg \
-		auth/v1/auth.proto \
-		auth/v1/challenge.proto
+	$(MAKE) -C ../proto generate/rpc generate/openapi
 
-	protoc \
-		--proto_path=./api \
-		--proto_path=./third_party \
-		--grpc-gateway_out=paths=source_relative:./pkg \
-		--openapi_out=paths=source_relative:. \
-		auth/v1/auth.proto
-
-## services/update_grpc commit=$1: update grpc for commit
-.PHONY:
-services/update_grpc:
-	go get github.com/mikhaeris/sky-bank/notification_service/pkg/notification/v1@${commit}
+## services/update_grpc: refresh local contracts and module dependencies
+.PHONY: services/update_grpc
+services/update_grpc: grpc/generate
+	go mod tidy

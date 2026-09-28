@@ -497,7 +497,7 @@ const file_customer_v1_customer_proto_rawDesc = "" +
 	"\x19CompleteEmailVerification\x121.api.customer.v1.CompleteEmailVerificationRequest\x1a\x16.google.protobuf.Empty\"0\x82\xd3\xe4\x93\x02*:\x01*\"%/customer/email-verification/complete\x12^\n" +
 	"\vGetCustomer\x12\x16.google.protobuf.Empty\x1a$.api.customer.v1.GetCustomerResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/customer\x12d\n" +
 	"\rUpdateProfile\x12%.api.customer.v1.UpdateProfileRequest\x1a\x16.google.protobuf.Empty\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*2\t/customer\x12p\n" +
-	"\x11SubmitCustomerKYC\x12).api.customer.v1.SubmitCustomerKYCRequest\x1a\x16.google.protobuf.Empty\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/customer/kycBKZIgithub.com/mikhaeris/sky-bank/customer_service/pkg/customer/v1;customerv1b\x06proto3"
+	"\x11SubmitCustomerKYC\x12).api.customer.v1.SubmitCustomerKYCRequest\x1a\x16.google.protobuf.Empty\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/customer/kycB@Z>github.com/mikhaeris/sky-bank/proto/gen/customer/v1;customerv1b\x06proto3"
 
 var (
 	file_customer_v1_customer_proto_rawDescOnce sync.Once

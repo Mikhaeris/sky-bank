@@ -28,6 +28,7 @@ type Tokens struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	ExpiresAt     string                 `protobuf:"bytes,3,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -72,6 +73,13 @@ func (x *Tokens) GetAccessToken() string {
 func (x *Tokens) GetRefreshToken() string {
 	if x != nil {
 		return x.RefreshToken
+	}
+	return ""
+}
+
+func (x *Tokens) GetExpiresAt() string {
+	if x != nil {
+		return x.ExpiresAt
 	}
 	return ""
 }
@@ -552,10 +560,12 @@ var File_auth_v1_auth_proto protoreflect.FileDescriptor
 
 const file_auth_v1_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x12auth/v1/auth.proto\x12\vapi.auth.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\"P\n" +
+	"\x12auth/v1/auth.proto\x12\vapi.auth.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1bbuf/validate/validate.proto\"o\n" +
 	"\x06Tokens\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\";\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\x12\x1d\n" +
+	"\n" +
+	"expires_at\x18\x03 \x01(\tR\texpiresAt\";\n" +
 	"\x1aStartAuthenticationRequest\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\"@\n" +
 	"\x1bStartAuthenticationResponse\x12!\n" +
@@ -591,7 +601,7 @@ const file_auth_v1_auth_proto_rawDesc = "" +
 	"\rRefreshTokens\x12!.api.auth.v1.RefreshTokensRequest\x1a\".api.auth.v1.RefreshTokensResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/auth/refresh\x12_\n" +
 	"\vGetSessions\x12\x16.google.protobuf.Empty\x1a .api.auth.v1.GetSessionsResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/auth/sessions\x12o\n" +
 	"\rRevokeSession\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"#\x82\xd3\xe4\x93\x02\x1d*\x1b/auth/sessions/{session_id}\x12|\n" +
-	"\x13RevokeOtherSessions\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$*\"/auth/sessions/others/{session_id}B?Z=github.com/mikhaeris/sky-bank/auth_service/pkg/auth/v1;authv1b\x06proto3"
+	"\x13RevokeOtherSessions\x12!.api.auth.v1.RevokeSessionRequest\x1a\x16.google.protobuf.Empty\"*\x82\xd3\xe4\x93\x02$*\"/auth/sessions/others/{session_id}B8Z6github.com/mikhaeris/sky-bank/proto/gen/auth/v1;authv1b\x06proto3"
 
 var (
 	file_auth_v1_auth_proto_rawDescOnce sync.Once

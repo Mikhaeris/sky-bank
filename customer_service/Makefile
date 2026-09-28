@@ -4,20 +4,7 @@ db/migration/new:
 	@echo 'Creating migration files for ${name}...'
 	migrate create -seq -ext=.sql -dir=./migrations ${name}
 
-## grpc/generate: generate proto contracts
+## grpc/generate: regenerate shared RPC contracts and OpenAPI
 .PHONY: grpc/generate
 grpc/generate:
-	mkdir -p ./pkg
-	protoc \
-		--proto_path=./api \
-		--proto_path=./third_party \
-		--go_out=paths=source_relative:./pkg \
-		--go-grpc_out=paths=source_relative:./pkg \
-		customer/v1/customer.proto \
-
-	protoc \
-		--proto_path=./api \
-		--proto_path=./third_party \
-		--grpc-gateway_out=paths=source_relative:./pkg \
-		--openapi_out=paths=source_relative:. \
-		customer/v1/customer.proto
+	$(MAKE) -C ../proto generate/rpc generate/openapi

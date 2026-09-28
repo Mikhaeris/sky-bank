@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "buf/validate/validate.proto";
 
-option go_package = "github.com/mikhaeris/sky-bank/auth_service/pkg/auth/v1;authv1";
+option go_package = "github.com/mikhaeris/sky-bank/proto/gen/auth/v1;authv1";
 
 service Auth {
   rpc StartAuthentication (StartAuthenticationRequest) returns (StartAuthenticationResponse) {
@@ -52,6 +52,7 @@ service Auth {
 message Tokens{
   string access_token = 1;
   string refresh_token = 2;
+  string expires_at = 3;
 }
 
 message StartAuthenticationRequest {
