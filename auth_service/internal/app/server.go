@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"log/slog"
 	"net"
 	"os"
@@ -11,9 +12,14 @@ import (
 	"google.golang.org/grpc"
 )
 
+const (
+	shutdownSignalBufferSize = 1
+	gracefulShutdownTimeout  = 10 * time.Second
+)
+
 func RunGRPCServer(grpcServer *grpc.Server, addr string, logger *slog.Logger) error {
 	go func() {
-		quit := make(chan os.Signal, 1)
+		quit := make(chan os.Signal, shutdownSignalBufferSize)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		defer signal.Stop(quit)
 
@@ -31,7 +37,7 @@ func RunGRPCServer(grpcServer *grpc.Server, addr string, logger *slog.Logger) er
 			close(done)
 		}()
 
-		timer := time.NewTimer(10 * time.Second)
+		timer := time.NewTimer(gracefulShutdownTimeout)
 		defer timer.Stop()
 
 		select {
@@ -46,7 +52,7 @@ func RunGRPCServer(grpcServer *grpc.Server, addr string, logger *slog.Logger) er
 
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
-		return err
+		return fmt.Errorf("listen for grpc: %w", err)
 	}
 
 	logger.Info(
@@ -55,7 +61,7 @@ func RunGRPCServer(grpcServer *grpc.Server, addr string, logger *slog.Logger) er
 	)
 
 	if err := grpcServer.Serve(lis); err != nil {
-		return err
+		return fmt.Errorf("serve grpc: %w", err)
 	}
 
 	logger.Info("stopped server", "addr", addr)

@@ -25,6 +25,7 @@ type Config struct {
 		} `yaml:"grpc"`
 	} `yaml:"client"`
 	Storage StorageConfig `yaml:"database"`
+	Kafka   KafkaConfig   `yaml:"kafka"`
 }
 
 type StorageConfig struct {
@@ -33,6 +34,10 @@ type StorageConfig struct {
 	Database string `yaml:"database"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
+}
+
+type KafkaConfig struct {
+	Brokers []string `yaml:"brokers"`
 }
 
 const configPath = "config.yaml"

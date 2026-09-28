@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS customers (
     birth_date date,
     gender text,
 
-    profile_status text NOT NULL DEFAULT false,
     kyc_status text NOT NULL,
 
     created_at timestamptz NOT NULL DEFAULT now(),

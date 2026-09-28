@@ -1,81 +1,107 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"os"
 
 	"github.com/mikhaeris/sky-bank/auth_service/internal/app"
-	grpcclient "github.com/mikhaeris/sky-bank/auth_service/internal/clients/grpc"
-	otpprovider "github.com/mikhaeris/sky-bank/auth_service/internal/clients/otpProvider"
 	postgresclient "github.com/mikhaeris/sky-bank/auth_service/internal/clients/postgres"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/config"
-	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/handler"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/lib/jwt"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/lib/otp"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/repository"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/server"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/service"
-
-	_ "github.com/lib/pq"
+	"github.com/mikhaeris/sky-bank/pkg/kafka"
+	"github.com/mikhaeris/sky-bank/pkg/telemetry"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 )
 
 func main() {
+	ctx := context.Background()
+
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	cfg := config.GetConfig(logger)
 
-	db, err := postgresclient.OpenDB(&cfg.Storage)
+	tracer, cleanup, err := telemetry.NewTracer(ctx, cfg.OtlpEndpoint, "auth_service")
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error("new tracer", "error", err)
 		os.Exit(1)
 	}
-	defer db.Close()
+	defer cleanup()
+	otel.SetTextMapPropagator(propagation.TraceContext{})
+
+	pool, err := postgresclient.OpenDB(&cfg.Storage)
+	if err != nil {
+		logger.Error("open database", "error", err)
+		os.Exit(1)
+	}
+	defer pool.Close()
 	logger.Info("database connection pool established")
 
-	notificationClient, closeNotificationClient, err := grpcclient.NewNotificationClient(cfg.Client.Grpc.Addr)
-	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
-	}
-	defer closeNotificationClient()
-	logger.Info("grpc notification_service connection established")
+	store := repository.NewDataStore(tracer, pool)
 
-	tokenRepositories := repository.NewTokenRepository(db)
-	sessionRepository := repository.NewSessionRepository(db)
-	identityRepositories := repository.NewIdentityRepository(db)
-
-	codeHash, err := domain.NewCodeHasher(cfg.OtpSecretPath)
+	codeHash, err := otp.NewCodeHasher(cfg.OtpSecretPath)
 	if err != nil {
-		logger.Info(err.Error())
+		logger.Error("create OTP code hasher", "error", err)
 		os.Exit(1)
 	}
 
 	keys, err := jwt.NewKeys(cfg.Jwt.PrivKeyPath, cfg.Jwt.AccessTokenTtl)
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error("load signing key", "error", err)
 		os.Exit(1)
 	}
 
-	otpProvider := otpprovider.NewEmailOtpProvider(logger, notificationClient)
+	producer, err := kafka.NewProducer(cfg.Kafka.Brokers)
+	if err != nil {
+		logger.Error("create kafka producer", "error", err)
+		os.Exit(1)
+	}
+	defer producer.Close()
 
-	authService := service.NewAuthService(
-		keys,
-		logger,
+	challengeService := service.NewChallengeService(
+		tracer,
 		codeHash,
-		otpProvider,
-		notificationClient,
-		tokenRepositories,
-		sessionRepository,
-		identityRepositories,
+		producer,
+		store,
+		cfg.OtpLimits,
+	)
+	cleanupCtx, stopCleanup := context.WithCancel(context.Background())
+	cleanupDone := make(chan struct{})
+	go func() {
+		defer close(cleanupDone)
+		app.RunOTPCleanup(cleanupCtx, logger, challengeService)
+	}()
+	defer func() {
+		stopCleanup()
+		<-cleanupDone
+	}()
+
+	sessionsService := service.NewSessionsService(
+		store,
 	)
 
-	authHandler := handler.NewAuthHandler(logger, authService)
+	identityService := service.NewIdentityService(
+		tracer,
+		keys,
+		producer,
+		challengeService,
+		store,
+	)
 
-	grpcServer := server.NewGRPCServer(authHandler, logger)
+	authHandler := handler.NewAuthHandler(tracer, identityService, sessionsService)
+	challengeHandler := handler.NewChallengeHandler(challengeService)
+
+	grpcServer := server.NewGRPCServer(authHandler, challengeHandler, logger)
 
 	err = app.RunGRPCServer(grpcServer, cfg.Server.Grpc.Addr, logger)
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error("run grpc server", "error", err)
 		os.Exit(1)
 	}
 }

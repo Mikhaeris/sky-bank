@@ -1,8 +1,11 @@
 package domain
 
+import "time"
+
 type Tokens struct {
-	Access  string
-	Refresh string
+	Access    string
+	Refresh   string
+	ExpiresAt time.Time
 }
 
 type TokensDTO struct {

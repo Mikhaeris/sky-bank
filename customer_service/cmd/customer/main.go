@@ -13,6 +13,7 @@ import (
 	"github.com/mikhaeris/sky-bank/customer_service/internal/repository"
 	"github.com/mikhaeris/sky-bank/customer_service/internal/server"
 	"github.com/mikhaeris/sky-bank/customer_service/internal/service"
+	"github.com/mikhaeris/sky-bank/pkg/kafka"
 )
 
 func main() {
@@ -28,16 +29,22 @@ func main() {
 	defer db.Close()
 	logger.Info("database connection pool established")
 
-	notificationClient, closeNotificationClient, err := grpcclient.NewNotificationClient(cfg.Client.Grpc.Notification.Addr)
+	producer, err := kafka.NewProducer(cfg.Kafka.Brokers)
+	if err != nil {
+		logger.Error("create kafka producer", "error", err)
+		os.Exit(1)
+	}
+
+	otpServiceClient, closeOtpServiceClient, err := grpcclient.NewOtpServiceClient(cfg.Client.Grpc.Auth.Addr)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
 	}
-	defer closeNotificationClient()
-	logger.Info("grpc notification_service connection established")
+	defer closeOtpServiceClient()
+	logger.Info("grpc auth_service connection established")
 
 	customerRepository := repository.NewCustomerRepository(db)
-	customerService := service.NewCustomerService(customerRepository, notificationClient)
+	customerService := service.NewCustomerService(customerRepository, producer, otpServiceClient)
 	customerHandler := handler.NewCustomerHandler(customerService)
 
 	grpcServer := server.NewGRPCServer(customerHandler, logger)

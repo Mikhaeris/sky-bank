@@ -1,21 +1,26 @@
 package handler
 
 import (
-	"log/slog"
-
-	v1 "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/service"
+	v1 "github.com/mikhaeris/sky-bank/proto/gen/auth/v1"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type AuthHandler struct {
 	v1.UnimplementedAuthServer
-	logger      *slog.Logger
-	authService *service.AuthService
+	tracer          trace.Tracer
+	identityService *service.IdentityService
+	sessionsService *service.SessionsService
 }
 
-func NewAuthHandler(logger *slog.Logger, authService *service.AuthService) *AuthHandler {
+func NewAuthHandler(
+	tracer trace.Tracer,
+	identityService *service.IdentityService,
+	sessionsService *service.SessionsService,
+) *AuthHandler {
 	return &AuthHandler{
-		logger:      logger,
-		authService: authService,
+		tracer:          tracer,
+		identityService: identityService,
+		sessionsService: sessionsService,
 	}
 }

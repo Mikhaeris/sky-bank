@@ -2,35 +2,38 @@ package postgresclient
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
+	"net"
+	"net/url"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/config"
 )
 
-func OpenDB(storage *config.StorageConfig) (*sql.DB, error) {
-	dsn := fmt.Sprintf(
-		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		storage.Username,
-		storage.Password,
-		storage.Host,
-		storage.Port,
-		storage.Database,
-	)
+const databasePingTimeout = 5 * time.Second
 
-	db, err := sql.Open("postgres", dsn)
-	if err != nil {
-		return nil, err
+func OpenDB(storage *config.StorageConfig) (*pgxpool.Pool, error) {
+	dsn := url.URL{
+		Scheme:   "postgres",
+		User:     url.UserPassword(storage.Username, storage.Password),
+		Host:     net.JoinHostPort(storage.Host, storage.Port),
+		Path:     "/" + storage.Database,
+		RawQuery: "sslmode=disable",
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	db, err := pgxpool.New(context.Background(), dsn.String())
+	if err != nil {
+		return nil, fmt.Errorf("create postgres pool: %w", err)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), databasePingTimeout)
 	defer cancel()
 
-	err = db.PingContext(ctx)
+	err = db.Ping(ctx)
 	if err != nil {
 		db.Close()
-		return nil, err
+		return nil, fmt.Errorf("ping postgres: %w", err)
 	}
 
 	return db, nil

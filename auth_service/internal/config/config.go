@@ -21,11 +21,14 @@ type Config struct {
 		} `yaml:"grpc"`
 	} `yaml:"client"`
 	Storage StorageConfig `yaml:"database"`
+	Kafka   KafkaConfig   `yaml:"kafka"`
 	Jwt     struct {
 		PrivKeyPath    string        `yaml:"priv_key_path"`
 		AccessTokenTtl time.Duration `yaml:"access_token_ttl"`
 	} `yaml:"jwt"`
-	OtpSecretPath string `yaml:"otp_secret_path"`
+	OtpSecretPath string    `yaml:"otp_secret_path"`
+	OtpLimits     OtpLimits `yaml:"otp_limits"`
+	OtlpEndpoint  string    `yaml:"otlp_endpoint"`
 }
 
 type StorageConfig struct {
@@ -34,6 +37,21 @@ type StorageConfig struct {
 	Database string `yaml:"database"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
+}
+
+type KafkaConfig struct {
+	Brokers []string `yaml:"brokers"`
+}
+
+type OtpLimits struct {
+	FreeIssues              int           `yaml:"free_issues"`
+	InitialCooldown         time.Duration `yaml:"initial_cooldown"`
+	MaxCooldown             time.Duration `yaml:"max_cooldown"`
+	IssueWindow             time.Duration `yaml:"issue_window"`
+	MaxIssues               int           `yaml:"max_issues"`
+	MaxAttemptsPerChallenge int           `yaml:"max_attempts_per_challenge"`
+	FailureWindow           time.Duration `yaml:"failure_window"`
+	MaxFailures             int           `yaml:"max_failures"`
 }
 
 const configPath = "config.yaml"
@@ -58,6 +76,13 @@ func GetConfig(logger *slog.Logger) *Config {
 				"path", configPath,
 				"error", err,
 			)
+			os.Exit(1)
+		}
+		if config.OtpLimits.FreeIssues <= 0 || config.OtpLimits.InitialCooldown <= 0 ||
+			config.OtpLimits.MaxCooldown < config.OtpLimits.InitialCooldown ||
+			config.OtpLimits.IssueWindow <= 0 || config.OtpLimits.MaxIssues <= config.OtpLimits.FreeIssues ||
+			config.OtpLimits.MaxAttemptsPerChallenge <= 0 || config.OtpLimits.FailureWindow <= 0 || config.OtpLimits.MaxFailures <= 0 {
+			logger.Error("invalid OTP limit configuration")
 			os.Exit(1)
 		}
 	})

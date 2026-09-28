@@ -4,14 +4,17 @@ import (
 	"context"
 	"uuid"
 
-	"google.golang.org/grpc/codes"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/apperr"
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 )
 
+var ErrUnauthenticated = apperr.New(apperr.Unauthenticated, "AUTHENTICATION_REQUIRED", "authentication required")
+
 const (
-	identityIDMetadata = "x-identity-id"
-	emailMetadata      = "x-email"
+	identityIDMetadata       = "x-identity-id"
+	emailMetadata            = "x-email"
+	metadataSingleValueCount = 1
+	metadataFirstValueIndex  = 0
 )
 
 type Principal struct {
@@ -22,38 +25,26 @@ type Principal struct {
 func PrincipalFromContext(ctx context.Context) (Principal, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return Principal{}, status.Error(
-			codes.Unauthenticated,
-			"authentication metadata missing",
-		)
+		return Principal{}, ErrUnauthenticated
 	}
 
 	identityIDs := md.Get(identityIDMetadata)
-	if len(identityIDs) != 1 {
-		return Principal{}, status.Error(
-			codes.Unauthenticated,
-			"identity id missing",
-		)
+	if len(identityIDs) != metadataSingleValueCount {
+		return Principal{}, ErrUnauthenticated
 	}
 
-	identityID, err := uuid.Parse(identityIDs[0])
+	identityID, err := uuid.Parse(identityIDs[metadataFirstValueIndex])
 	if err != nil {
-		return Principal{}, status.Error(
-			codes.Unauthenticated,
-			"invalid identity id",
-		)
+		return Principal{}, ErrUnauthenticated
 	}
 
 	emails := md.Get(emailMetadata)
-	if len(emails) != 1 {
-		return Principal{}, status.Error(
-			codes.Unauthenticated,
-			"email missing",
-		)
+	if len(emails) != metadataSingleValueCount {
+		return Principal{}, ErrUnauthenticated
 	}
 
 	return Principal{
 		IdentityID: identityID,
-		Email:      emails[0],
+		Email:      emails[metadataFirstValueIndex],
 	}, nil
 }

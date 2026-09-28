@@ -2,23 +2,24 @@ package repository
 
 import (
 	"context"
-	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 	"uuid"
 
-	v1 "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
+	"github.com/jackc/pgx/v5"
+	v1 "github.com/mikhaeris/sky-bank/proto/gen/auth/v1"
 
 	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 )
 
 type SessionRepository struct {
-	DB *sql.DB
+	db DBTX
 }
 
-func NewSessionRepository(db *sql.DB) *SessionRepository {
+func NewSessionRepository(db DBTX) *SessionRepository {
 	return &SessionRepository{
-		DB: db,
+		db: db,
 	}
 }
 
@@ -36,11 +37,14 @@ func (sr *SessionRepository) Insert(ctx context.Context, session domain.Session)
 		session.LastUsedAt,
 	}
 
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
 	defer cancel()
 
-	_, err := sr.DB.ExecContext(ctx, query, args...)
-	return err
+	_, err := sr.db.Exec(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("insert session: %w", err)
+	}
+	return nil
 }
 
 func (sr *SessionRepository) GetByRefreshTokenHash(ctx context.Context, refreshTokenHash []byte) (domain.Session, error) {
@@ -49,12 +53,12 @@ func (sr *SessionRepository) GetByRefreshTokenHash(ctx context.Context, refreshT
 		FROM sessions
 		WHERE refresh_token_hash = $1 AND expires_at > NOW()`
 
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
 	defer cancel()
 
 	var session domain.Session
 
-	err := sr.DB.QueryRowContext(ctx, query, refreshTokenHash).Scan(
+	err := sr.db.QueryRow(ctx, query, refreshTokenHash).Scan(
 		&session.ID,
 		&session.IdentityID,
 		&session.RefreshTokenHash,
@@ -63,7 +67,10 @@ func (sr *SessionRepository) GetByRefreshTokenHash(ctx context.Context, refreshT
 		&session.LastUsedAt,
 	)
 	if err != nil {
-		return domain.Session{}, err
+		if errors.Is(err, pgx.ErrNoRows) {
+			return domain.Session{}, fmt.Errorf("find refresh session: %w", ErrRecordNotFound)
+		}
+		return domain.Session{}, fmt.Errorf("find refresh session: %w", err)
 	}
 
 	return session, nil
@@ -75,12 +82,12 @@ func (sr *SessionRepository) GetSessionsByIdentityID(ctx context.Context, identi
 		FROM sessions
 		WHERE identity_id = $1`
 
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
 	defer cancel()
 
-	rows, err := sr.DB.QueryContext(ctx, query, identityID)
+	rows, err := sr.db.Query(ctx, query, identityID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("list sessions: %w", err)
 	}
 	defer rows.Close()
 
@@ -88,22 +95,26 @@ func (sr *SessionRepository) GetSessionsByIdentityID(ctx context.Context, identi
 
 	for rows.Next() {
 		var session v1.Session
+		var createdAt, expiresAt, lastUsedAt time.Time
 
 		err := rows.Scan(
 			&session.Id,
-			&session.CreatedAt,
-			&session.ExpiresAt,
-			&session.LastUsedAt,
+			&createdAt,
+			&expiresAt,
+			&lastUsedAt,
 		)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("scan session: %w", err)
 		}
+		session.CreatedAt = createdAt.Format(time.RFC3339Nano)
+		session.ExpiresAt = expiresAt.Format(time.RFC3339Nano)
+		session.LastUsedAt = lastUsedAt.Format(time.RFC3339Nano)
 
 		sessions = append(sessions, &session)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("iterate sessions: %w", err)
 	}
 
 	return sessions, nil
@@ -124,21 +135,16 @@ func (sr *SessionRepository) Update(ctx context.Context, session domain.Session,
 		oldTokenHash,
 	}
 
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
 	defer cancel()
 
-	res, err := sr.DB.ExecContext(ctx, query, args...)
+	res, err := sr.db.Exec(ctx, query, args...)
 	if err != nil {
-		return err
+		return fmt.Errorf("rotate refresh session: %w", err)
 	}
 
-	rows, err := res.RowsAffected()
-	if err != nil {
-		return err
-	}
-
-	if rows == 0 {
-		return fmt.Errorf("invalid session")
+	if res.RowsAffected() == 0 {
+		return fmt.Errorf("rotate refresh session: %w", ErrEditConflict)
 	}
 
 	return nil
@@ -151,21 +157,16 @@ func (sr *SessionRepository) DeleteSessionByID(ctx context.Context, sessionID, i
 
 	agrs := []any{sessionID, identityID}
 
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
 	defer cancel()
 
-	res, err := sr.DB.ExecContext(ctx, query, agrs...)
+	res, err := sr.db.Exec(ctx, query, agrs...)
 	if err != nil {
-		return err
+		return fmt.Errorf("delete session: %w", err)
 	}
 
-	rowsAffected, err := res.RowsAffected()
-	if err != nil {
-		return err
-	}
-
-	if rowsAffected == 0 {
-		return fmt.Errorf("session not found")
+	if res.RowsAffected() == 0 {
+		return fmt.Errorf("delete session: %w", ErrRecordNotFound)
 	}
 
 	return nil
@@ -177,12 +178,12 @@ func (sr *SessionRepository) DeleteOtherSessionsByID(ctx context.Context, sessio
 		WHERE identity_id = $1
 		  AND id <> $2`
 
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
 	defer cancel()
 
-	_, err := sr.DB.ExecContext(ctx, query, identityID, sessionID)
+	_, err := sr.db.Exec(ctx, query, identityID, sessionID)
 	if err != nil {
-		return err
+		return fmt.Errorf("delete other sessions: %w", err)
 	}
 
 	return nil

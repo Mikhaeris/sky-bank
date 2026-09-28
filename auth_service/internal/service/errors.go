@@ -1,19 +1,12 @@
 package service
 
-import (
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-)
+import "github.com/mikhaeris/sky-bank/auth_service/internal/apperr"
 
 var (
-	ErrUserAlreadyExistEmail = status.Error(codes.AlreadyExists, "user with given email already exist")
-	ErrTokenInvalid          = status.Error(codes.Unauthenticated, "invalid token")
-	ErrHaveNotPermission     = status.Error(codes.PermissionDenied, "have not permission")
-	ErrOtpCodeInvalid        = status.Error(codes.InvalidArgument, "invalid otp code")
-	ErrRecordNotFound        = status.Error(codes.NotFound, "user with given id not found")
-	ErrInvalidRefreshToken   = status.Error(codes.InvalidArgument, "invalid refresh token")
+	ErrInvalidRefreshToken = apperr.New(apperr.Unauthenticated, "INVALID_REFRESH_TOKEN", "invalid refresh token")
+	ErrOtpCodeInvalid      = apperr.New(apperr.InvalidArgument, "INVALID_OTP_CODE", "invalid otp code")
+	ErrOtpRateLimited      = apperr.New(apperr.RateLimited, "OTP_RATE_LIMITED", "otp rate limit exceeded")
+	ErrDestinationInvalid  = apperr.New(apperr.InvalidArgument, "INVALID_DESTINATION", "invalid destination")
+	ErrPurposeInvalid      = apperr.New(apperr.InvalidArgument, "INVALID_PURPOSE", "invalid purpose")
+	ErrSessionNotFound     = apperr.New(apperr.NotFound, "SESSION_NOT_FOUND", "session not found")
 )
-
-func internalErr(err error) error {
-	return status.Errorf(codes.Internal, "%v", err.Error())
-}

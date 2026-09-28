@@ -2,127 +2,166 @@ package service
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
-
-	notificationv1 "github.com/mikhaeris/sky-bank/notification_service/api/notification/v1"
+	"uuid"
 
 	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/lib/jwt"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/repository"
+	"github.com/mikhaeris/sky-bank/pkg/kafka"
+	ke "github.com/mikhaeris/sky-bank/pkg/kafkaevents"
+	"github.com/mikhaeris/sky-bank/pkg/kafkaevents/constant"
+	"go.opentelemetry.io/otel/trace"
 )
 
-func (a *AuthService) StartAuthentication(ctx context.Context, dto domain.IdentityDTO) error {
-	otp, err := domain.GenerateCode(a.codeHash, dto.Email, domain.CodePurposeAuthentication, domain.CodeTTLAuthentication)
-	if err != nil {
-		return internalErr(err)
-	}
-
-	err = a.otpRepo.Insert(ctx, otp)
-	if err != nil {
-		return internalErr(err)
-	}
-
-	go func(email, otpCode string) {
-		ctx, cancel := context.WithTimeout(
-			context.Background(),
-			5*time.Second,
-		)
-		defer cancel()
-
-		if err := a.otpProvider.SendOtpCode(ctx, email, otpCode); err != nil {
-			a.logger.Error(
-				"failed to send otp code",
-				"error", err,
-				"email", email,
-			)
-		}
-	}(dto.Email, otp.CodePlaintext)
-
-	return nil
+type IdentityService struct {
+	tracer               trace.Tracer
+	jwtKey               *jwt.Keys
+	notificationProducer *kafka.Producer
+	challengeServ        *ChallengeService
+	store                repository.DataStore
 }
 
-func (a *AuthService) CompleteAuthentication(ctx context.Context, dto domain.OtpDto) (domain.Tokens, error) {
-	code, err := a.otpRepo.GetByEmail(ctx, dto.Email, domain.CodePurposeAuthentication)
-	if err != nil {
-		a.logger.Error(ErrOtpCodeInvalid.Error())
-		return domain.Tokens{}, ErrOtpCodeInvalid
+func NewIdentityService(
+	tracer trace.Tracer,
+	jwtKey *jwt.Keys,
+	notificationProducer *kafka.Producer,
+	challengeServ *ChallengeService,
+	store repository.DataStore,
+) *IdentityService {
+	return &IdentityService{
+		tracer:               tracer,
+		jwtKey:               jwtKey,
+		notificationProducer: notificationProducer,
+		challengeServ:        challengeServ,
+		store:                store,
+	}
+}
+
+func (i *IdentityService) StartAuthentication(ctx context.Context, dto domain.IdentityDTO) (uuid.UUID, error) {
+	ctx, span := i.tracer.Start(ctx, "auth.start_authentication")
+	defer span.End()
+
+	tdto := domain.IssueChallengeDTO{
+		Destination: dto.Email,
+		Channel:     domain.OtpChannelEmail,
+		Purpose:     domain.CodePurposeAuthentication,
 	}
 
-	match := a.codeHash.Verify(dto.CodePlaintext, code.CodeHash)
-	if !match {
-		a.logger.Error(ErrOtpCodeInvalid.Error())
-		return domain.Tokens{}, ErrOtpCodeInvalid
+	challengeID, err := i.challengeServ.Issue(ctx, tdto)
+	if err != nil {
+		return uuid.Nil(), fmt.Errorf("start authentication: %w", err)
 	}
 
-	err = a.otpRepo.DeleteByEmail(ctx, dto.Email, domain.CodePurposeAuthentication)
+	return challengeID, nil
+}
+
+func (i *IdentityService) CompleteAuthentication(ctx context.Context, dto domain.OtpDTO) (domain.Tokens, error) {
+	tdto := domain.ConsumeChallengeDTO{
+		ChallengeID:     dto.ChallengeID,
+		Code:            dto.CodePlaintext,
+		ExpectedPurpose: domain.CodePurposeAuthentication,
+	}
+	code, err := i.challengeServ.Consume(ctx, tdto)
 	if err != nil {
-		return domain.Tokens{}, internalErr(err)
+		return domain.Tokens{}, fmt.Errorf("complete authentication: %w", err)
 	}
 
-	identity, err := a.identityRepo.GetOrCreateByEmail(ctx, dto.Email)
+	var identity domain.Identity
+	err = i.store.Atomic(ctx, func(ctx context.Context, tx repository.TxStore) error {
+		identityRepo := tx.IdentityRepository()
+		if err := identityRepo.InsertIfAbsent(ctx, code.Destination); err != nil {
+			return err
+		}
+
+		var txErr error
+		identity, txErr = identityRepo.GetByEmail(ctx, code.Destination)
+		return txErr
+	})
 	if err != nil {
-		return domain.Tokens{}, internalErr(err)
+		return domain.Tokens{}, fmt.Errorf("create identity: %w", err)
 	}
 
-	accessToken, err := a.jwtKey.CreateToken(&identity)
+	accessToken, err := i.jwtKey.CreateToken(&identity)
 	if err != nil {
-		return domain.Tokens{}, internalErr(err)
+		return domain.Tokens{}, fmt.Errorf("sign access token: %w", err)
 	}
 
 	session := domain.NewSession(identity.ID, domain.RefreshTokenTTL)
 
-	err = a.sessionRepo.Insert(ctx, *session)
+	err = i.store.SessionRepository().Insert(ctx, *session)
 	if err != nil {
-		return domain.Tokens{}, internalErr(err)
+		return domain.Tokens{}, fmt.Errorf("create session: %w", err)
 	}
 
-	go func(email string) {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
+	event := ke.Event[ke.NotificationPayload]{
+		Metadata: ke.Metadata{
+			EventID:    uuid.New(),
+			EventType:  "notification.requested",
+			OccurredAt: time.Now().UTC(),
+			Source:     "auth_service",
+		},
+		Payload: ke.NotificationPayload{
+			IdentityID:       identity.ID,
+			Destination:      code.Destination,
+			NotificationType: ke.NotificationTypeEmail,
+			TemplateID:       constant.TemplateNewLogIn,
+			Data:             map[string]any{},
+			ExpiredAt:        nil,
+		},
+	}
 
-		req := &notificationv1.SendNewLogInRequest{
-			Email: email,
-		}
-
-		if _, err := a.notificationClient.SendNewLogIn(ctx, req); err != nil {
-			a.logger.Error(
-				"failed to send new log in email",
-				"error", err,
-			)
-		}
-	}(dto.Email)
+	err = i.notificationProducer.Produce(ctx, constant.TopicNotificationRequested, event)
+	if err != nil {
+		return domain.Tokens{}, fmt.Errorf("publish login notification: %w", err)
+	}
 
 	return domain.Tokens{
-		Access:  accessToken,
-		Refresh: session.RefreshTokenPlaintext,
+		Access:    accessToken,
+		Refresh:   session.RefreshTokenPlaintext,
+		ExpiresAt: session.ExpiresAt,
 	}, nil
 }
 
-func (a *AuthService) RefreshTokens(ctx context.Context, dto domain.TokensDTO) (domain.Tokens, error) {
+func (i *IdentityService) RefreshTokens(ctx context.Context, dto domain.TokensDTO) (domain.Tokens, error) {
 	oldTokenHash := domain.HashRefreshToken(dto.Refersh)
 
-	session, err := a.sessionRepo.GetByRefreshTokenHash(ctx, oldTokenHash)
+	session, err := i.store.SessionRepository().GetByRefreshTokenHash(ctx, oldTokenHash)
 	if err != nil {
-		return domain.Tokens{}, ErrInvalidRefreshToken
+		if errors.Is(err, repository.ErrRecordNotFound) {
+			return domain.Tokens{}, ErrInvalidRefreshToken
+		}
+		return domain.Tokens{}, fmt.Errorf("refresh tokens: %w", err)
 	}
 
-	identity, err := a.identityRepo.GetByID(ctx, session.IdentityID)
+	identity, err := i.store.IdentityRepository().GetByID(ctx, session.IdentityID)
 	if err != nil {
-		return domain.Tokens{}, internalErr(err)
+		if errors.Is(err, repository.ErrRecordNotFound) {
+			return domain.Tokens{}, ErrInvalidRefreshToken
+		}
+		return domain.Tokens{}, fmt.Errorf("refresh tokens: %w", err)
 	}
 
-	accessToken, err := a.jwtKey.CreateToken(&identity)
+	accessToken, err := i.jwtKey.CreateToken(&identity)
 	if err != nil {
-		return domain.Tokens{}, internalErr(err)
+		return domain.Tokens{}, fmt.Errorf("sign refreshed access token: %w", err)
 	}
 
 	session.RotateRefreshToken()
 
-	err = a.sessionRepo.Update(ctx, session, oldTokenHash)
+	err = i.store.SessionRepository().Update(ctx, session, oldTokenHash)
 	if err != nil {
-		return domain.Tokens{}, internalErr(err)
+		if errors.Is(err, repository.ErrEditConflict) {
+			return domain.Tokens{}, ErrInvalidRefreshToken
+		}
+		return domain.Tokens{}, fmt.Errorf("refresh tokens: %w", err)
 	}
 
 	return domain.Tokens{
-		Access:  accessToken,
-		Refresh: session.RefreshTokenPlaintext,
+		Access:    accessToken,
+		Refresh:   session.RefreshTokenPlaintext,
+		ExpiresAt: session.ExpiresAt,
 	}, nil
 }
