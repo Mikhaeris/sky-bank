@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	authv1 "github.com/mikhaeris/sky-bank/auth_service/api/auth/v1"
-	jwt "github.com/mikhaeris/sky-bank/gateway/internal/lib"
+	"github.com/mikhaeris/sky-bank/gateway/internal/pkg/jwt"
+	authv1 "github.com/mikhaeris/sky-bank/proto/gen/auth/v1"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -53,11 +53,11 @@ func Authenticate(verifier *jwt.TokenVerifier) grpc.UnaryClientInterceptor {
 			)
 		}
 
-		ctx = metadata.AppendToOutgoingContext(
-			ctx,
-			identityIDMetadata, claims.Subject,
-			emailMetadata, claims.Email,
-		)
+		md, _ := metadata.FromOutgoingContext(ctx)
+		md = md.Copy()
+		md.Set(identityIDMetadata, claims.Subject)
+		md.Set(emailMetadata, claims.Email)
+		ctx = metadata.NewOutgoingContext(ctx, md)
 
 		return invoker(ctx, method, req, reply, cc, opts...)
 	}

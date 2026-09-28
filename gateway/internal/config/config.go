@@ -15,9 +15,20 @@ type Config struct {
 	Auth struct {
 		Addr string `yaml:"addr"`
 	} `yaml:"auth"`
+	Customer struct {
+		Addr string `yaml:"addr"`
+	} `yaml:"customer"`
 	Jwt struct {
 		PubKeyPath string `yaml:"pub_key_path"`
 	} `yaml:"jwt"`
+	RateLimiter struct {
+		Enabled      bool    `yaml:"enabled"`
+		PublicRPS    float64 `yaml:"public_rps"`
+		PublicBurst  int     `yaml:"public_burst"`
+		PrivateRPS   float64 `yaml:"private_rps"`
+		PrivateBurst int     `yaml:"private_burst"`
+	} `yaml:"rate_limiter"`
+	OtlpEndpoint string `yaml:"otlp_endpoint"`
 }
 
 const configPath = "config.yaml"
