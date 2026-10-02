@@ -1,3 +1,4 @@
 secrets/
 config.yaml
+!infra/otel-collector/config.yaml
 .env

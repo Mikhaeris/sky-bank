@@ -58,7 +58,7 @@ services:
         condition: service_completed_successfully
       notification:
         condition: service_started
-      tempo:
+      otel-collector:
         condition: service_started
       kafka-1:
         condition: service_healthy
@@ -69,6 +69,7 @@ services:
     volumes:
       - ./secrets/keys/private.pem:/keys/private.pem:ro
       - ./secrets/otp.key:/secrets/otp.key:ro
+      - ./secrets/outbox.key:/secrets/outbox.key:ro
 
   customer:
     build:
@@ -164,13 +165,58 @@ services:
     ports:
       - "4318:4318"
 
+  loki:
+    image: grafana/loki:3.7.8
+    command: ["-config.file=/etc/loki/loki.yaml"]
+    volumes:
+      - ./infra/loki/loki.yaml:/etc/loki/loki.yaml:ro
+      - loki_data:/tmp
+    ports:
+      - "127.0.0.1:3100:3100"
+    healthcheck:
+      test: ["CMD", "/usr/bin/loki", "-health"]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  prometheus:
+    image: prom/prometheus:v3.14.0
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-otlp-receiver
+    volumes:
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.161.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./infra/otel-collector/config.yaml:/etc/otelcol/config.yaml:ro
+    depends_on:
+      tempo:
+        condition: service_started
+      prometheus:
+        condition: service_started
+      loki:
+        condition: service_healthy
+
   grafana:
     image: grafana/grafana:12.4.11
     depends_on:
       tempo:
         condition: service_started
+      prometheus:
+        condition: service_started
+      loki:
+        condition: service_healthy
     volumes:
       - ./infra/grafana/provisioning/datasources/tempo.yaml:/etc/grafana/provisioning/datasources/tempo.yaml:ro
+      - ./infra/grafana/provisioning/datasources/prometheus.yaml:/etc/grafana/provisioning/datasources/prometheus.yaml:ro
+      - ./infra/grafana/provisioning/datasources/loki.yaml:/etc/grafana/provisioning/datasources/loki.yaml:ro
       - grafana_data:/var/lib/grafana
     ports:
       - "3000:3000"
@@ -243,4 +289,6 @@ volumes:
   kafka_2_data:
   kafka_3_data:
   tempo_data:
+  loki_data:
+  prometheus_data:
   grafana_data:
