@@ -22,6 +22,7 @@ type TxStore interface {
 	IdentityRepository() *IdentityRepository
 	OTPLimitRepository() *OTPLimitRepository
 	SessionRepository() *SessionRepository
+	OTPOutboxRepository() *OTPOutboxRepository
 }
 
 type DataStore interface {
@@ -42,7 +43,7 @@ func (r *repositories) ChallengeRepository() *ChallengeRepository {
 }
 
 func (r *repositories) IdentityRepository() *IdentityRepository {
-	return NewIdentityRepository(r.db)
+	return NewIdentityRepository(r.tracer, r.db)
 }
 
 func (r *repositories) OTPLimitRepository() *OTPLimitRepository {
@@ -50,7 +51,11 @@ func (r *repositories) OTPLimitRepository() *OTPLimitRepository {
 }
 
 func (r *repositories) SessionRepository() *SessionRepository {
-	return NewSessionRepository(r.db)
+	return NewSessionRepository(r.tracer, r.db)
+}
+
+func (r *repositories) OTPOutboxRepository() *OTPOutboxRepository {
+	return NewOTPOutboxRepository(r.tracer, r.db)
 }
 
 type dataStore struct {
@@ -82,7 +87,10 @@ func (s *dataStore) Atomic(
 		span.End()
 	}()
 
-	dbTx, err := s.pool.Begin(ctx)
+	beginCtx, beginSpan := s.tracer.Start(ctx, "db.transaction.begin")
+	dbTx, err := s.pool.Begin(beginCtx)
+	beginSpan.End()
+
 	if err != nil {
 		return fmt.Errorf("begin transaction: %w", err)
 	}
@@ -97,7 +105,13 @@ func (s *dataStore) Atomic(
 		return err
 	}
 
-	if err = dbTx.Commit(ctx); err != nil {
+	commitCtx, commitSpan := s.tracer.Start(ctx, "db.transaction.commit")
+
+	err = dbTx.Commit(commitCtx)
+
+	commitSpan.End()
+
+	if err != nil {
 		return fmt.Errorf("commit transaction: %w", err)
 	}
 

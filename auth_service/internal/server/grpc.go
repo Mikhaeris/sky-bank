@@ -4,6 +4,7 @@ import (
 	"log/slog"
 
 	"github.com/mikhaeris/sky-bank/auth_service/internal/handler"
+	"github.com/mikhaeris/sky-bank/auth_service/internal/server/interceptors"
 
 	authv1 "github.com/mikhaeris/sky-bank/proto/gen/auth/v1"
 	"google.golang.org/grpc"
@@ -15,7 +16,11 @@ func NewGRPCServer(auth *handler.AuthHandler, challenge *handler.ChallengeHandle
 	logger.Info("new grpc server")
 
 	opts := []grpc.ServerOption{
-		grpc.ChainUnaryInterceptor(RecoveryInterceptors(logger), ErrorInterceptor(logger)),
+		grpc.ChainUnaryInterceptor(
+			interceptors.RecoveryInterceptors(logger),
+			interceptors.ErrorInterceptor(logger),
+			interceptors.ValidationInterceptor(),
+		),
 		grpc.StatsHandler(otelgrpc.NewServerHandler()),
 	}
 	grpcServer := grpc.NewServer(opts...)

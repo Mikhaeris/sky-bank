@@ -6,3 +6,6 @@ CREATE TABLE IF NOT EXISTS sessions (
     expires_at timestamp(0) with time zone NOT NULL,
     last_used_at timestamp(0) with time zone NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS sessions_refresh_token_hash_idx
+    ON sessions (refresh_token_hash);

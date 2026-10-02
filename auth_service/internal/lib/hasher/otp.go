@@ -1,4 +1,4 @@
-package otp
+package hasher
 
 import (
 	"crypto/hmac"

@@ -8,6 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
+	"go.opentelemetry.io/otel/trace"
 )
 
 var (
@@ -16,16 +17,24 @@ var (
 )
 
 type IdentityRepository struct {
-	db DBTX
+	tracer trace.Tracer
+	db     DBTX
 }
 
-func NewIdentityRepository(db DBTX) *IdentityRepository {
+func NewIdentityRepository(
+	tracer trace.Tracer,
+	db DBTX,
+) *IdentityRepository {
 	return &IdentityRepository{
-		db: db,
+		tracer: tracer,
+		db:     db,
 	}
 }
 
 func (ir *IdentityRepository) GetByID(ctx context.Context, identityID uuid.UUID) (domain.Identity, error) {
+	ctx, span := ir.tracer.Start(ctx, "identity.get")
+	defer span.End()
+
 	query := `
 		SELECT id, email, version
 		FROM identities
@@ -52,24 +61,33 @@ func (ir *IdentityRepository) GetByID(ctx context.Context, identityID uuid.UUID)
 }
 
 func (ir *IdentityRepository) InsertIfAbsent(ctx context.Context, email string) error {
-	id := uuid.New()
-
-	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
-	defer cancel()
+	ctx, span := ir.tracer.Start(ctx, "identity.insert")
+	defer span.End()
 
 	query := `
 		INSERT INTO identities (id, email, version)
 		VALUES ($1, $2, $3)
 		ON CONFLICT (email) DO NOTHING`
 
-	_, err := ir.db.Exec(ctx, query, id, email, initialIdentityVersion)
+	id := uuid.New()
+
+	args := []any{id, email, initialIdentityVersion}
+
+	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
+	defer cancel()
+
+	_, err := ir.db.Exec(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("insert identity if absent: %w", err)
 	}
+
 	return nil
 }
 
 func (ir *IdentityRepository) GetByEmail(ctx context.Context, email string) (domain.Identity, error) {
+	ctx, span := ir.tracer.Start(ctx, "identity.get")
+	defer span.End()
+
 	query := `
 		SELECT id, email, version
 		FROM identities

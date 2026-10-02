@@ -4,7 +4,7 @@ import (
 	"context"
 	"uuid"
 
-	"github.com/mikhaeris/sky-bank/auth_service/internal/apperr"
+	"github.com/mikhaeris/sky-bank/pkg/apperr"
 	"google.golang.org/grpc/metadata"
 )
 

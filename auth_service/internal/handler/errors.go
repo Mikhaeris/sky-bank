@@ -1,6 +1,8 @@
 package handler
 
-import "github.com/mikhaeris/sky-bank/auth_service/internal/apperr"
+import (
+	"github.com/mikhaeris/sky-bank/pkg/apperr"
+)
 
 var (
 	ErrInvalidID         = apperr.New(apperr.InvalidArgument, "INVALID_ID", "invalid id")

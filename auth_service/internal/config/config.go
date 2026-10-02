@@ -26,9 +26,10 @@ type Config struct {
 		PrivKeyPath    string        `yaml:"priv_key_path"`
 		AccessTokenTtl time.Duration `yaml:"access_token_ttl"`
 	} `yaml:"jwt"`
-	OtpSecretPath string    `yaml:"otp_secret_path"`
-	OtpLimits     OtpLimits `yaml:"otp_limits"`
-	OtlpEndpoint  string    `yaml:"otlp_endpoint"`
+	OtpSecretPath       string    `yaml:"otp_secret_path"`
+	OtpLimits           OtpLimits `yaml:"otp_limits"`
+	OtlpEndpoint        string    `yaml:"otlp_endpoint"`
+	OtpOutboxSecretPath string    `yaml:"otp_outbox_secret_path"`
 }
 
 type StorageConfig struct {
@@ -44,14 +45,11 @@ type KafkaConfig struct {
 }
 
 type OtpLimits struct {
-	FreeIssues              int           `yaml:"free_issues"`
-	InitialCooldown         time.Duration `yaml:"initial_cooldown"`
-	MaxCooldown             time.Duration `yaml:"max_cooldown"`
-	IssueWindow             time.Duration `yaml:"issue_window"`
-	MaxIssues               int           `yaml:"max_issues"`
-	MaxAttemptsPerChallenge int           `yaml:"max_attempts_per_challenge"`
-	FailureWindow           time.Duration `yaml:"failure_window"`
-	MaxFailures             int           `yaml:"max_failures"`
+	InitialIssues           int           `yaml:"initial_issues" env-default:"5"`
+	InitialCooldown         time.Duration `yaml:"initial_cooldown" env-default:"15s"`
+	MaxCooldown             time.Duration `yaml:"max_cooldown" env-default:"5m"`
+	IssueResetAfter         time.Duration `yaml:"issue_reset_after" env-default:"30m"`
+	MaxAttemptsPerChallenge int           `yaml:"max_attempts_per_challenge" env-default:"5"`
 }
 
 const configPath = "config.yaml"
@@ -78,10 +76,10 @@ func GetConfig(logger *slog.Logger) *Config {
 			)
 			os.Exit(1)
 		}
-		if config.OtpLimits.FreeIssues <= 0 || config.OtpLimits.InitialCooldown <= 0 ||
+		if config.OtpLimits.InitialIssues <= 0 || config.OtpLimits.InitialCooldown <= 0 ||
 			config.OtpLimits.MaxCooldown < config.OtpLimits.InitialCooldown ||
-			config.OtpLimits.IssueWindow <= 0 || config.OtpLimits.MaxIssues <= config.OtpLimits.FreeIssues ||
-			config.OtpLimits.MaxAttemptsPerChallenge <= 0 || config.OtpLimits.FailureWindow <= 0 || config.OtpLimits.MaxFailures <= 0 {
+			config.OtpLimits.IssueResetAfter < config.OtpLimits.MaxCooldown ||
+			config.OtpLimits.MaxAttemptsPerChallenge <= 0 {
 			logger.Error("invalid OTP limit configuration")
 			os.Exit(1)
 		}

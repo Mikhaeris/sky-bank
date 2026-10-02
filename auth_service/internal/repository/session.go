@@ -9,21 +9,30 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	v1 "github.com/mikhaeris/sky-bank/proto/gen/auth/v1"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 )
 
 type SessionRepository struct {
-	db DBTX
+	tracer trace.Tracer
+	db     DBTX
 }
 
-func NewSessionRepository(db DBTX) *SessionRepository {
+func NewSessionRepository(
+	tracer trace.Tracer,
+	db DBTX,
+) *SessionRepository {
 	return &SessionRepository{
-		db: db,
+		tracer: tracer,
+		db:     db,
 	}
 }
 
 func (sr *SessionRepository) Insert(ctx context.Context, session domain.Session) error {
+	ctx, span := sr.tracer.Start(ctx, "session.insert")
+	defer span.End()
+
 	query := `
 		INSERT INTO sessions (id, identity_id, refresh_token_hash, created_at, expires_at, last_used_at)
 		VALUES ($1, $2, $3, $4, $5, $6)`
@@ -47,7 +56,42 @@ func (sr *SessionRepository) Insert(ctx context.Context, session domain.Session)
 	return nil
 }
 
+func (sr *SessionRepository) GetById(ctx context.Context, sessionId uuid.UUID) (domain.Session, error) {
+	ctx, span := sr.tracer.Start(ctx, "session.get_by_id")
+	defer span.End()
+
+	query := `
+		SELECT id, identity_id, refresh_token_hash, created_at, expires_at, last_used_at
+		FROM sessions
+		WHERE id = $1 AND expires_at > NOW()`
+
+	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
+	defer cancel()
+
+	var session domain.Session
+
+	err := sr.db.QueryRow(ctx, query, sessionId).Scan(
+		&session.ID,
+		&session.IdentityID,
+		&session.RefreshTokenHash,
+		&session.CreatedAt,
+		&session.ExpiresAt,
+		&session.LastUsedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return domain.Session{}, fmt.Errorf("find id session: %w", ErrRecordNotFound)
+		}
+		return domain.Session{}, fmt.Errorf("find id session: %w", err)
+	}
+
+	return session, nil
+}
+
 func (sr *SessionRepository) GetByRefreshTokenHash(ctx context.Context, refreshTokenHash []byte) (domain.Session, error) {
+	ctx, span := sr.tracer.Start(ctx, "session.get_by_token_hash")
+	defer span.End()
+
 	query := `
 		SELECT id, identity_id, refresh_token_hash, created_at, expires_at, last_used_at
 		FROM sessions
@@ -77,6 +121,9 @@ func (sr *SessionRepository) GetByRefreshTokenHash(ctx context.Context, refreshT
 }
 
 func (sr *SessionRepository) GetSessionsByIdentityID(ctx context.Context, identityID uuid.UUID) ([]*v1.Session, error) {
+	ctx, span := sr.tracer.Start(ctx, "session.get_by_identity_id")
+	defer span.End()
+
 	query := `
 		SELECT id, created_at, expires_at, last_used_at
 		FROM sessions
@@ -121,6 +168,9 @@ func (sr *SessionRepository) GetSessionsByIdentityID(ctx context.Context, identi
 }
 
 func (sr *SessionRepository) Update(ctx context.Context, session domain.Session, oldTokenHash []byte) error {
+	ctx, span := sr.tracer.Start(ctx, "session.update")
+	defer span.End()
+
 	query := `
 		UPDATE sessions
 		SET refresh_token_hash = $1, created_at = $2, expires_at = $3, last_used_at = $4
@@ -151,6 +201,9 @@ func (sr *SessionRepository) Update(ctx context.Context, session domain.Session,
 }
 
 func (sr *SessionRepository) DeleteSessionByID(ctx context.Context, sessionID, identityID uuid.UUID) error {
+	ctx, span := sr.tracer.Start(ctx, "session.delete")
+	defer span.End()
+
 	query := `
 		DELETE FROM sessions
 		WHERE id = $1 AND identity_id = $2`
@@ -173,6 +226,9 @@ func (sr *SessionRepository) DeleteSessionByID(ctx context.Context, sessionID, i
 }
 
 func (sr *SessionRepository) DeleteOtherSessionsByID(ctx context.Context, sessionID, identityID uuid.UUID) error {
+	ctx, span := sr.tracer.Start(ctx, "session.delete_other")
+	defer span.End()
+
 	query := `
 		DELETE FROM sessions
 		WHERE identity_id = $1

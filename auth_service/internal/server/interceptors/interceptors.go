@@ -1,44 +1,18 @@
-package server
+package interceptors
 
 import (
 	"context"
 	"errors"
 	"log/slog"
-	"runtime/debug"
+	"time"
 
-	"github.com/mikhaeris/sky-bank/auth_service/internal/apperr"
+	"github.com/mikhaeris/sky-bank/pkg/apperr"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/durationpb"
 )
-
-func RecoveryInterceptors(logger *slog.Logger) grpc.UnaryServerInterceptor {
-	return func(
-		ctx context.Context,
-		req any,
-		info *grpc.UnaryServerInfo,
-		handler grpc.UnaryHandler,
-	) (resp any, err error) {
-		defer func() {
-			if recovered := recover(); recovered != nil {
-				logger.ErrorContext(ctx, "panic in grpc handler",
-					"method", info.FullMethod,
-					"panic", recovered,
-					"stack", string(debug.Stack()),
-				)
-
-				resp = nil
-				err = status.Error(
-					codes.Internal,
-					"internal error",
-				)
-			}
-		}()
-
-		return handler(ctx, req)
-	}
-}
 
 func grpcCode(kind apperr.Kind) (codes.Code, bool) {
 	switch kind {
@@ -68,9 +42,20 @@ func ErrorInterceptor(logger *slog.Logger) grpc.UnaryServerInterceptor {
 		var publicErr *apperr.Error
 		if errors.As(err, &publicErr) {
 			if code, ok := grpcCode(publicErr.Kind()); ok {
+				errorInfo := &errdetails.ErrorInfo{Reason: publicErr.Reason(), Domain: "auth_service"}
+				var retryable interface{ RetryAt() time.Time }
+				hasRetry := code == codes.ResourceExhausted && errors.As(err, &retryable)
+				if hasRetry {
+					errorInfo.Metadata = map[string]string{"retry_at": retryable.RetryAt().UTC().Format(time.RFC3339Nano)}
+				}
 				publicStatus, detailErr := status.New(code, publicErr.Message()).WithDetails(
-					&errdetails.ErrorInfo{Reason: publicErr.Reason(), Domain: "auth_service"},
+					errorInfo,
 				)
+				if detailErr == nil && hasRetry {
+					publicStatus, detailErr = publicStatus.WithDetails(&errdetails.RetryInfo{
+						RetryDelay: durationpb.New(max(0, time.Until(retryable.RetryAt()))),
+					})
+				}
 				if detailErr == nil {
 					return nil, publicStatus.Err()
 				}

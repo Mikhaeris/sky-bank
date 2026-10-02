@@ -1,6 +1,10 @@
 package service
 
-import "github.com/mikhaeris/sky-bank/auth_service/internal/apperr"
+import (
+	"time"
+
+	"github.com/mikhaeris/sky-bank/pkg/apperr"
+)
 
 var (
 	ErrInvalidRefreshToken = apperr.New(apperr.Unauthenticated, "INVALID_REFRESH_TOKEN", "invalid refresh token")
@@ -10,3 +14,11 @@ var (
 	ErrPurposeInvalid      = apperr.New(apperr.InvalidArgument, "INVALID_PURPOSE", "invalid purpose")
 	ErrSessionNotFound     = apperr.New(apperr.NotFound, "SESSION_NOT_FOUND", "session not found")
 )
+
+type IssueRateLimitError struct {
+	AvailableAt time.Time
+}
+
+func (e *IssueRateLimitError) Error() string      { return ErrOtpRateLimited.Error() }
+func (e *IssueRateLimitError) Unwrap() error      { return ErrOtpRateLimited }
+func (e *IssueRateLimitError) RetryAt() time.Time { return e.AvailableAt }

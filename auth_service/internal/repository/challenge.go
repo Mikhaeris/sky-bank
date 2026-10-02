@@ -8,6 +8,7 @@ import (
 	"uuid"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/mikhaeris/sky-bank/auth_service/internal/domain"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -27,7 +28,7 @@ func NewChallengeRepository(
 	}
 }
 
-func (cr *ChallengeRepository) Upster(ctx context.Context, otp *domain.Challenge) error {
+func (cr *ChallengeRepository) Upster(ctx context.Context, otp *domain.Challenge) (uuid.UUID, error) {
 	ctx, span := cr.tracer.Start(ctx, "challenge.upsert")
 	defer span.End()
 
@@ -47,7 +48,8 @@ func (cr *ChallengeRepository) Upster(ctx context.Context, otp *domain.Challenge
 	    id = EXCLUDED.id,
 	    code_hash = EXCLUDED.code_hash,
 	    expires_at = EXCLUDED.expires_at,
-	    failed_attempts = 0`
+	    failed_attempts = 0
+	RETURNING OLD.id`
 
 	args := []any{
 		otp.ID,
@@ -61,11 +63,19 @@ func (cr *ChallengeRepository) Upster(ctx context.Context, otp *domain.Challenge
 	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
 	defer cancel()
 
-	_, err := cr.db.Exec(ctx, query, args...)
+	var oldChallengeID pgtype.UUID
+	err := cr.db.QueryRow(ctx, query, args...).Scan(
+		&oldChallengeID,
+	)
 	if err != nil {
-		return fmt.Errorf("upsert challenge: %w", err)
+		return uuid.Nil(), fmt.Errorf("upsert challenge: %w", err)
 	}
-	return nil
+
+	if !oldChallengeID.Valid {
+		return uuid.Nil(), nil
+	}
+
+	return uuid.UUID(oldChallengeID.Bytes), nil
 }
 
 func (cr *ChallengeRepository) GetByChallengeId(ctx context.Context, challengeID uuid.UUID) (domain.Challenge, error) {
@@ -77,6 +87,9 @@ func (cr *ChallengeRepository) GetByChallengeIdForUpdate(ctx context.Context, ch
 }
 
 func (cr *ChallengeRepository) getByChallengeID(ctx context.Context, challengeID uuid.UUID, forUpdate bool) (domain.Challenge, error) {
+	ctx, span := cr.tracer.Start(ctx, "challenge.get")
+	defer span.End()
+
 	query := `
 		SELECT id, destination, channel, purpose, code_hash, expires_at, failed_attempts
 		FROM challenges
@@ -112,13 +125,18 @@ func (cr *ChallengeRepository) getByChallengeID(ctx context.Context, challengeID
 }
 
 func (cr *ChallengeRepository) IncrementFailedAttempts(ctx context.Context, challengeID uuid.UUID) error {
+	ctx, span := cr.tracer.Start(ctx, "challenge.increment")
+	defer span.End()
+
+	query := `
+		UPDATE challenges
+		SET failed_attempts = failed_attempts + 1
+		WHERE id = $1 AND expires_at > NOW()`
+
 	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
 	defer cancel()
 
-	result, err := cr.db.Exec(ctx, `
-		UPDATE challenges
-		SET failed_attempts = failed_attempts + 1
-		WHERE id = $1 AND expires_at > NOW()`, challengeID)
+	result, err := cr.db.Exec(ctx, query, challengeID)
 	if err != nil {
 		return fmt.Errorf("increment challenge failures: %w", err)
 	}
@@ -131,6 +149,9 @@ func (cr *ChallengeRepository) IncrementFailedAttempts(ctx context.Context, chal
 }
 
 func (cr *ChallengeRepository) DeleteByChallengeId(ctx context.Context, challengeID uuid.UUID) error {
+	ctx, span := cr.tracer.Start(ctx, "challenge.delete")
+	defer span.End()
+
 	query := `
 		DELETE FROM challenges
 		WHERE id = $1 AND expires_at > NOW()`
@@ -146,14 +167,21 @@ func (cr *ChallengeRepository) DeleteByChallengeId(ctx context.Context, challeng
 	if res.RowsAffected() == 0 {
 		return fmt.Errorf("delete challenge: %w", ErrRecordNotFound)
 	}
+
 	return nil
 }
 
 func (cr *ChallengeRepository) DeleteExpired(ctx context.Context, now time.Time) (int64, error) {
-	result, err := cr.db.Exec(ctx, `
-		DELETE FROM challenges WHERE expires_at <= $1`, now)
+	query := `DELETE FROM challenges
+		WHERE expires_at <= $1`
+
+	ctx, cancel := context.WithTimeout(ctx, queryTimeout)
+	defer cancel()
+
+	result, err := cr.db.Exec(ctx, query, now)
 	if err != nil {
 		return 0, fmt.Errorf("delete expired challenges: %w", err)
 	}
+
 	return result.RowsAffected(), nil
 }

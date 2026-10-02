@@ -67,13 +67,18 @@ func (p *Producer) Produce(ctx context.Context, topic string, evt kafkaevents.Ba
 		})
 	}
 
-	ch := make(chan kafka.Event)
+	ch := make(chan kafka.Event, 1)
 	err = p.producer.Produce(message, ch)
 	if err != nil {
 		return err
 	}
 
-	e := <-ch
+	var e kafka.Event
+	select {
+	case e = <-ch:
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 	switch ev := e.(type) {
 	case *kafka.Message:
 		return ev.TopicPartition.Error
